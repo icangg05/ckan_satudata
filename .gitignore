@@ -53,6 +53,4 @@ htmlcov/
 .mypy_cache
 
 .env
-ckan_storage/i18n/
-ckan_storage/webassets/
-# ckan_storage/storage/
+ckan_storage/

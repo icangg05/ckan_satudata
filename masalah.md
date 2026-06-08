@@ -1,0 +1,2 @@
+- file belum otomatis terhapus saat update
+- ckan.ini => mimes image/webp, kalau bisa mount saja langsung agar mudah diubah tanpa masuk container

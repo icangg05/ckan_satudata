@@ -779,7 +779,8 @@ def _group_or_org_update(
     else:
         schema: Schema = group_plugin.update_group_schema()
 
-    upload = uploader.get_uploader('group')
+    old_filename = group.image_url if group and group.image_url and not group.image_url.startswith('http') else None
+    upload = uploader.get_uploader('group', old_filename)
     upload.update_data_dict(data_dict, 'image_url',
                             'image_upload', 'clear_upload')
 
@@ -911,7 +912,9 @@ def user_update(context: Context, data_dict: DataDict) -> ActionResult.UserUpdat
 
     _check_access('user_update', context, data_dict)
 
-    upload = uploader.get_uploader('user')
+    # upload = uploader.get_uploader('user')
+    old_filename = user_obj.image_url if user_obj and user_obj.image_url and not user_obj.image_url.startswith('http') else None
+    upload = uploader.get_uploader('user', old_filename)
     upload.update_data_dict(data_dict, 'image_url',
                             'image_upload', 'clear_upload')
 
