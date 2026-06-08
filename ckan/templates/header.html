@@ -72,22 +72,22 @@
       <hgroup class="{{ g.header_class }} navbar-left">
 
       {% block header_logo %}
-      {% if g.site_logo %}
-      <a class="logo" href="{{ h.url_for('home.index') }}">
-        <img src="{{ h.url_for_static_or_external(g.site_logo) }}" alt="{{ g.site_title }}"
-          aria-label="{{ _('Navigate to Home - {site_title}').format(site_title=g.site_title) }}"/>
+      <a href="{{ h.url_for('home.index') }}" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+        {% if g.site_logo %}
+        <img src="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else h.url_for_static_or_external(g.site_logo) }}"
+          alt="{{ g.site_title }}"
+          style="height: 50px; width: auto; flex-shrink: 0;"/>
+        {% endif %}
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <span style="font-size: 1.2rem; font-weight: bold; color: #ffffff; line-height: 1.2;">{{ g.site_title }}</span>
+          {% if g.site_description %}
+          <span style="font-size: 0.8rem; color: rgba(255,255,255,0.8);">{{ g.site_description }}</span>
+          {% endif %}
+        </div>
       </a>
-      {% else %}
-      <h1>
-        <a href="{{ h.url_for('home.index') }}">{{ g.site_title }}</a>
-      </h1>
-      {% if g.site_description %}
-      <h2>{{ g.site_description }}</h2>
-      {% endif %}
-      {% endif %}
       {% endblock %}
 
-       </hgroup>
+      </hgroup>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation-toggle"
         aria-controls="main-navigation-toggle" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
         <span class="fa fa-bars text-white"></span>

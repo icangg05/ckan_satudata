@@ -1320,7 +1320,8 @@ def config_option_update(
 
         raise ValidationError({'message': msg})
 
-    upload = uploader.get_uploader('admin')
+    old_filename = config.get('ckan.site_logo') if config.get('ckan.site_logo') and not config.get('ckan.site_logo', '').startswith('http') else None
+    upload = uploader.get_uploader('admin', old_filename)
     upload.update_data_dict(data_dict, 'ckan.site_logo',
                             'logo_upload', 'clear_logo_upload')
     upload.upload(uploader.get_max_image_size())
