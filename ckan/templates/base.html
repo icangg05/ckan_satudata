@@ -54,7 +54,8 @@
     such as rss feeds and favicons in the same way as the meta block.
     #}
     {% block links -%}
-      <link rel="shortcut icon" href="{{ g.favicon }}" />
+      <!-- <link rel="shortcut icon" href="{{ g.favicon }}" /> -->
+      <link rel="shortcut icon" href="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else g.favicon }}" />
     {% endblock -%}
 
     {#
