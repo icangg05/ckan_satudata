@@ -2,6 +2,9 @@
 docker compose exec ckan bash
 
 
+======================================================================
+
+
 2. Setup & jalankan CKAN secara manual di dalam container
 => cd /workspace
 
@@ -18,6 +21,9 @@ docker compose exec ckan bash
 nano /workspace/ckan.ini
 
 
+======================================================================
+
+
 3. Ubah baris-baris berikut di ckan.ini:
 
 sqlalchemy.url = postgresql://ckan_default:pass@localhost/ckan_default
@@ -29,12 +35,21 @@ solr_url = http://localhost:8983/solr/ckan
 ckan.redis.url = redis://localhost:6379/0
 
 
+======================================================================
+
+
 4. Inisialisasi database
 ckan -c /workspace/ckan.ini db init
 
 
+======================================================================
+
+
 5. Jalankan CKAN
 ckan -c /workspace/ckan.ini run --host 0.0.0.0 --port 5000
+
+
+======================================================================
 
 
 6. Cek Port Forwarding
