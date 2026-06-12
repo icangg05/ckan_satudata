@@ -93,9 +93,15 @@
     <div class="form-group control-medium">
       <label for="field-private" class="form-label">{{ _('Visibility') }}</label>
       <div class="controls">
+        {% set current_private = data.get('private') %}
+        {% if current_private is none or current_private == '' %}
+          {% set current_private = 'False' %}
+        {% else %}
+          {% set current_private = current_private|string|trim %}
+        {% endif %}
         <select id="field-private" name="private" class="form-control">
           {% for option in [('True', _('Private')), ('False', _('Public'))] %}
-          <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
+          <option value="{{ option[0] }}" {% if option[0] == current_private %}selected="selected"{% endif %}>{{ option[1] }}</option>
           {% endfor %}
         </select>
       </div>

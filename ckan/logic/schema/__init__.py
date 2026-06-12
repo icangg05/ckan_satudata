@@ -47,19 +47,20 @@ def default_resource_schema(
         isodate: Validator, int_validator: Validator,
         extras_valid_json: Validator, keep_extras: Validator,
         uuid_validator: Validator,
-        resource_id_does_not_exist: Validator) -> Schema:
+        resource_id_does_not_exist: Validator,
+        not_empty: Validator) -> Schema:
     return {
         'id': [ignore_empty, uuid_validator,
                resource_id_does_not_exist, unicode_safe],
         'package_id': [ignore],
-        'url': [ignore_missing, unicode_safe, remove_whitespace],
+        'url': [not_empty, unicode_safe, remove_whitespace],
         'description': [ignore_missing, unicode_safe],
         'format': [if_empty_guess_format, ignore_missing, clean_format,
                    unicode_safe],
         'hash': [ignore_missing, unicode_safe],
         'state': [ignore],
         'position': [ignore],
-        'name': [ignore_missing, unicode_safe],
+        'name': [not_empty, unicode_safe],
         'resource_type': [ignore_missing, unicode_safe],
         'url_type': [ignore_missing, unicode_safe],
         'mimetype': [ignore_missing, unicode_safe],
