@@ -44,13 +44,8 @@
         {% block explore_view %}
           <li>
             <a class="dropdown-item" href="{{ url }}">
-              {% if res.has_views %}
-                <i class="fa fa-chart-bar"></i>
-                {{ _('Preview') }}
-              {% else %}
-                <i class="fa fa-info-circle"></i>
-                {{ _('More information') }}
-              {% endif %}
+              <i class="fa fa-chart-bar"></i>
+              {{ _('Preview') }}
             </a>
           </li>
         {% endblock explore_view %}
@@ -58,13 +53,8 @@
         {% if res.url and h.is_url(res.url) %}
       <li>
         <a class="dropdown-item resource-url-analytics" href="{{ res.url }}" target="_blank" rel="noreferrer">
-          {% if res.has_views or res.url_type == 'upload' %}
-            <i class="fa fa-arrow-circle-down"></i>
-            {{ _('Download') }}
-          {% else %}
-            <i class="fa fa-external-link"></i>
-            {{ _('Go to resource') }}
-          {% endif %}
+          <i class="fa fa-arrow-circle-down"></i>
+          {{ _('Download') }}
         </a>
       </li>
       {% endif %}

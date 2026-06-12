@@ -61,6 +61,8 @@ services:
     container_name: datapusher
     network_mode: service:ckan
     image: ckan/ckan-base-datapusher:0.0.19
+    environment:
+      - DATAPUSHER_MAX_CONTENT_LENGTH=104857600
 
 volumes:
   postgres-data:
