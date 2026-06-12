@@ -408,6 +408,25 @@ class ResourceUpload(object):
             except OSError:
                 pass
 
+    def delete(self, id: str) -> None:
+        if not self.storage_path:
+            return
+        try:
+            filepath = self.get_path(id)
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                # Remove empty parent directories up to storage_path
+                real_storage = os.path.realpath(self.storage_path)
+                dir_path = os.path.dirname(os.path.realpath(filepath))
+                while dir_path and dir_path != real_storage:
+                    if os.path.exists(dir_path) and os.path.isdir(dir_path) and not os.listdir(dir_path):
+                        os.rmdir(dir_path)
+                        dir_path = os.path.dirname(dir_path)
+                    else:
+                        break
+        except (OSError, logic.ValidationError):
+            pass
+
 
 class FKUpload(object):
     storage: fk.Storage | None = None
@@ -618,3 +637,13 @@ class FKResourceUpload(object):
         if self.clear:
             with contextlib.suppress(files.exc.MissingFileError):
                 self.storage.remove(files.FileData(location))
+
+    def delete(self, id: str) -> None:
+        if not self.storage:
+            return
+        try:
+            location = self.get_path(id)
+            with contextlib.suppress(files.exc.MissingFileError):
+                self.storage.remove(files.FileData(location))
+        except logic.ValidationError:
+            pass

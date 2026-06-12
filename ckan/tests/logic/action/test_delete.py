@@ -84,6 +84,168 @@ class TestDeleteResource(object):
         pkg = helpers.call_action("package_show", id=res["package_id"])
         assert len(pkg["resources"]) == 0
 
+    @pytest.mark.ckan_config('ckan.uploads_enabled', True)
+    def test_resource_delete_removes_physical_file(self, monkeypatch, tmpdir):
+        import os
+        from io import BytesIO
+        from werkzeug.datastructures import FileStorage
+        import ckan.lib.uploader as uploader
+        from ckan.common import config
+
+        monkeypatch.setitem(config, 'ckan.storage_path', str(tmpdir))
+
+        user = factories.User()
+        dataset = factories.Dataset(user=user)
+
+        resource_id = '8a3a874e-5ee1-4e43-bdaf-e2569cf72344'
+        res_dict = {
+            'package_id': dataset['id'],
+            'id': resource_id,
+            'url': 'https://example.com/data.csv',
+            'url_type': 'upload',
+            'upload': FileStorage(
+                BytesIO(b'some CSV data'),
+                filename='data.csv',
+                content_type='CSV'
+            )
+        }
+
+        upload = uploader.get_resource_uploader(res_dict)
+        filepath = upload.get_path(resource_id)
+
+        resource = helpers.call_action(
+            'resource_create',
+            context={'user': user['name']},
+            **res_dict
+        )
+
+        assert os.path.exists(filepath)
+
+        helpers.call_action(
+            'resource_delete',
+            context={'user': user['name']},
+            id=resource['id']
+        )
+
+        assert not os.path.exists(filepath)
+
+    @pytest.mark.ckan_config('ckan.uploads_enabled', True)
+    def test_resource_update_removes_old_physical_file(self, monkeypatch, tmpdir):
+        import os
+        from io import BytesIO
+        from werkzeug.datastructures import FileStorage
+        import ckan.lib.uploader as uploader
+        from ckan.common import config
+
+        monkeypatch.setitem(config, 'ckan.storage_path', str(tmpdir))
+
+        user = factories.User()
+        dataset = factories.Dataset(user=user)
+
+        resource_id = '8a3a874e-5ee1-4e43-bdaf-e2569cf72344'
+        res_dict = {
+            'package_id': dataset['id'],
+            'id': resource_id,
+            'url': 'https://example.com/data.csv',
+            'url_type': 'upload',
+            'upload': FileStorage(
+                BytesIO(b'some CSV data'),
+                filename='data.csv',
+                content_type='CSV'
+            )
+        }
+
+        upload = uploader.get_resource_uploader(res_dict)
+        filepath = upload.get_path(resource_id)
+
+        resource = helpers.call_action(
+            'resource_create',
+            context={'user': user['name']},
+            **res_dict
+        )
+
+        assert os.path.exists(filepath)
+
+        resource['url_type'] = 'api'
+        resource['url'] = 'https://example.com/data.csv'
+        resource.pop('upload', None)
+
+        helpers.call_action(
+            'resource_update',
+            context={'user': user['name']},
+            **resource
+        )
+
+        assert not os.path.exists(filepath)
+
+    @pytest.mark.ckan_config('ckan.uploads_enabled', True)
+    def test_package_delete_removes_resource_files(self, monkeypatch, tmpdir):
+        import os
+        from io import BytesIO
+        from werkzeug.datastructures import FileStorage
+        import ckan.lib.uploader as uploader
+        from ckan.common import config
+
+        monkeypatch.setitem(config, 'ckan.storage_path', str(tmpdir))
+
+        user = factories.User()
+        dataset = factories.Dataset(user=user)
+
+        resource_id_1 = '8a3a874e-5ee1-4e43-bdaf-e2569cf72344'
+        resource_id_2 = '9b4b985f-6ff2-5f54-cdae-f3670df83455'
+
+        res_dict_1 = {
+            'package_id': dataset['id'],
+            'id': resource_id_1,
+            'url': 'https://example.com/data1.csv',
+            'url_type': 'upload',
+            'upload': FileStorage(
+                BytesIO(b'some CSV data 1'),
+                filename='data1.csv',
+                content_type='CSV'
+            )
+        }
+        res_dict_2 = {
+            'package_id': dataset['id'],
+            'id': resource_id_2,
+            'url': 'https://example.com/data2.csv',
+            'url_type': 'upload',
+            'upload': FileStorage(
+                BytesIO(b'some CSV data 2'),
+                filename='data2.csv',
+                content_type='CSV'
+            )
+        }
+
+        upload_1 = uploader.get_resource_uploader(res_dict_1)
+        filepath_1 = upload_1.get_path(resource_id_1)
+
+        upload_2 = uploader.get_resource_uploader(res_dict_2)
+        filepath_2 = upload_2.get_path(resource_id_2)
+
+        helpers.call_action(
+            'resource_create',
+            context={'user': user['name']},
+            **res_dict_1
+        )
+        helpers.call_action(
+            'resource_create',
+            context={'user': user['name']},
+            **res_dict_2
+        )
+
+        assert os.path.exists(filepath_1)
+        assert os.path.exists(filepath_2)
+
+        helpers.call_action(
+            'package_delete',
+            context={'user': user['name']},
+            id=dataset['id']
+        )
+
+        assert not os.path.exists(filepath_1)
+        assert not os.path.exists(filepath_2)
+
     def test_resource_delete_copies_other_resources(self):
         from ckan.lib.dictization import model_save
         res1 = factories.Resource()

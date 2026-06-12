@@ -258,6 +258,9 @@ class PResourceUploader(Protocol):
     def upload(self, id: str, max_size: int = ...) -> None:
         ...
 
+    def delete(self, id: str) -> None:
+        ...
+
 
 TFactoryResult = TypeVar("TFactoryResult", default="dict[str, Any]")
 TFactoryModel = TypeVar("TFactoryModel", default=Any, covariant=True)

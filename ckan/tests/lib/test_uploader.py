@@ -79,6 +79,32 @@ class TestInitResourceUpload(object):
         with pytest.raises(ValidationError):
             res_upload.upload(resource_id)
 
+    def test_resource_upload_and_delete(
+            self, ckan_config, monkeypatch, tmpdir):
+        import os
+        monkeypatch.setitem(ckan_config, u'ckan.storage_path', str(tmpdir))
+        resource_id = u'8a3a874e-5ee1-4e43-bdaf-e2569cf72344'
+        res = {u'clear_upload': u'',
+               u'format': u'PNG',
+               u'url': u'https://example.com/data.csv',
+               u'description': u'',
+               u'upload': FileStorage(
+                   BytesIO(b'some CSV data'),
+                   filename=u'data.csv',
+                   content_type=u'CSV'
+               ),
+               u'package_id': u'dataset1',
+               u'id': resource_id,
+               u'name': u'data.csv'}
+        res_upload = ResourceUpload(res)
+        res_upload.upload(resource_id)
+
+        filepath = res_upload.get_path(resource_id)
+        assert os.path.exists(filepath)
+
+        res_upload.delete(resource_id)
+        assert not os.path.exists(filepath)
+
 @pytest.mark.ckan_config('ckan.uploads_enabled', True)
 class TestUpload(object):
     def test_group_upload(
