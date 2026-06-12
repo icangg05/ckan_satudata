@@ -20,6 +20,16 @@ docker compose -f .devcontainer/docker-compose.yml exec ckan bash -c "ckan -c /w
 
 ======================================================================
 
+# 1. Masuk ke container datapusher dan pasang xlrd versi 1.2.0 (yang mendukung .xlsx)
+
+docker compose -f .devcontainer/docker-compose.yml exec -u 0 datapusher pip install xlrd==1.2.0
+
+# 2. Restart container datapusher agar perubahan aktif
+
+docker compose -f .devcontainer/docker-compose.yml restart datapusher
+
+======================================================================
+
 1. Masuk ke container
    docker compose exec ckan bash
 
