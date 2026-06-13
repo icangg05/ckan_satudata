@@ -2,55 +2,264 @@
 {% set org_type = h.default_group_type('organization') %}
 {% set group_type = h.default_group_type('group') %}
 {% import 'macros/nav_link.html' as nav %}
+
+<style>
+  .footer-redesign {
+    background: #1A3C61;
+    color: #cbd5e1;
+    padding: 3rem 0 2rem;
+  }
+  .footer-redesign .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .footer-redesign .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 768px) {
+    .footer-redesign .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .footer-redesign .footer-grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
+    }
+  }
+  .footer-redesign .footer-col-title {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    letter-spacing: 0.03em;
+  }
+  .footer-redesign .footer-description {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin: 0 0 1.25rem 0;
+  }
+  .footer-redesign .footer-social {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-redesign .footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(148,163,184,0.35);
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .footer-redesign .footer-social a:hover {
+    background: #F59E0B;
+    border-color: #F59E0B;
+    color: #fff;
+  }
+  .footer-redesign .footer-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-redesign .footer-nav-list li {
+    margin-bottom: 0.5rem;
+  }
+  .footer-redesign .footer-nav-list a,
+  .footer-redesign .footer-nav-list li > a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .footer-redesign .footer-nav-list a:hover {
+    color: #F59E0B;
+    transform: translateX(4px);
+  }
+  .footer-redesign .footer-nav-list li.active a {
+    color: #F59E0B;
+    font-weight: 600;
+  }
+  .footer-redesign .footer-contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-redesign .footer-contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+  }
+  .footer-redesign .footer-contact-list li i {
+    color: #F59E0B;
+    margin-top: 2px;
+    flex-shrink: 0;
+    width: 14px;
+    text-align: center;
+  }
+  .footer-redesign .footer-contact-list a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-redesign .footer-contact-list a:hover {
+    color: #F59E0B;
+  }
+  .footer-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin: 0;
+  }
+  .footer-bottom {
+    background: #122D4A;
+    padding: 1.1rem 0;
+  }
+  .footer-bottom .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .footer-bottom-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  @media (min-width: 768px) {
+    .footer-bottom-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  .footer-copyright {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .footer-copyright img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .footer-copyright span {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .footer-lang-box {
+    background: #1A3C61;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem;
+  }
+  .footer-lang-box .lang-select label,
+  .footer-lang-box .lang-select .form-group {
+    color: #94a3b8 !important;
+    margin-bottom: 0;
+  }
+</style>
+
 <footer>
-  <div class="site-footer">
-    <div class="container">
+  <div class="footer-redesign">
+    <div class="footer-container">
       {% block footer_content %}
-        <div class="row">
-          <div class="col-md-6" style="margin-bottom: 20px;">
-            <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Satu Data Kota Kendari</h4>
-            <p style="color: #a0aab5; line-height: 1.6; font-size: 13px;">
-              Portal resmi Satu Data Kota Kendari menyajikan data akurat, mutakhir, terpadu, dan dapat dipertanggungjawabkan yang diproduksi oleh perangkat daerah di lingkungan Pemerintah Kota Kendari.
+        <div class="footer-grid">
+
+          {# Kolom 1 — Deskripsi #}
+          <div>
+            <h4 class="footer-col-title">Satu Data Kota Kendari</h4>
+            <p class="footer-description">
+              Portal resmi Satu Data Kota Kendari menyajikan data akurat, mutakhir, terpadu, dan
+              dapat dipertanggungjawabkan yang diproduksi oleh perangkat daerah di lingkungan
+              Pemerintah Kota Kendari.
             </p>
+            <ul class="footer-social">
+              <li><a href="#" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+              <li><a href="#" title="Twitter/X"><i class="fa fa-twitter"></i></a></li>
+              <li><a href="#" title="Instagram"><i class="fa fa-instagram"></i></a></li>
+              <li><a href="#" title="YouTube"><i class="fa fa-youtube-play"></i></a></li>
+            </ul>
           </div>
-          <div class="col-md-6 footer-links row">
-            {% block footer_nav %}
-              <div class="col-md-6" style="margin-bottom: 20px;">
-                <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Menu</h4>
-                <ul class="list-unstyled">
-                  {% block footer_links %}
-                    {{ nav.link(h.url_for('home.index'), _('Home')) }}
-                    {{ nav.link(h.url_for(dataset_type ~ '.search'), h.humanize_entity_type('package', dataset_type, 'footer nav') or _('Datasets'), active_blueprints=[dataset_type, dataset_type + '_resource']) }}
-                    {{ nav.link(h.url_for(org_type ~ '.index'), h.humanize_entity_type('organization', org_type, 'footer nav') or _('Organizations'), active_blueprints=[org_type]) }}
-                    {{ nav.link(h.url_for(group_type ~ '.index'), h.humanize_entity_type('group', group_type, 'footer nav') or _('Groups'), active_blueprints=[group_type]) }}
-                    {{ nav.link(h.url_for('home.about'), _('About')) }}
-                  {% endblock %}
-                </ul>
-              </div>
-              <div class="col-md-6" style="margin-bottom: 20px;">
-                <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Tautan Lain</h4>
-                <ul class="list-unstyled">
-                  <li><a href="https://kendarikota.go.id" target="_blank" rel="noopener noreferrer">Portal Kota Kendari</a></li>
-                </ul>
-              </div>
-            {% endblock %}
+
+          {% block footer_nav %}
+            {# Kolom 2 — Navigasi Menu #}
+            <div>
+              <h4 class="footer-col-title">Navigasi Menu</h4>
+              <ul class="footer-nav-list">
+                {% block footer_links %}
+                  {{ nav.link(h.url_for('home.index'), _('Home')) }}
+                  {{ nav.link(h.url_for(dataset_type ~ '.search'), h.humanize_entity_type('package', dataset_type, 'footer nav') or _('Datasets'), active_blueprints=[dataset_type, dataset_type + '_resource']) }}
+                  {{ nav.link(h.url_for(org_type ~ '.index'), h.humanize_entity_type('organization', org_type, 'footer nav') or _('Organizations'), active_blueprints=[org_type]) }}
+                  {{ nav.link(h.url_for(group_type ~ '.index'), h.humanize_entity_type('group', group_type, 'footer nav') or _('Groups'), active_blueprints=[group_type]) }}
+                  {{ nav.link(h.url_for('home.about'), _('About')) }}
+                {% endblock %}
+              </ul>
+            </div>
+
+            {# Kolom 3 — Tautan Terkait #}
+            <div>
+              <h4 class="footer-col-title">Tautan Terkait</h4>
+              <ul class="footer-nav-list">
+                <li><a href="https://kendarikota.go.id" target="_blank" rel="noopener noreferrer">Portal Kota Kendari</a></li>
+                <li><a href="https://diskominfo.kendarikota.go.id" target="_blank" rel="noopener noreferrer">Diskominfo Kota Kendari</a></li>
+              </ul>
+            </div>
+          {% endblock %}
+
+          {# Kolom 4 — Hubungi Kami #}
+          <div>
+            <h4 class="footer-col-title">Hubungi Kami</h4>
+            <ul class="footer-contact-list">
+              <li>
+                <i class="fa fa-map-marker"></i>
+                <span>Jl. Cokroaminoto No.6, Kendari, Sulawesi Tenggara</span>
+              </li>
+              <li>
+                <i class="fa fa-envelope"></i>
+                <a href="mailto:diskominfo@kendarikota.go.id">diskominfo@kendarikota.go.id</a>
+              </li>
+              <li>
+                <i class="fa fa-phone"></i>
+                <span>(0401) 3121345</span>
+              </li>
+            </ul>
           </div>
+
         </div>
       {% endblock %}
     </div>
   </div>
-  <div class="bg-black">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-9 attribution">
+
+  <hr class="footer-divider">
+
+  {# Bottom bar — copyright + language #}
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-inner">
+        <div class="footer-copyright">
           {% block footer_attribution %}
-            <div class="footer-logo-box" style="margin-bottom: 15px; display: inline-block; vertical-align: middle;">
-              <img src="/uploads/admin/2026-06-08-125615.974681LambangKotaKendari.webp" alt="Lambang Kota Kendari" style="height: 40px; vertical-align: middle;">
-              <span style="color: #ffffff; font-size: 14px; font-weight: bold; margin-left: 10px; display: inline-block; vertical-align: middle;">&copy; 2026 Pemerintah Kota Kendari. Hak Cipta Dilindungi.</span>
-            </div>
+            <img src="/uploads/admin/2026-06-08-125615.974681LambangKotaKendari.webp" alt="Lambang Kota Kendari">
+            <span>&copy; 2026 Pemerintah Kota Kendari. Hak Cipta Dilindungi.</span>
           {% endblock %}
         </div>
-        <div class="col-md-3">
+        <div class="footer-lang-box">
           {% block footer_lang %}
             {% snippet "snippets/language_selector.html" %}
           {% endblock %}
@@ -59,3 +268,4 @@
     </div>
   </div>
 </footer>
+
