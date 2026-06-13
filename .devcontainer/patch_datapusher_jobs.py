@@ -6,24 +6,14 @@ as a proper util.JobError instead of crashing the APScheduler job runner.
 This handles the case where a resource was previously a PDF and DataPusher
 still tries to parse it as such due to a stale content-type.
 """
-import re
+import os
 import sys
+import zipfile
+import shutil
 
-JOBS_PATH = (
-    '/usr/lib/python3.8/site-packages/'
-    'datapusher-0.0.19-py3.8.egg/datapusher/jobs.py'
-)
+EGG_PATH = '/usr/lib/python3.8/site-packages/datapusher-0.0.19-py3.8.egg'
 
-with open(JOBS_PATH, 'r') as f:
-    content = f.read()
-
-# The original line (line ~433 in datapusher 0.0.19):
-# "        table_set = messytables.any_tableset(tmp, mimetype=ct, extension=ct)"
-# We wrap it in a try/except that converts ImportError -> JobError.
-
-OLD = (
-    '        table_set = messytables.any_tableset(tmp, mimetype=ct, extension=ct)\n'
-)
+OLD = '        table_set = messytables.any_tableset(tmp, mimetype=ct, extension=ct)\n'
 NEW = (
     '        try:\n'
     '            table_set = messytables.any_tableset(tmp, mimetype=ct, extension=ct)\n'
@@ -34,16 +24,49 @@ NEW = (
     '                .format(_import_err))\n'
 )
 
-if OLD in content:
-    patched = content.replace(OLD, NEW, 1)
-    with open(JOBS_PATH, 'w') as f:
-        f.write(patched)
-    print('patch_datapusher_jobs.py: patched jobs.py successfully.')
+if not os.path.exists(EGG_PATH):
+    print(f"patch_datapusher_jobs.py: Path {EGG_PATH} does not exist. Skipping.")
+    sys.exit(0)
+
+if os.path.isdir(EGG_PATH):
+    jobs_path = os.path.join(EGG_PATH, 'datapusher/jobs.py')
+    with open(jobs_path, 'r') as f:
+        content = f.read()
+    if OLD in content:
+        patched = content.replace(OLD, NEW, 1)
+        with open(jobs_path, 'w') as f:
+            f.write(patched)
+        print('patch_datapusher_jobs.py: patched jobs.py (directory) successfully.')
+    else:
+        print(
+            'patch_datapusher_jobs.py: WARNING - expected pattern not found in '
+            'directory jobs.py. Skipping.',
+            file=sys.stderr,
+        )
 else:
-    # Already patched or different version - just warn, don't fail the build.
-    print(
-        'patch_datapusher_jobs.py: WARNING - expected pattern not found in '
-        'jobs.py. The file may already be patched or this is a different '
-        'version. Skipping patch.',
-        file=sys.stderr,
-    )
+    # Zipped egg file
+    temp_egg_path = EGG_PATH + '.tmp'
+    try:
+        with zipfile.ZipFile(EGG_PATH, 'r') as yin:
+            with zipfile.ZipFile(temp_egg_path, 'w') as yout:
+                for item in yin.infolist():
+                    data = yin.read(item.filename)
+                    if item.filename == 'datapusher/jobs.py':
+                        content = data.decode('utf-8')
+                        if OLD in content:
+                            content = content.replace(OLD, NEW, 1)
+                            print('patch_datapusher_jobs.py: patched jobs.py (zipped egg) successfully.')
+                        else:
+                            print(
+                                'patch_datapusher_jobs.py: WARNING - expected pattern not found in '
+                                'zipped egg jobs.py. Skipping.',
+                                file=sys.stderr,
+                            )
+                        data = content.encode('utf-8')
+                    yout.writestr(item, data)
+        shutil.move(temp_egg_path, EGG_PATH)
+    except Exception as e:
+        if os.path.exists(temp_egg_path):
+            os.remove(temp_egg_path)
+        raise e
+

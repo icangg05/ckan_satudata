@@ -13,6 +13,7 @@ if [ ! -f /workspace/ckan.ini ]; then
     sed -i 's|#ckan.site_url = .*|ckan.site_url = http://localhost:5000|' /workspace/ckan.ini
     sed -i 's|#solr_url = .*|solr_url = http://localhost:8983/solr/ckan|' /workspace/ckan.ini
     sed -i 's|#ckan.redis.url = .*|ckan.redis.url = redis://localhost:6379/0|' /workspace/ckan.ini
+    sed -i 's|debug = false|debug = true|' /workspace/ckan.ini
 
     echo "✅ ckan.ini berhasil dibuat"
 fi
