@@ -14,13 +14,46 @@
       </h1>
       {% block about %}
         {% if g.site_about %}
-          {{ h.render_markdown(g.site_about) }}
+          <div class="markdown-content">
+            {{ h.render_markdown(g.site_about) }}
+          </div>
         {% else %}
           {% snippet 'home/snippets/about_text.html' %}
         {% endif %}
       {% endblock %}
     </div>
   </article>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <style>
+    .markdown-content ul {
+      list-style: disc !important;
+      padding-left: 2rem !important;
+      margin-top: 0.5rem !important;
+      margin-bottom: 1rem !important;
+    }
+    .markdown-content ol {
+      list-style: decimal !important;
+      padding-left: 2rem !important;
+      margin-top: 0.5rem !important;
+      margin-bottom: 1rem !important;
+    }
+    .markdown-content li {
+      display: list-item !important;
+      margin-bottom: 0.5rem !important;
+    }
+    .markdown-content p {
+      margin-bottom: 1rem !important;
+      line-height: 1.6;
+    }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 {
+      margin-top: 1.5rem !important;
+      margin-bottom: 1rem !important;
+      font-weight: 600 !important;
+    }
+  </style>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
