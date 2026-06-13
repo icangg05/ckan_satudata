@@ -11,31 +11,46 @@
   {% set is_in_progress = status.status and status.status not in ['complete', 'error'] %}
   {% set show_status_and_logs = is_complete or is_in_progress or status.status == 'error' %}
 
-  {% if is_complete and not is_in_progress %}
-  <form method="post" action="{{ delete_action }}" class="mb-3 d-inline-block">
-    {{ h.csrf_input() }}
-    <button class="btn btn-danger" name="delete" type="submit"
-      data-module="confirm-action"
-      data-module-with-data=true
-      data-module-content="{{ _('Are you sure you want to delete the DataStore and Data Dictionary?') }}">
-      <i class="fa fa-remove"></i> {{ _('Delete from DataStore') }}
-    </button>
-  </form>
-  {% endif %}
+  <div class="d-flex align-items-start" style="gap: 10px; margin-bottom: 1rem;">
+    {% if is_complete or is_in_progress %}
+    <form method="post" action="{{ delete_action }}" style="margin: 0;">
+      {{ h.csrf_input() }}
+      <button class="btn btn-danger" name="delete" type="submit"
+        data-module="confirm-action"
+        data-module-with-data=true
+        data-module-content="{% if is_in_progress %}{{ _('Are you sure you want to cancel the DataStore processing?') }}{% else %}{{ _('Are you sure you want to delete the DataStore and Data Dictionary?') }}{% endif %}">
+        <i class="fa fa-remove"></i>
+        {% if is_in_progress %}
+          {{ _('Cancel Process') }}
+        {% else %}
+          {{ _('Delete from DataStore') }}
+        {% endif %}
+      </button>
+    </form>
+    {% endif %}
 
-  {% if not is_complete and not is_in_progress %}
-  <form method="post" action="{{ action }}" class="datapusher-form mb-3 d-inline-block">
-    {{ h.csrf_input() }}
-    <button class="btn btn-primary" name="save" type="submit">
-      <i class="fa fa-cloud-upload"></i> {{ _('Upload to DataStore') }}
-    </button>
-  </form>
-  {% endif %}
+    {% if not is_complete and not is_in_progress %}
+      {% if is_supported_format %}
+      <form method="post" action="{{ action }}" class="datapusher-form" style="margin: 0;">
+        {{ h.csrf_input() }}
+        <button class="btn btn-primary" name="save" type="submit">
+          <i class="fa fa-cloud-upload"></i> {{ _('Upload to DataStore') }}
+        </button>
+      </form>
+      {% endif %}
+    {% endif %}
 
-  {% if is_in_progress %}
-  <a href="{{ h.url_for('datapusher.resource_data', id=pkg.name, resource_id=res.id) }}" class="btn btn-info mb-3">
-    <i class="fa fa-refresh fa-spin"></i> {{ _('Refresh') }}
-  </a>
+    {% if is_in_progress %}
+    <a href="{{ h.url_for('datapusher.resource_data', id=pkg.name, resource_id=res.id) }}" class="btn btn-info" style="margin: 0;">
+      <i class="fa fa-refresh fa-spin"></i> {{ _('Refresh') }}
+    </a>
+    {% endif %}
+  </div>
+
+  {% if not is_complete and not is_in_progress and not is_supported_format %}
+    <div class="alert alert-info">
+      <i class="fa fa-info-circle"></i> {{ _('DataStore is only supported for tabular formats (CSV, XLSX, TSV, etc.). Upload option is not available for this resource format.') }}
+    </div>
   {% endif %}
 
   {% if status.error and status.error.message %}
@@ -58,8 +73,13 @@
           {% endif %}
         {% endfor %}
       {% elif status.task_info.error is iterable %}
-        <strong>{{ _('Error traceback:') }}</strong>
-        <pre>{{ ''.join(status.task_info.error) }}</pre>
+        {% set traceback = ''.join(status.task_info.error) %}
+        {% if 'pdftables is not installed' in traceback %}
+          <strong>{{ _('Error:') }}</strong> {{ _('File ini terdeteksi sebagai dokumen PDF, namun DataStore hanya mendukung file tabular (CSV/Excel). Mohon unggah file CSV/Excel yang sebenarnya, bukan PDF yang diubah ekstensinya.') }}
+        {% else %}
+          <strong>{{ _('Error traceback:') }}</strong>
+          <pre>{{ traceback }}</pre>
+        {% endif %}
       {% endif %}
     </div>
   {% endif %}

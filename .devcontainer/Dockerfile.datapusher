@@ -5,6 +5,11 @@ USER root
 # Install xlrd and openpyxl to support Excel (.xls and .xlsx) file ingestion in DataPusher/messytables
 RUN pip install xlrd==1.2.0 openpyxl
 
+# Patch jobs.py so that ImportError (e.g. "pdftables is not installed") is
+# caught and turned into a clean JobError instead of crashing the scheduler.
+COPY .devcontainer/patch_datapusher_jobs.py /tmp/patch_datapusher_jobs.py
+RUN python3 /tmp/patch_datapusher_jobs.py
+
 # Switch back to the default user if defined, or keep as root if necessary.
 # In official CKAN datapusher, it runs under a non-root user (www-data) by default.
 USER www-data

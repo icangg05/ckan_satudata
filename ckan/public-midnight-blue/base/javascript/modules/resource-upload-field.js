@@ -18,9 +18,6 @@ this.ckan.module('resource-upload-field', function (jQuery) {
       }) 
 
       $('#field-resource-upload').on('change', function() {
-        if (_nameIsDirty) {
-          return;
-        }
         var file_name = $(this).val().split(/^C:\\fakepath\\/).pop();
 
         // Internet Explorer 6-11 and Edge 20+
@@ -32,7 +29,24 @@ this.ckan.module('resource-upload-field', function (jQuery) {
           file_name = fName ? fName[0] : file_name;
         }
 
-        $('input[name="name"]').val(file_name);
+        // Auto-fill name without extension
+        if (!_nameIsDirty) {
+          var cleanName = file_name;
+          if (file_name.indexOf('.') !== -1) {
+            cleanName = file_name.substring(0, file_name.lastIndexOf('.'));
+          }
+          $('input[name="name"]').val(cleanName);
+        }
+
+        // Auto-fill format based on file extension
+        if (file_name.indexOf('.') !== -1) {
+          var ext = file_name.substring(file_name.lastIndexOf('.') + 1).toUpperCase();
+          var formatField = $('input[name="format"]');
+          if (formatField.length > 0) {
+            formatField.val(ext);
+            formatField.trigger('change');
+          }
+        }
       });
     }
   }

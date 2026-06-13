@@ -4,7 +4,7 @@ set -e
 cd /workspace
 
 # Install CKAN
-pip install -e ".[dev]" --quiet
+pip install -e ".[dev]" --no-deps --quiet
 
 if [ ! -f /workspace/ckan.ini ]; then
     ckan generate config /workspace/ckan.ini

@@ -318,8 +318,14 @@ class ResourceUpload(object):
             # go back to the beginning of the file buffer
             self.upload_file.seek(0, os.SEEK_SET)
 
-            # check if the mimetype failed from guessing with the url
-            if not self.mimetype and config_mimetype_guess == 'file_ext':
+            # Always re-detect mimetype from the NEW uploaded file.
+            # Reset self.mimetype so we don't carry over a stale value that
+            # was guessed from the OLD resource url (e.g. application/pdf)
+            # which would cause DataPusher to fetch the file as PDF even
+            # after replacing it with a CSV/XLSX.
+            self.mimetype = None
+
+            if config_mimetype_guess == 'file_ext':
                 self.mimetype = mimetypes.guess_type(self.filename)[0]
 
             if not self.mimetype and config_mimetype_guess == 'file_contents':
@@ -330,6 +336,12 @@ class ResourceUpload(object):
                 except IOError:
                     # Not that important if call above fails
                     self.mimetype = None
+
+            if self.mimetype:
+                resource['mimetype'] = self.mimetype
+            elif 'mimetype' in resource:
+                # If mimetype is not found for the new file, clear the old one
+                resource['mimetype'] = None
 
         elif self.clear:
             resource['url_type'] = ''
@@ -568,6 +580,12 @@ class FKResourceUpload(object):
 
             if not self.mimetype and config_mimetype_guess == 'file_contents':
                 self.mimetype = self.upload_file.content_type
+
+            if self.mimetype:
+                resource['mimetype'] = self.mimetype
+            elif 'mimetype' in resource:
+                # If mimetype is not found for the new file, clear the old one
+                resource['mimetype'] = None
 
         elif self.clear:
             resource['url_type'] = ''

@@ -221,7 +221,8 @@ this.ckan.module('image-upload', function($) {
 
       this._showOnlyFieldUrl();
 
-      this._autoName(file_name);
+      this._autoName(file_name, true);
+      this._autoFormat(file_name);
 
       this._updateUrlLabel(this._('File'));
     },
@@ -279,7 +280,9 @@ this.ckan.module('image-upload', function($) {
     _onFromWebBlur: function() {
       var url = this.field_url_input.val().match(/([^\/]+)\/?$/)
       if (url) {
-        this._autoName(url.pop());
+        var filename = url.pop();
+        this._autoName(filename, true);
+        this._autoFormat(filename);
       }
     },
 
@@ -288,10 +291,38 @@ this.ckan.module('image-upload', function($) {
      * Select by attribute [name] to be on the safe side and allow to change field id
      * Returns nothing
      */
-     _autoName: function(name) {
-        if (!this._nameIsDirty){
-          this.field_name.val(name);
+     _autoName: function(name, force) {
+        if (!this._nameIsDirty || force){
+          var cleanName = name;
+          if (name.indexOf('.') !== -1) {
+            cleanName = name.substring(0, name.lastIndexOf('.'));
+          }
+          this.field_name.val(cleanName);
         }
+     },
+
+     _autoFormat: function(filename) {
+       if (filename.indexOf('.') !== -1) {
+         var ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+         var formatField = this.el.parents('form').find('input[name="format"], select[name="format"]');
+         if (formatField.length > 0) {
+           if (formatField.is('select')) {
+             var option = formatField.find('option').filter(function() {
+               return $(this).val().toLowerCase() === ext;
+             });
+             if (option.length > 0) {
+               formatField.val(option.val());
+             } else {
+               var extUpper = ext.toUpperCase();
+               var newOption = new Option(extUpper, extUpper, true, true);
+               formatField.append(newOption);
+             }
+           } else {
+             formatField.val(ext.toUpperCase());
+           }
+           formatField.trigger('change');
+         }
+       }
      }
   };
 });

@@ -49,6 +49,28 @@ class ResourceDataView(MethodView):
         except (logic.NotFound, logic.NotAuthorized):
             base.abort(404, _(u'Resource not found'))
 
+        supported_formats = toolkit.config.get('ckan.datapusher.formats')
+        resource_format = resource.get('format', '')
+        url = resource.get('url', '')
+        if url:
+            from urllib.parse import urlparse
+            import os
+            try:
+                path = urlparse(url).path
+                ext = os.path.splitext(path)[1].strip('.').lower()
+                if ext:
+                    if not resource_format:
+                        resource_format = ext
+                    elif ext != resource_format.lower() and ext not in supported_formats:
+                        resource_format = ext
+            except Exception:
+                pass
+
+        is_supported_format = bool(
+            resource_format
+            and resource_format.lower() in supported_formats
+        )
+
         try:
             datapusher_status = toolkit.get_action(u'datapusher_status')(
                 {}, {
@@ -66,6 +88,7 @@ class ResourceDataView(MethodView):
                 u'status': datapusher_status,
                 u'pkg_dict': pkg_dict,
                 u'resource': resource,
+                u'is_supported_format': is_supported_format,
             }
         )
 
@@ -92,14 +115,38 @@ def delete_datastore_table(id: str, resource_id: str) -> Response:
                 'Unauthorized to delete resource {resource_id}'
             ).format(resource_id=resource_id))
     except toolkit.ObjectNotFound:
-        return toolkit.abort(
-            404, _(
-                'Resource not found in datastore {resource_id}'
-            ).format(resource_id=resource_id))
+        pass
+
+    try:
+        task = toolkit.get_action('task_status_show')(
+            {'ignore_auth': True},
+            {
+                'entity_id': resource_id,
+                'task_type': 'datapusher',
+                'key': 'datapusher'
+            }
+        )
+        toolkit.get_action('task_status_delete')(
+            {'ignore_auth': True},
+            {'id': task['id']}
+        )
+    except toolkit.ObjectNotFound:
+        pass
+
+    try:
+        res = toolkit.get_action('resource_show')(
+            {'ignore_auth': True}, {'id': resource_id})
+        if res.get('datastore_active'):
+            patch_context = {'ignore_auth': True, 'datastore_delete': True}
+            toolkit.get_action('resource_patch')(
+                patch_context,
+                {'id': resource_id, 'datastore_active': False}
+            )
+    except Exception:
+        pass
 
     toolkit.h.flash_notice(
-        _('DataStore and Data Dictionary '
-            'deleted for resource {resource_id}').format(resource_id=resource_id))
+        _('DataStore table and DataPusher task cleared for resource {resource_id}').format(resource_id=resource_id))
 
     return toolkit.h.redirect_to(
         'datapusher.resource_data',

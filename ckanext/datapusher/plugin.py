@@ -87,9 +87,24 @@ class DatapusherPlugin(p.SingletonPlugin):
         }
 
         resource_format = resource_dict.get('format')
+        url = resource_dict.get('url', '')
         supported_formats = p.toolkit.config.get(
             'ckan.datapusher.formats'
         )
+
+        if url:
+            from urllib.parse import urlparse
+            import os
+            try:
+                path = urlparse(url).path
+                ext = os.path.splitext(path)[1].strip('.').lower()
+                if ext:
+                    if not resource_format:
+                        resource_format = ext
+                    elif ext != resource_format.lower() and ext not in supported_formats:
+                        resource_format = ext
+            except Exception:
+                pass
 
         submit = (
             resource_format
@@ -98,6 +113,37 @@ class DatapusherPlugin(p.SingletonPlugin):
         )
 
         if not submit:
+            # Clean up datastore table since the format is no longer supported
+            if resource_dict.get('datastore_active'):
+                try:
+                    p.toolkit.get_action('datastore_delete')(
+                        {'ignore_auth': True, 'datastore_delete': True},
+                        {'resource_id': resource_dict['id'], 'force': True}
+                    )
+                    log.debug('Cleaned up DataStore for unsupported format %s', resource_dict['id'])
+                except Exception as e:
+                    log.error('Error deleting datastore for unsupported format: %s', e)
+
+            # Clean up datapusher task status
+            try:
+                task = p.toolkit.get_action('task_status_show')(
+                    {'ignore_auth': True},
+                    {
+                        'entity_id': resource_dict['id'],
+                        'task_type': 'datapusher',
+                        'key': 'datapusher'
+                    }
+                )
+                p.toolkit.get_action('task_status_delete')(
+                    {'ignore_auth': True},
+                    {'id': task['id']}
+                )
+                log.debug('Cleaned up DataPusher task status for unsupported format %s', resource_dict['id'])
+            except p.toolkit.ObjectNotFound:
+                pass
+            except Exception as e:
+                log.error('Error deleting task status for unsupported format: %s', e)
+
             return
 
         try:
@@ -125,11 +171,28 @@ class DatapusherPlugin(p.SingletonPlugin):
                 'Submitting resource %s to DataPusher',
                 resource_dict['id'],
             )
-            p.toolkit.get_action(u'datapusher_submit')(
-                context, {
-                    u'resource_id': resource_dict['id']
-                }
-            )
+            import threading
+            import time
+
+            def delayed_submit():
+                time.sleep(2)
+                try:
+                    submit_context = {
+                        'ignore_auth': True,
+                        'user': context.get('user'),
+                        'model': context.get('model')
+                    }
+                    p.toolkit.get_action(u'datapusher_submit')(
+                        submit_context, {
+                            u'resource_id': resource_dict['id']
+                        }
+                    )
+                except Exception as e:
+                    log.error('Delayed DataPusher submit failed: %s', e)
+
+            t = threading.Thread(target=delayed_submit)
+            t.daemon = True
+            t.start()
         except p.toolkit.ValidationError as e:
             # If datapusher is offline want to catch error instead
             # of raising otherwise resource save will fail with 500
