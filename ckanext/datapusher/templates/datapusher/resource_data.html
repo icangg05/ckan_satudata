@@ -7,7 +7,11 @@
   {% set action = h.url_for('datapusher.resource_data', id=pkg.name, resource_id=res.id) %}
   {% set delete_action = h.url_for('datapusher.delete_datastore_table', id=pkg.id, resource_id=res.id) %}
   {% set show_table = true %}
+  {% set is_complete = res.datastore_active %}
+  {% set is_in_progress = status.status and status.status not in ['complete', 'error'] %}
+  {% set show_status_and_logs = is_complete or is_in_progress or status.status == 'error' %}
 
+  {% if is_complete and not is_in_progress %}
   <form method="post" action="{{ delete_action }}" class="mb-3 d-inline-block">
     {{ h.csrf_input() }}
     <button class="btn btn-danger" name="delete" type="submit"
@@ -17,13 +21,22 @@
       <i class="fa fa-remove"></i> {{ _('Delete from DataStore') }}
     </button>
   </form>
+  {% endif %}
 
+  {% if not is_complete and not is_in_progress %}
   <form method="post" action="{{ action }}" class="datapusher-form mb-3 d-inline-block">
     {{ h.csrf_input() }}
     <button class="btn btn-primary" name="save" type="submit">
       <i class="fa fa-cloud-upload"></i> {{ _('Upload to DataStore') }}
     </button>
   </form>
+  {% endif %}
+
+  {% if is_in_progress %}
+  <a href="{{ h.url_for('datapusher.resource_data', id=pkg.name, resource_id=res.id) }}" class="btn btn-info mb-3">
+    <i class="fa fa-refresh fa-spin"></i> {{ _('Refresh') }}
+  </a>
+  {% endif %}
 
   {% if status.error and status.error.message %}
     {% set show_table = false %}
@@ -58,11 +71,17 @@
     </colgroup>
     <tr>
       <th>{{ _('Status') }}</th>
-      <td>{{ h.datapusher_status_description(status) }}</td>
+      <td>
+        {% if show_status_and_logs %}
+          {{ h.datapusher_status_description(status) }}
+        {% else %}
+          {{ _('Not in DataStore') }}
+        {% endif %}
+      </td>
     </tr>
     <tr>
       <th>{{ _('Last updated') }}</th>
-      {% if status.status %}
+      {% if show_status_and_logs and status.status %}
         <td><span class="date" title="{{ h.render_datetime(status.last_updated, with_hours=True) }}">{{ h.time_ago_from_timestamp(status.last_updated) }}</span></td>
       {% else %}
         <td>{{ _('Never') }}</td>
@@ -70,7 +89,7 @@
     </tr>
   </table>
 
-  {% if status.status and status.task_info and show_table %}
+  {% if show_status_and_logs and status.status and status.task_info and show_table %}
     <h3>{{ _('Upload Log') }}</h3>
     <ul class="datapusher-activity">
       {% for item in status.task_info.logs|sort(attribute='timestamp') %}

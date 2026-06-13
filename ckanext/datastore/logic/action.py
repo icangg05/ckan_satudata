@@ -594,8 +594,10 @@ def datastore_delete(context: Context, data_dict: dict[str, Any]):
         if res.get('url_type') in p.toolkit.h.datastore_rw_resource_url_types():
             patch_kwargs['last_modified'] = datetime.now(timezone.utc)
             _cancel_patch_resource_last_modified(resource_id)
+        patch_context = p.toolkit.fresh_context(context)
+        patch_context['datastore_delete'] = True
         p.toolkit.get_action('resource_patch')(
-            p.toolkit.fresh_context(context), patch_kwargs
+            patch_context, patch_kwargs
         )
     elif res.get('url_type') in p.toolkit.h.datastore_rw_resource_url_types():
         _schedule_patch_resource_last_modified(resource_id)

@@ -104,6 +104,20 @@ def read(package_type: str, id: str, resource_id: str) -> Union[Response, str]:
             u'id': resource_id
         }
     )
+
+    import ckan.lib.datapreview as datapreview
+    filtered_views = []
+    for rv in resource_views:
+        plugin = datapreview.get_view_plugin(rv[u'view_type'])
+        if plugin:
+            data_dict = {
+                u'resource': resource,
+                u'package': package,
+                u'resource_view': rv
+            }
+            if plugin.info().get(u'always_available', False) or plugin.can_view(data_dict):
+                filtered_views.append(rv)
+    resource_views = filtered_views
     resource[u'has_views'] = len(resource_views) > 0
 
     current_resource_view = None

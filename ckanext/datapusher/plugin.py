@@ -75,6 +75,9 @@ class DatapusherPlugin(p.SingletonPlugin):
     def after_resource_update(
             self, context: Context, resource_dict: dict[str, Any]):
 
+        if context.get('datastore_delete'):
+            log.debug('Skipping DataPusher submission due to datastore_delete')
+            return
         self._submit_to_datapusher(resource_dict)
 
     def _submit_to_datapusher(self, resource_dict: dict[str, Any]):
