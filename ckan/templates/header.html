@@ -9,7 +9,7 @@
     {% if c.userobj %}
 
     {# ── Autentikasi ── #}
-    <div class="tw-flex tw-items-center tw-justify-end" data-module="me" data-me="{{ c.userobj.id }}">
+    <div class="tw-flex tw-items-center tw-justify-end tw-py-0" data-module="me" data-me="{{ c.userobj.id }}">
       <ul class="tw-flex tw-items-center tw-gap-0.5 tw-list-none tw-m-0 tw-p-0">
         {% block header_account_logged %}
 
@@ -18,10 +18,10 @@
         <li>
           <a href="{{ h.url_for('admin.index') }}" aria-label="{{ _('Sysadmin settings') }}"
             title="{{ _('Sysadmin settings') }}"
-            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors hover:tw-no-underline hover:tw-bg-white/10"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
             style="color: rgba(255,255,255,0.6);">
             <i class="fa-solid fa-gavel tw-text-[11px]" style="color:#fbbf24;" aria-hidden="true"></i>
-            <span>{{ _('Admin') }}</span>
+            <span class="tw-hidden sm:tw-inline">{{ _('Admin') }}</span>
           </a>
         </li>
         <li style="width:1px; height:12px; background:rgba(255,255,255,0.15); margin:0 2px; flex-shrink:0;"
@@ -33,14 +33,15 @@
         <li>
           <a href="{{ h.url_for('user.read', id=c.userobj.name) }}" aria-label="{{ _('View profile') }}"
             title="{{ _('View profile') }}"
-            class="tw-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors hover:tw-no-underline hover:tw-bg-white/10"
+            class="tw-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
             style="color: rgba(255,255,255,0.6);">
             <span
               class="tw-inline-flex tw-items-center tw-justify-center tw-w-[18px] tw-h-[18px] tw-rounded-full tw-shrink-0 tw-overflow-hidden"
               style="background:rgba(255,255,255,0.15); color:#fff; font-size:8px; font-weight:700;">
               {{ h.user_image((c.user if c and c.user else ''), size=18) }}
             </span>
-            <span style="color:rgba(255,255,255,0.9); font-weight:500;">{{ c.userobj.display_name }}</span>
+            <span class="tw-hidden sm:tw-inline" style="color:rgba(255,255,255,0.9); font-weight:500;">{{
+              c.userobj.display_name }}</span>
           </a>
         </li>
         {% endblock %}
@@ -53,10 +54,10 @@
         <li>
           <a href="{{ h.url_for('dashboard.datasets') }}" aria-label="{{ _('View dashboard') }}"
             title="{{ _('View dashboard') }}"
-            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors hover:tw-no-underline hover:tw-bg-white/10"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
             style="color: rgba(255,255,255,0.6);">
             <i class="fa-solid fa-gauge tw-text-[11px]" aria-hidden="true"></i>
-            <span>{{ _('Dashboard') }}</span>
+            <span class="tw-hidden sm:tw-inline">{{ _('Dashboard') }}</span>
           </a>
         </li>
         {% endblock %}
@@ -66,10 +67,10 @@
         <li>
           <a href="{{ h.url_for('user.edit', id=c.userobj.name) }}" aria-label="{{ _('Profile settings') }}"
             title="{{ _('Profile settings') }}"
-            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors hover:tw-no-underline hover:tw-bg-white/10"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
             style="color: rgba(255,255,255,0.6);">
             <i class="fa-solid fa-gear tw-text-[11px]" aria-hidden="true"></i>
-            <span>{{ _('Settings') }}</span>
+            <span class="tw-hidden sm:tw-inline">{{ _('Settings') }}</span>
           </a>
         </li>
         {% endblock %}
@@ -83,7 +84,7 @@
           <form action="{{ h.url_for('user.logout') }}" method="post" class="tw-m-0">
             {{ h.csrf_input() }}
             <button type="submit" aria-label="{{ _('Log out') }}" title="{{ _('Log out') }}"
-              class="btn-logout tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded tw-transition-colors"
+              class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded tw-transition-colors"
               style="background:transparent; border:none; cursor:pointer; color:rgba(255,255,255,0.5);"
               onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.color='#f87171';"
               onmouseout="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.5)';">
@@ -134,70 +135,253 @@
 </div>
 {% endblock %}
 
-<header class="masthead">
-  <div class="container">
-    {% block header_debug %} {% if g.debug and not g.debug_supress_header %}
-    <div class="debug">Blueprint : {{ g.blueprint }}<br />View : {{ g.view }}</div>
-    {% endif %} {% endblock %}
-    <nav class="navbar navbar-expand-lg navbar-light">
-      <hgroup class="{{ g.header_class }} navbar-left">
+<header class="tw-bg-[#185A75] tw-shadow-md tw-relative tw-overflow-hidden">
 
-        {% block header_logo %}
-        <a href="{{ h.url_for('home.index') }}"
-          style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
-          {% if g.site_logo %}
-          <img
-            src="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else h.url_for_static_or_external(g.site_logo) }}"
-            alt="{{ g.site_title }}" style="height: 50px; width: auto; flex-shrink: 0;" />
+  {# ── Ornamen dekoratif ── #}
+  <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-pointer-events-none tw-z-0" viewBox="0 0 1440 56"
+    preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+    {# Garis tepi bawah double #}
+    <line x1="0" y1="55.5" x2="1440" y2="55.5" stroke="rgba(255,255,255,0.10)" stroke-width="1" />
+    <line x1="0" y1="53" x2="1440" y2="53" stroke="rgba(125,211,238,0.07)" stroke-width="0.5" />
+
+    {# Garis tepi atas #}
+    <line x1="0" y1="0.5" x2="1440" y2="0.5" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" />
+
+    {# Separator vertikal kiri & kanan konten nav #}
+    <line x1="340" y1="10" x2="340" y2="46" stroke="rgba(255,255,255,0.07)" stroke-width="0.5" />
+    <line x1="1080" y1="10" x2="1080" y2="46" stroke="rgba(255,255,255,0.07)" stroke-width="0.5" />
+
+    {# Lingkaran konsentris di balik logo (kiri) #}
+    <circle cx="72" cy="28" r="32" fill="none" stroke="rgba(125,211,238,0.07)" stroke-width="0.5" />
+    <circle cx="72" cy="28" r="50" fill="none" stroke="rgba(125,211,238,0.04)" stroke-width="0.5" />
+    <circle cx="72" cy="28" r="72" fill="none" stroke="rgba(125,211,238,0.03)" stroke-width="0.5" />
+
+    {# Garis diagonal sisi kanan (di balik search) #}
+    <line x1="1260" y1="0" x2="1330" y2="56" stroke="rgba(125,211,238,0.07)" stroke-width="0.5" />
+    <line x1="1285" y1="0" x2="1355" y2="56" stroke="rgba(125,211,238,0.05)" stroke-width="0.5" />
+    <line x1="1310" y1="0" x2="1380" y2="56" stroke="rgba(125,211,238,0.04)" stroke-width="0.5" />
+    <line x1="1335" y1="0" x2="1405" y2="56" stroke="rgba(125,211,238,0.03)" stroke-width="0.5" />
+    <line x1="1360" y1="0" x2="1430" y2="56" stroke="rgba(125,211,238,0.02)" stroke-width="0.5" />
+
+    {# Titik-titik dekoratif pojok kanan #}
+    <rect x="1390" y="10" width="4" height="4" rx="1" fill="rgba(125,211,238,0.20)" />
+    <rect x="1406" y="20" width="3" height="3" rx="0.5" fill="rgba(125,211,238,0.14)" />
+    <rect x="1420" y="12" width="2" height="2" rx="0.5" fill="rgba(125,211,238,0.10)" />
+    <circle cx="1412" cy="40" r="1.5" fill="rgba(125,211,238,0.16)" />
+    <circle cx="1432" cy="30" r="1" fill="rgba(125,211,238,0.12)" />
+    <circle cx="1395" cy="46" r="1" fill="rgba(125,211,238,0.10)" />
+  </svg>
+
+  <div class="tw-max-w-6xl tw-mx-auto tw-px-6 tw-relative tw-z-10">
+    <nav class="tw-flex tw-items-center tw-justify-between tw-h-14 tw-gap-6">
+
+      {# ── Logo & Brand ── #}
+      {% block header_logo %}
+      <a href="{{ h.url_for('home.index') }}" class="tw-flex tw-items-center tw-gap-2 tw-no-underline tw-flex-shrink-0">
+        {% if g.site_logo %}
+        <img
+          src="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else h.url_for_static_or_external(g.site_logo) }}"
+          alt="{{ g.site_title }}" class="tw-h-8 tw-w-auto tw-flex-shrink-0 tw-rounded" />
+        {% endif %}
+        <div class="tw-flex tw-flex-col tw-justify-center">
+          <span class="tw-text-white tw-text-sm tw-font-semibold tw-leading-tight">
+            {{ g.site_title }}
+          </span>
+          {% if g.site_description %}
+          <span class="tw-text-[#e0f4fb]/[0.65] tw-text-[10px] tw-mt-0.5 tw-leading-none">
+            {{ g.site_description }}
+          </span>
           {% endif %}
-          <div style="display: flex; flex-direction: column; justify-content: center;">
-            <span style="font-size: 1.2rem; font-weight: bold; color: #ffffff; line-height: 1.2;">{{ g.site_title
-              }}</span>
-            {% if g.site_description %}
-            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.8);">{{ g.site_description }}</span>
-            {% endif %}
-          </div>
-        </a>
-        {% endblock %}
+        </div>
+      </a>
+      {% endblock %}
 
-      </hgroup>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation-toggle"
-        aria-controls="main-navigation-toggle" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
-        <span class="fa fa-bars text-white"></span>
-      </button>
-
-      <div class="main-navbar collapse navbar-collapse" id="main-navigation-toggle">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      {# ── Nav Links (desktop) ── #}
+      <div class="tw-hidden lg:tw-flex tw-items-stretch tw-justify-center tw-flex-1 tw-min-w-0 tw-h-full">
+        <ul class="tw-flex tw-items-stretch tw-list-none tw-m-0 tw-p-0 tw-h-full">
           {% block header_site_navigation %}
           {% block header_site_navigation_tabs %}
           {% set org_type = h.default_group_type('organization') %}
           {% set group_type = h.default_group_type('group') %}
 
-          {{ h.build_nav_main(
-          (dataset_type ~ '.search', h.humanize_entity_type('package', dataset_type, 'main nav') or _('Datasets'),
-          ["dataset", "resource"]),
-          (org_type ~ '.index',
-          h.humanize_entity_type('organization', org_type, 'main nav') or _('Organizations'), ['organization']),
-          (group_type ~ '.index',
-          h.humanize_entity_type('group', group_type, 'main nav') or _('Groups'), ['group']),
-          ('home.about', _('About')) ) }}
+          {% set is_home_active = h.page_is_active('home.index') %}
+          {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', ["dataset", "resource"]) %}
+          {% set is_org_active = h.page_is_active(org_type ~ '.index', ['organization']) %}
+          {% set is_group_active = h.page_is_active(group_type ~ '.index', ['group']) %}
+          {% set is_about_active = h.page_is_active('home.about') %}
+
+          <li class="tw-flex tw-items-stretch">
+            <a href="{{ h.url_for('home.index') }}" class="tw-flex tw-items-center tw-px-4 tw-h-full tw-text-[13px] tw-font-medium
+                      tw-border-b-2 tw-transition-all tw-duration-200 tw-no-underline hover:tw-no-underline
+                      {% if is_home_active %}tw-border-white !tw-text-white tw-bg-white/[0.06]
+                      {% else %}tw-border-transparent !tw-text-[#e0f4fb]/80
+                        hover:!tw-text-white hover:tw-border-white/30 hover:tw-bg-white/[0.04]{% endif %}">
+              {{ _('Home') }}
+            </a>
+          </li>
+          <li class="tw-flex tw-items-stretch">
+            <a href="{{ h.url_for(dataset_type ~ '.search') }}" class="tw-flex tw-items-center tw-px-4 tw-h-full tw-text-[13px] tw-font-medium
+                      tw-border-b-2 tw-transition-all tw-duration-200 tw-no-underline hover:tw-no-underline
+                      {% if is_dataset_active %}tw-border-white !tw-text-white tw-bg-white/[0.06]
+                      {% else %}tw-border-transparent !tw-text-[#e0f4fb]/80
+                        hover:!tw-text-white hover:tw-border-white/30 hover:tw-bg-white/[0.04]{% endif %}">
+              {{ h.humanize_entity_type('package', dataset_type, 'main nav') or _('Datasets') }}
+            </a>
+          </li>
+          <li class="tw-flex tw-items-stretch">
+            <a href="{{ h.url_for(org_type ~ '.index') }}" class="tw-flex tw-items-center tw-px-4 tw-h-full tw-text-[13px] tw-font-medium
+                      tw-border-b-2 tw-transition-all tw-duration-200 tw-no-underline hover:tw-no-underline
+                      {% if is_org_active %}tw-border-white !tw-text-white tw-bg-white/[0.06]
+                      {% else %}tw-border-transparent !tw-text-[#e0f4fb]/80
+                        hover:!tw-text-white hover:tw-border-white/30 hover:tw-bg-white/[0.04]{% endif %}">
+              {{ h.humanize_entity_type('organization', org_type, 'main nav') or _('Organizations') }}
+            </a>
+          </li>
+          <li class="tw-flex tw-items-stretch">
+            <a href="{{ h.url_for(group_type ~ '.index') }}" class="tw-flex tw-items-center tw-px-4 tw-h-full tw-text-[13px] tw-font-medium
+                      tw-border-b-2 tw-transition-all tw-duration-200 tw-no-underline hover:tw-no-underline
+                      {% if is_group_active %}tw-border-white !tw-text-white tw-bg-white/[0.06]
+                      {% else %}tw-border-transparent !tw-text-[#e0f4fb]/80
+                        hover:!tw-text-white hover:tw-border-white/30 hover:tw-bg-white/[0.04]{% endif %}">
+              {{ h.humanize_entity_type('group', group_type, 'main nav') or _('Groups') }}
+            </a>
+          </li>
+          <li class="tw-flex tw-items-stretch">
+            <a href="{{ h.url_for('home.about') }}" class="tw-flex tw-items-center tw-px-4 tw-h-full tw-text-[13px] tw-font-medium
+                      tw-border-b-2 tw-transition-all tw-duration-200 tw-no-underline hover:tw-no-underline
+                      {% if is_about_active %}tw-border-white !tw-text-white tw-bg-white/[0.06]
+                      {% else %}tw-border-transparent !tw-text-[#e0f4fb]/80
+                        hover:!tw-text-white hover:tw-border-white/30 hover:tw-bg-white/[0.04]{% endif %}">
+              {{ _('About') }}
+            </a>
+          </li>
+          {% endblock %}
           {% endblock %}
         </ul>
+      </div>
 
-        {% endblock %}
+      {# ── Search + Hamburger ── #}
+      <div class="tw-flex tw-items-center tw-gap-3 tw-flex-shrink-0">
+
         {% block header_site_search %}
-        <form class="d-flex site-search" action="{% url_for dataset_type ~ '.search' %}" method="get">
-          <label class="d-none" for="field-sitewide-search">{% block header_site_search_label %}{{
-            h.humanize_entity_type('package', dataset_type, 'search_placeholder') or _('Search Datasets...') }}{%
-            endblock %}</label>
-          <input id="field-sitewide-search" class="form-control me-2" type="text" name="q"
-            placeholder="{{ _('Search') }}"
+        <form class="tw-hidden lg:tw-flex tw-items-center
+             tw-rounded-lg tw-overflow-hidden tw-transition-all tw-duration-200
+             tw-border tw-border-white/25
+             hover:tw-border-white/45
+             focus-within:!tw-border-white/60" style="background: rgba(255,255,255,0.12);
+             backdrop-filter: blur(12px);
+             -webkit-backdrop-filter: blur(12px);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 8px rgba(0,0,0,0.12);"
+          action="{% url_for dataset_type ~ '.search' %}" method="get">
+          <label class="tw-sr-only" for="field-sitewide-search">
+            {% block header_site_search_label %}
+            {{ h.humanize_entity_type('package', dataset_type, 'search_placeholder') or _('Search Datasets...') }}
+            {% endblock %}
+          </label>
+          <input id="field-sitewide-search" class="tw-bg-transparent tw-border-none tw-outline-none
+                tw-text-[#e0f4fb] tw-placeholder-[rgba(224,244,251,0.45)]
+                tw-text-[13px] tw-py-1.5 tw-px-3 tw-w-44" type="text" name="q" placeholder="{{ _('Search datasets...') }}"
+            autocomplete="off"
             aria-label="{{ h.humanize_entity_type('package', dataset_type, 'search_placeholder') or _('Search datasets...') }}" />
-          <button class="btn" type="submit" aria-label="{{ _('Submit') }}"><i class="fa fa-search"></i></button>
+          <button class="tw-bg-transparent tw-border-none tw-border-l tw-border-white/15 tw-cursor-pointer
+                 tw-px-3 tw-py-1.5 tw-text-[rgba(224,244,251,0.65)]
+                 hover:tw-text-white hover:tw-bg-white/10 tw-transition-all tw-flex tw-items-center" type="submit"
+            aria-label="{{ _('Submit') }}">
+            <i class="fa fa-search tw-text-sm"></i>
+          </button>
         </form>
         {% endblock %}
+
+        {# Mobile hamburger #}
+        <button class="lg:tw-hidden tw-flex tw-items-center tw-justify-center
+                       tw-w-9 tw-h-9 tw-rounded-lg tw-text-[#e0f4fb]
+                       tw-bg-white/[0.08] hover:tw-bg-white/[0.15]
+                       tw-transition-colors tw-border-0 tw-cursor-pointer" type="button" data-bs-toggle="collapse"
+          data-bs-target="#main-navigation-toggle" aria-controls="main-navigation-toggle" aria-expanded="false"
+          aria-label="{{ _('Toggle navigation') }}">
+          <span class="fa fa-bars"></span>
+        </button>
       </div>
+
     </nav>
+
+    {# ── Mobile dropdown ── #}
+    <div class="collapse tw-pb-4 tw-relative tw-z-10" id="main-navigation-toggle">
+      <ul class="tw-flex tw-flex-col tw-list-none tw-m-0 tw-p-0 tw-mb-3">
+        {% block header_site_navigation_mobile %}
+        {% set org_type = h.default_group_type('organization') %}
+        {% set group_type = h.default_group_type('group') %}
+        {% set is_home_active = h.page_is_active('home.index') %}
+        {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', ["dataset", "resource"]) %}
+        {% set is_org_active = h.page_is_active(org_type ~ '.index', ['organization']) %}
+        {% set is_group_active = h.page_is_active(group_type ~ '.index', ['group']) %}
+        {% set is_about_active = h.page_is_active('home.about') %}
+
+        <li>
+          <a href="{{ h.url_for('home.index') }}" class="tw-block tw-px-4 tw-py-2.5 tw-text-xs tw-font-medium tw-rounded-lg
+                    tw-transition-colors tw-no-underline hover:tw-no-underline
+                    {% if is_home_active %}tw-bg-white/15 !tw-text-white
+                    {% else %}!tw-text-[#e0f4fb]/85 hover:tw-bg-white/10 hover:!tw-text-white{% endif %}">
+            {{ _('Home') }}
+          </a>
+        </li>
+        <li>
+          <a href="{{ h.url_for(dataset_type ~ '.search') }}" class="tw-block tw-px-4 tw-py-2.5 tw-text-xs tw-font-medium tw-rounded-lg
+                    tw-transition-colors tw-no-underline hover:tw-no-underline
+                    {% if is_dataset_active %}tw-bg-white/15 !tw-text-white
+                    {% else %}!tw-text-[#e0f4fb]/85 hover:tw-bg-white/10 hover:!tw-text-white{% endif %}">
+            {{ h.humanize_entity_type('package', dataset_type, 'main nav') or _('Datasets') }}
+          </a>
+        </li>
+        <li>
+          <a href="{{ h.url_for(org_type ~ '.index') }}" class="tw-block tw-px-4 tw-py-2.5 tw-text-xs tw-font-medium tw-rounded-lg
+                    tw-transition-colors tw-no-underline hover:tw-no-underline
+                    {% if is_org_active %}tw-bg-white/15 !tw-text-white
+                    {% else %}!tw-text-[#e0f4fb]/85 hover:tw-bg-white/10 hover:!tw-text-white{% endif %}">
+            {{ h.humanize_entity_type('organization', org_type, 'main nav') or _('Organizations') }}
+          </a>
+        </li>
+        <li>
+          <a href="{{ h.url_for(group_type ~ '.index') }}" class="tw-block tw-px-4 tw-py-2.5 tw-text-xs tw-font-medium tw-rounded-lg
+                    tw-transition-colors tw-no-underline hover:tw-no-underline
+                    {% if is_group_active %}tw-bg-white/15 !tw-text-white
+                    {% else %}!tw-text-[#e0f4fb]/85 hover:tw-bg-white/10 hover:!tw-text-white{% endif %}">
+            {{ h.humanize_entity_type('group', group_type, 'main nav') or _('Groups') }}
+          </a>
+        </li>
+        <li>
+          <a href="{{ h.url_for('home.about') }}" class="tw-block tw-px-4 tw-py-2.5 tw-text-xs tw-font-medium tw-rounded-lg
+                    tw-transition-colors tw-no-underline hover:tw-no-underline
+                    {% if is_about_active %}tw-bg-white/15 !tw-text-white
+                    {% else %}!tw-text-[#e0f4fb]/85 hover:tw-bg-white/10 hover:!tw-text-white{% endif %}">
+            {{ _('About') }}
+          </a>
+        </li>
+        {% endblock %}
+      </ul>
+
+      <form class="tw-flex tw-items-center
+             tw-rounded-lg tw-overflow-hidden tw-w-full tw-transition-all tw-duration-200
+             tw-border tw-border-white/25
+             hover:tw-border-white/45
+             focus-within:!tw-border-white/60" style="background: rgba(255,255,255,0.12);
+             backdrop-filter: blur(12px);
+             -webkit-backdrop-filter: blur(12px);
+             box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 8px rgba(0,0,0,0.12);"
+        action="{% url_for dataset_type ~ '.search' %}" method="get">
+        <input class="tw-flex-1 tw-bg-transparent tw-border-none tw-outline-none
+                tw-text-[#e0f4fb] tw-placeholder-[rgba(224,244,251,0.45)]
+                tw-text-[13px] tw-py-2 tw-px-3" type="text" name="q" placeholder="{{ _('Search datasets...') }}" />
+        <button class="tw-bg-transparent tw-border-none tw-border-l tw-border-white/15 tw-cursor-pointer
+                 tw-px-3 tw-py-2 tw-text-[rgba(224,244,251,0.65)]
+                 hover:tw-text-white hover:tw-bg-white/10 tw-transition-all tw-flex tw-items-center" type="submit"
+          aria-label="{{ _('Submit') }}">
+          <i class="fa fa-search tw-text-sm"></i>
+        </button>
+      </form>
+    </div>
+
   </div>
 </header>
 {% endblock %}

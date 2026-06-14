@@ -1,0 +1,205 @@
+{% set dataset_type = h.default_package_type() %}
+
+{% block header_wrapper %}
+
+{% block header_account %}
+<div style="background: #0D3748;">
+  <div class="tw-mx-auto tw-max-w-6xl tw-px-4">
+    {% block header_account_container_content %}
+    {% if c.userobj %}
+
+    {# ── Autentikasi ── #}
+    <div class="tw-flex tw-items-center tw-justify-end tw-py-0" data-module="me" data-me="{{ c.userobj.id }}">
+      <ul class="tw-flex tw-items-center tw-gap-0.5 tw-list-none tw-m-0 tw-p-0">
+        {% block header_account_logged %}
+
+        {# Sysadmin #}
+        {% if c.userobj.sysadmin %}
+        <li>
+          <a href="{{ h.url_for('admin.index') }}" aria-label="{{ _('Sysadmin settings') }}"
+            title="{{ _('Sysadmin settings') }}"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
+            style="color: rgba(255,255,255,0.6);">
+            <i class="fa-solid fa-gavel tw-text-[11px]" style="color:#fbbf24;" aria-hidden="true"></i>
+            <span class="tw-hidden sm:tw-inline">{{ _('Admin') }}</span>
+          </a>
+        </li>
+        <li style="width:1px; height:12px; background:rgba(255,255,255,0.15); margin:0 2px; flex-shrink:0;"
+          aria-hidden="true"></li>
+        {% endif %}
+
+        {# Profil #}
+        {% block header_account_profile %}
+        <li>
+          <a href="{{ h.url_for('user.read', id=c.userobj.name) }}" aria-label="{{ _('View profile') }}"
+            title="{{ _('View profile') }}"
+            class="tw-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
+            style="color: rgba(255,255,255,0.6);">
+            <span
+              class="tw-inline-flex tw-items-center tw-justify-center tw-w-[18px] tw-h-[18px] tw-rounded-full tw-shrink-0 tw-overflow-hidden"
+              style="background:rgba(255,255,255,0.15); color:#fff; font-size:8px; font-weight:700;">
+              {{ h.user_image((c.user if c and c.user else ''), size=18) }}
+            </span>
+            <span class="tw-hidden sm:tw-inline" style="color:rgba(255,255,255,0.9); font-weight:500;">{{
+              c.userobj.display_name }}</span>
+          </a>
+        </li>
+        {% endblock %}
+
+        <li style="width:1px; height:12px; background:rgba(255,255,255,0.15); margin:0 2px; flex-shrink:0;"
+          aria-hidden="true"></li>
+
+        {# Dashboard #}
+        {% block header_dashboard %}
+        <li>
+          <a href="{{ h.url_for('dashboard.datasets') }}" aria-label="{{ _('View dashboard') }}"
+            title="{{ _('View dashboard') }}"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
+            style="color: rgba(255,255,255,0.6);">
+            <i class="fa-solid fa-gauge tw-text-[11px]" aria-hidden="true"></i>
+            <span class="tw-hidden sm:tw-inline">{{ _('Dashboard') }}</span>
+          </a>
+        </li>
+        {% endblock %}
+
+        {# Pengaturan profil #}
+        {% block header_account_settings_link %}
+        <li>
+          <a href="{{ h.url_for('user.edit', id=c.userobj.name) }}" aria-label="{{ _('Profile settings') }}"
+            title="{{ _('Profile settings') }}"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-no-underline hover:tw-bg-white/10"
+            style="color: rgba(255,255,255,0.6);">
+            <i class="fa-solid fa-gear tw-text-[11px]" aria-hidden="true"></i>
+            <span class="tw-hidden sm:tw-inline">{{ _('Settings') }}</span>
+          </a>
+        </li>
+        {% endblock %}
+
+        <li style="width:1px; height:12px; background:rgba(255,255,255,0.15); margin:0 2px; flex-shrink:0;"
+          aria-hidden="true"></li>
+
+        {# Log out #}
+        {% block header_account_log_out_link %}
+        <li>
+          <form action="{{ h.url_for('user.logout') }}" method="post" class="tw-m-0">
+            {{ h.csrf_input() }}
+            <button type="submit" aria-label="{{ _('Log out') }}" title="{{ _('Log out') }}"
+              class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded tw-transition-colors"
+              style="background:transparent; border:none; cursor:pointer; color:rgba(255,255,255,0.5);"
+              onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.color='#f87171';"
+              onmouseout="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.5)';">
+              <i class="fa-solid fa-right-from-bracket tw-text-[11px]" aria-hidden="true"></i>
+            </button>
+          </form>
+        </li>
+        {% endblock %}
+
+        {% endblock %}
+      </ul>
+    </div>
+
+    {% else %}
+
+    {# ── Belum login ── #}
+    <nav class="tw-flex tw-justify-end tw-py-[0.5px]" aria-label="{{ _('Account') }}">
+      <ul class="tw-flex tw-items-center tw-gap-2 tw-list-none tw-m-0 tw-p-0">
+        {% block header_account_notlogged %}
+
+        <li>
+          <a href="{{ h.url_for('user.login') }}"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1.5 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors hover:tw-no-underline hover:tw-bg-white/10"
+            style="color:rgba(255,255,255,0.6);">
+            <i class="fa-solid fa-right-to-bracket tw-text-[11px]" aria-hidden="true"></i>
+            <span>{{ _('Log in') }}</span>
+          </a>
+        </li>
+
+        {% if h.check_access('user_create') %}
+        <li>
+          <a href="{{ h.url_for('user.register') }}"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-text-[11px] tw-font-medium tw-rounded tw-transition-colors tw-no-underline hover:tw-bg-white/20"
+            style="color:rgba(255,255,255,0.9); background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.18);">
+            <i class="fa-solid fa-user-plus tw-text-[10px]" aria-hidden="true"></i>
+            <span>{{ _('Register') }}</span>
+          </a>
+        </li>
+        {% endif %}
+
+        {% endblock %}
+      </ul>
+    </nav>
+
+    {% endif %}
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}
+
+<header class="masthead">
+  <div class="container">
+    {# {% block header_debug %} {% if g.debug and not g.debug_supress_header %}
+    <div class="debug">Blueprint : {{ g.blueprint }}<br />View : {{ g.view }}</div>
+    {% endif %} {% endblock %} #}
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <hgroup class="{{ g.header_class }} navbar-left">
+
+        {% block header_logo %}
+        <a href="{{ h.url_for('home.index') }}"
+          style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+          {% if g.site_logo %}
+          <img
+            src="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else h.url_for_static_or_external(g.site_logo) }}"
+            alt="{{ g.site_title }}" style="height: 50px; width: auto; flex-shrink: 0;" />
+          {% endif %}
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <span style="font-size: 1.2rem; font-weight: bold; color: #ffffff; line-height: 1.2;">{{ g.site_title
+              }}</span>
+            {% if g.site_description %}
+            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.8);">{{ g.site_description }}</span>
+            {% endif %}
+          </div>
+        </a>
+        {% endblock %}
+
+      </hgroup>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation-toggle"
+        aria-controls="main-navigation-toggle" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
+        <span class="fa fa-bars text-white"></span>
+      </button>
+
+      <div class="main-navbar collapse navbar-collapse" id="main-navigation-toggle">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          {% block header_site_navigation %}
+          {% block header_site_navigation_tabs %}
+          {% set org_type = h.default_group_type('organization') %}
+          {% set group_type = h.default_group_type('group') %}
+
+          {{ h.build_nav_main(
+          (dataset_type ~ '.search', h.humanize_entity_type('package', dataset_type, 'main nav') or _('Datasets'),
+          ["dataset", "resource"]),
+          (org_type ~ '.index',
+          h.humanize_entity_type('organization', org_type, 'main nav') or _('Organizations'), ['organization']),
+          (group_type ~ '.index',
+          h.humanize_entity_type('group', group_type, 'main nav') or _('Groups'), ['group']),
+          ('home.about', _('About')) ) }}
+          {% endblock %}
+        </ul>
+
+        {% endblock %}
+        {% block header_site_search %}
+        <form class="d-flex site-search" action="{% url_for dataset_type ~ '.search' %}" method="get">
+          <label class="d-none" for="field-sitewide-search">{% block header_site_search_label %}{{
+            h.humanize_entity_type('package', dataset_type, 'search_placeholder') or _('Search Datasets...') }}{%
+            endblock %}</label>
+          <input id="field-sitewide-search" class="form-control me-2" type="text" name="q"
+            placeholder="{{ _('Search') }}"
+            aria-label="{{ h.humanize_entity_type('package', dataset_type, 'search_placeholder') or _('Search datasets...') }}" />
+          <button class="btn" type="submit" aria-label="{{ _('Submit') }}"><i class="fa fa-search"></i></button>
+        </form>
+        {% endblock %}
+      </div>
+    </nav>
+  </div>
+</header>
+
+{% endblock %}

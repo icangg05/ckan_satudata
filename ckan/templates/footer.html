@@ -63,6 +63,13 @@
           {% set org_type = h.default_group_type('organization') %}
           {% set group_type = h.default_group_type('group') %}
           <li class="tw-border-b tw-border-white/[0.06] tw-py-1.5 tw-w-fit">
+            <a href="{{ h.url_for('home.index') }}"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              {{ _('Home') }}
+            </a>
+          </li>
+          <li class="tw-border-b tw-border-white/[0.06] tw-py-1.5 tw-w-fit">
             <a href="{{ h.url_for(dataset_type ~ '.search') }}"
               class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
               <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
@@ -153,19 +160,15 @@
         &copy; 2026 Pemerintah Kota Kendari. Hak Cipta Dilindungi Undang-Undang.
       </p>
       <div class="tw-flex tw-items-center tw-gap-1.5">
-        <a href="#" aria-label="Facebook"
+        <a href="https://www.facebook.com/people/Kendarikota/100083031531002/" aria-label="Facebook" target="_blank" rel="noopener noreferrer"
           class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
           <i class="fa-brands fa-facebook-f tw-text-[#bde3f0] tw-text-xs"></i>
         </a>
-        <a href="#" aria-label="Instagram"
+        <a href="https://www.instagram.com/kendarikotagoid/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"
           class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
           <i class="fa-brands fa-instagram tw-text-[#bde3f0] tw-text-xs"></i>
         </a>
-        <a href="#" aria-label="Twitter/X"
-          class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
-          <i class="fa-brands fa-x-twitter tw-text-[#bde3f0] tw-text-xs"></i>
-        </a>
-        <a href="#" aria-label="YouTube"
+        <a href="https://www.youtube.com/@kendarikotagoid9481/featured/" aria-label="YouTube" target="_blank" rel="noopener noreferrer"
           class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
           <i class="fa-brands fa-youtube tw-text-[#bde3f0] tw-text-xs"></i>
         </a>
