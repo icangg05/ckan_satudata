@@ -74,6 +74,7 @@
       {# TODO: store just name of asset instead of path to it. #}
       {% set theme = h.get_rtl_theme() if h.is_rtl_language() else g.theme %}
       {% asset theme %}
+      {% asset 'css/tailwind' %}
       {% asset 'vendor/fontawesome' %}
     {% endblock %}
 
@@ -99,24 +100,6 @@
         font-family: 'Inter', sans-serif !important;
       }
     </style>
-
-    <!-- Tailwind Play CDN with tw- prefix -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        prefix: 'tw-',
-        corePlugins: {
-          preflight: false,
-        },
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
   </head>
 
   {# Allows custom attributes to be added to the <body> tag #}

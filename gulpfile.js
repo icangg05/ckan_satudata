@@ -4,6 +4,7 @@ const sass = require("gulp-sass")(require("sass"));
 const if_ = require("gulp-if");
 const sourcemaps = require("gulp-sourcemaps");
 const rename = require("gulp-rename");
+const { execSync } = require("child_process");
 
 const with_sourcemaps = () => !!process.env.DEBUG || !!process.argv[4];
 const renamer = (path) => {
@@ -32,6 +33,22 @@ const watchSource = () =>
     { ignoreInitial: false },
     build
   );
+
+const buildTailwind = (cb) => {
+  execSync(
+    "./node_modules/.bin/tailwindcss -i ./ckan/public/base/css/tailwind-src.css -o ./ckan/public/base/css/tailwind.css --minify",
+    { cwd: __dirname, stdio: "inherit" }
+  );
+  cb();
+};
+
+const watchTailwind = (cb) => {
+  execSync(
+    "./node_modules/.bin/tailwindcss -i ./ckan/public/base/css/tailwind-src.css -o ./ckan/public/base/css/tailwind.css --watch",
+    { cwd: __dirname, stdio: "inherit" }
+  );
+  cb();
+};
 
 const buildMidnightBlue = () =>
   src([
@@ -111,8 +128,10 @@ const select2 = () =>
     ).pipe(dest(__dirname + "/ckan/public/base/vendor/select2/")
   )
 
-exports.build = build;
-exports.watch = watchSource;
+exports.build = parallel(build, buildTailwind);
+exports.watch = parallel(watchSource, watchTailwind);
+exports.buildTailwind = buildTailwind;
+exports.watchTailwind = watchTailwind;
 
 exports.buildMidnightBlue = buildMidnightBlue;
 exports.watchMidnightBlue = watchMidnightBlue;

@@ -19,17 +19,31 @@ icons. Already-redesigned references: [header.html](../../../ckan/templates/head
 
 ## Tooling setup (already configured — do not duplicate)
 
-- Tailwind is loaded via the **Tailwind Play CDN** in
-  [base.html](../../../ckan/templates/base.html) (around line 104):
+- Tailwind is **pre-built** (no CDN/runtime JIT — the CDN was removed for
+  performance reasons). Config lives in
+  [tailwind.config.js](../../../tailwind.config.js):
   - `prefix: 'tw-'` — every Tailwind utility class must be written as
     `tw-<utility>` (e.g. `tw-flex`, `tw-text-sm`, hover variants become
     `hover:tw-bg-white/10`).
   - `corePlugins: { preflight: false }` — Tailwind's reset is disabled, so
     existing CKAN base styles still apply unless overridden.
+  - `content` scans `./ckan/templates/**/*.html` to find which `tw-*`
+    classes are actually used.
   - Font is `Inter` (Google Fonts), already wired to `body`/`.tw-font-sans`.
   - No Tailwind plugins (e.g. typography/`prose`) are loaded — **never use
     `tw-prose`** classes; style markdown output manually with arbitrary
     variants like `[&_h1]:tw-text-white`.
+- **IMPORTANT — after adding/changing any `tw-*` class in a template, you
+  must rebuild the CSS**, otherwise the new classes won't have styles:
+  - One-off build: `npm run build-tailwind`
+  - During active development: `npm run watch-tailwind` (rebuilds on save)
+  - The compiled output is
+    [ckan/public/base/css/tailwind.css](../../../ckan/public/base/css/tailwind.css),
+    loaded via `{% asset 'css/tailwind' %}` in
+    [base.html](../../../ckan/templates/base.html). Source entry is
+    `ckan/public/base/css/tailwind-src.css`.
+  - `gulp build` / `gulp watch` also run the Tailwind build alongside the
+    SCSS build.
 - Font Awesome is loaded via `{% asset 'vendor/fontawesome' %}` in
   `base.html`. Use `fa-solid fa-<icon>` classes for icons.
 

@@ -6,3 +6,7 @@ main-rtl:
   filters: cssrewrite
   output: base/%(version)s_main-rtl.css
   contents: main-rtl.css
+tailwind:
+  filters: cssrewrite
+  output: base/%(version)s_tailwind.css
+  contents: tailwind.css
