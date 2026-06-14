@@ -1,45 +1,256 @@
 {% extends "package/read_base.html" %}
 
-{% block primary_content_inner %}
-  {{ super() }}
-  {% block package_description %}
-    {% if pkg.private %}
-      <span class="dataset-private badge badge-inverse pull-right">
-        <i class="fa fa-lock"></i>
-        {{ _('Private') }}
-      </span>
-    {% endif %}
-    <h1>
-      {% block page_heading %}
-        {{ h.dataset_display_name(pkg) }}
+{% set pkg = pkg_dict %}
+{% set dataset_type = pkg.type or 'dataset' %}
+{% set group_type = pkg.organization.type if pkg.organization else h.default_group_type('group') %}
+{% set formats = h.dict_list_reduce(pkg.resources, 'format') %}
+
+{% block content %}
+<div class="tw-font-sans tw-bg-sky-50 tw-min-h-screen">
+
+  {# ============ Header band ============ #}
+  <section class="tw-relative tw-overflow-hidden" style="background: linear-gradient(135deg, #0D3748, #185A75);">
+    <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <pattern id="dsr-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.5" fill="#ffffff" fill-opacity="0.08"></circle>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#dsr-dots)"></rect>
+    </svg>
+
+    <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-pt-8 tw-pb-10 md:tw-pt-10">
+      {# Breadcrumb #}
+      <nav class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-xs tw-mb-5" style="color: #bde3f0;" aria-label="{{ _('Breadcrumb') }}">
+        <a href="{{ h.url_for('home.index') }}" class="tw-no-underline hover:tw-no-underline hover:tw-text-white tw-transition-colors" style="color: #bde3f0;">{{ _('Home') }}</a>
+        <i class="fa-solid fa-chevron-right tw-text-[9px] tw-opacity-60" aria-hidden="true"></i>
+        {% if pkg.organization %}
+          <a href="{{ h.url_for(group_type ~ '.read', id=pkg.organization.name) }}" class="tw-no-underline hover:tw-no-underline hover:tw-text-white tw-transition-colors tw-truncate tw-max-w-[12rem]" style="color: #bde3f0;">{{ h.get_translated(pkg.organization, 'title') or pkg.organization.name }}</a>
+        {% else %}
+          <a href="{{ h.url_for(dataset_type ~ '.search') }}" class="tw-no-underline hover:tw-no-underline hover:tw-text-white tw-transition-colors" style="color: #bde3f0;">{{ _(dataset_type.title() + 's') }}</a>
+        {% endif %}
+        <i class="fa-solid fa-chevron-right tw-text-[9px] tw-opacity-60" aria-hidden="true"></i>
+        <span class="tw-text-white tw-font-medium tw-truncate tw-max-w-[16rem]">{{ h.dataset_display_name(pkg) }}</span>
+      </nav>
+
+      {# Badges #}
+      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-mb-3">
+        {% if pkg.private %}
+          <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1 tw-rounded-full tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-widest tw-text-white tw-bg-white/10 tw-border tw-border-white/20">
+            <i class="fa-solid fa-lock tw-text-[10px]" aria-hidden="true"></i>{{ _('Private') }}
+          </span>
+        {% endif %}
         {% if pkg.state.startswith('draft') %}
-          <span class="badge bg-info">{{ _('Draft') }}</span>
+          <span class="tw-inline-flex tw-items-center tw-px-3 tw-py-1 tw-rounded-full tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-widest" style="background-color: #fbbf24; color: #0D3748;">{{ _('Draft') }}</span>
+        {% elif pkg.state == 'deleted' %}
+          <span class="tw-inline-flex tw-items-center tw-px-3 tw-py-1 tw-rounded-full tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-widest tw-bg-red-500 tw-text-white">{{ _('Deleted') }}</span>
         {% endif %}
-        {% if pkg.state == 'deleted' %}
-          <span class="badge bg-info">{{ _('Deleted') }}</span>
+        {% if pkg.isopen %}
+          <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1 tw-rounded-full tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-widest tw-text-white tw-bg-white/10 tw-border tw-border-white/20">
+            <i class="fa-solid fa-lock-open tw-text-[10px]" style="color: #38bdf8;" aria-hidden="true"></i>{{ _('Open Data') }}
+          </span>
         {% endif %}
-      {% endblock %}
-    </h1>
-    {% block package_notes %}
-      {% if pkg.notes %}
-        <div class="notes embedded-content">
-          {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+      </div>
+
+      {# Title + actions #}
+      <div class="tw-flex tw-flex-col md:tw-flex-row md:tw-items-end md:tw-justify-between tw-gap-4">
+        <h1 class="tw-text-2xl md:tw-text-4xl tw-font-extrabold tw-text-white tw-m-0 tw-max-w-3xl tw-leading-tight">
+          {% block page_heading %}{{ h.dataset_display_name(pkg) }}{% endblock %}
+        </h1>
+        {% block content_action %}
+          {% if h.check_access('package_update', {'id':pkg.id }) %}
+            <a href="{{ h.url_for(pkg.type ~ '.edit', id=pkg.name) }}"
+              class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-rounded tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-transition-colors tw-bg-white/10 tw-text-white tw-border tw-border-white/20 hover:tw-bg-white/20 tw-whitespace-nowrap">
+              <i class="fa-solid fa-wrench" aria-hidden="true"></i>{{ _('Manage') }}
+            </a>
+          {% endif %}
+        {% endblock %}
+      </div>
+
+      {# Meta row #}
+      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-x-5 tw-gap-y-2 tw-mt-5 tw-text-xs md:tw-text-sm" style="color: #bde3f0;">
+        {% if pkg.organization %}
+          <span class="tw-inline-flex tw-items-center tw-gap-2">
+            <i class="fa-solid fa-building tw-text-[#7dd3ee]" aria-hidden="true"></i>
+            <a href="{{ h.url_for(group_type ~ '.read', id=pkg.organization.name) }}" class="tw-no-underline hover:tw-no-underline hover:tw-text-white tw-transition-colors" style="color: #bde3f0;">{{ h.get_translated(pkg.organization, 'title') or pkg.organization.name }}</a>
+          </span>
+        {% endif %}
+        <span class="tw-inline-flex tw-items-center tw-gap-2">
+          <i class="fa-solid fa-database tw-text-[#7dd3ee]" aria-hidden="true"></i>{{ pkg.resources|length }} {{ _('resources') }}
+        </span>
+        {% if formats %}
+          <span class="tw-inline-flex tw-items-center tw-gap-2">
+            <i class="fa-solid fa-file-lines tw-text-[#7dd3ee]" aria-hidden="true"></i>{{ formats|join(', ') }}
+          </span>
+        {% endif %}
+        {% if pkg.metadata_modified %}
+          <span class="tw-inline-flex tw-items-center tw-gap-2">
+            <i class="fa-solid fa-clock tw-text-[#7dd3ee]" aria-hidden="true"></i>{{ _('Updated') }} {{ h.render_datetime(pkg.metadata_modified) }}
+          </span>
+        {% endif %}
+      </div>
+
+      {# Tabs #}
+      <div class="tw-flex tw-items-center tw-gap-1 tw-mt-6">
+        {% block content_primary_nav %}
+          <a href="{{ h.url_for(dataset_type ~ '.read', id=pkg.name) }}"
+            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-rounded-t tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-bg-sky-50 tw-text-[#185A75]">
+            <i class="fa-solid fa-sitemap" aria-hidden="true"></i>{{ _('Dataset') }}
+          </a>
+          <a href="{{ h.url_for(dataset_type ~ '.groups', id=pkg.name) }}"
+            class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-rounded-t tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-text-white/80 hover:tw-text-white hover:tw-bg-white/10 tw-transition-colors">
+            <i class="fa-solid fa-users" aria-hidden="true"></i>{{ h.humanize_entity_type('group', group_type, 'content tab') or _('Groups') }}
+          </a>
+        {% endblock %}
+      </div>
+    </div>
+  </section>
+
+  {# ============ Main content ============ #}
+  <div class="tw-relative tw-overflow-hidden">
+    {# Decorative background ornaments #}
+    <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+      <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="dsr-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.4" fill="#185A75" fill-opacity="0.10"></circle>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dsr-grid)"></rect>
+      </svg>
+      <div class="tw-absolute -tw-top-24 -tw-right-16 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.28), transparent 70%); animation-duration: 7s;"></div>
+      <div class="tw-absolute tw-top-1/2 -tw-left-24 tw-w-[26rem] tw-h-[26rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.14), transparent 70%); animation-duration: 9s;"></div>
+      <svg class="tw-absolute tw-top-10 tw-left-1/2 -tw-translate-x-1/2 tw-w-[140%] tw-max-w-none" viewBox="0 0 1440 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,120 C240,60 480,180 720,120 C960,60 1200,180 1440,120" stroke="#185A75" stroke-opacity="0.10" stroke-width="2" fill="none"></path>
+        <path d="M0,170 C240,110 480,230 720,170 C960,110 1200,230 1440,170" stroke="#38bdf8" stroke-opacity="0.13" stroke-width="2" fill="none"></path>
+      </svg>
+    </div>
+
+    <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-8 md:tw-py-10">
+      {{ self.flash() }}
+      <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-[minmax(0,1fr)_320px] tw-gap-6 lg:tw-gap-8 tw-items-start">
+
+        {# ---- Primary column ---- #}
+        <div role="main" class="tw-space-y-6">
+          {% block primary_content_inner %}
+
+            {% block package_notes %}
+              <div class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-6">
+                <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-4">
+                  <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </span>
+                  <h2 class="tw-text-lg tw-font-bold tw-text-gray-800 tw-m-0">{{ _('About this dataset') }}</h2>
+                </div>
+                {% if pkg.notes %}
+                  <div class="tw-max-w-none [&_h1]:tw-text-2xl [&_h1]:tw-font-bold [&_h1]:tw-text-gray-800 [&_h1]:tw-mt-6 [&_h1]:tw-mb-3 [&_h2]:tw-text-xl [&_h2]:tw-font-bold [&_h2]:tw-text-gray-800 [&_h2]:tw-mt-5 [&_h2]:tw-mb-2.5 [&_h3]:tw-text-lg [&_h3]:tw-font-semibold [&_h3]:tw-text-gray-800 [&_h3]:tw-mt-4 [&_h3]:tw-mb-2 [&_p]:tw-text-sm [&_p]:tw-text-gray-600 [&_p]:tw-leading-relaxed [&_p]:tw-mb-3 [&_a]:tw-text-[#185A75] [&_a]:tw-underline [&_ul]:tw-list-disc [&_ul]:tw-pl-5 [&_ul]:tw-mb-3 [&_ul]:tw-text-sm [&_ul]:tw-text-gray-600 [&_ol]:tw-list-decimal [&_ol]:tw-pl-5 [&_ol]:tw-mb-3 [&_ol]:tw-text-sm [&_ol]:tw-text-gray-600 [&_li]:tw-mb-1 [&_code]:tw-bg-gray-100 [&_code]:tw-rounded [&_code]:tw-px-1.5 [&_code]:tw-py-0.5 [&_code]:tw-text-xs [&_blockquote]:tw-border-l-4 [&_blockquote]:tw-border-gray-200 [&_blockquote]:tw-pl-4 [&_blockquote]:tw-text-gray-500 [&_blockquote]:tw-italic [&_img]:tw-rounded [&_img]:tw-max-w-full">
+                    {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+                  </div>
+                {% else %}
+                  <p class="tw-text-sm tw-text-gray-400 tw-italic tw-m-0">{{ _('There is no description for this dataset.') }}</p>
+                {% endif %}
+              </div>
+            {% endblock %}
+
+            {% block package_resources %}
+              {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources,
+                can_edit=h.check_access('package_update', {'id':pkg.id }) %}
+            {% endblock %}
+
+            {% block package_additional_info %}
+              {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+            {% endblock %}
+
+            {% block package_tags %}
+              {% snippet "package/snippets/tags.html", tags=pkg.tags %}
+            {% endblock %}
+
+          {% endblock %}
         </div>
-      {% endif %}
-    {% endblock %}
-  {% endblock %}
 
-  {% block package_resources %}
-    {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources,
-      can_edit=h.check_access('package_update', {'id':pkg.id }) %}
-  {% endblock %}
+        {# ---- Sidebar ---- #}
+        <aside class="tw-space-y-6 lg:tw-sticky lg:tw-top-6">
 
-  {% block package_tags %}
-    {% snippet "package/snippets/tags.html", tags=pkg.tags %}
-  {% endblock %}
+          {% block package_info %}
+            {% snippet 'package/snippets/info.html', pkg=pkg, am_following=am_following %}
+          {% endblock %}
 
-  {% block package_additional_info %}
-    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
-  {% endblock %}
+          {% block package_organization %}
+            {% if pkg.organization %}
+              {% set org = h.get_organization(pkg.organization.id) %}
+              <section class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-overflow-hidden">
+                <div class="tw-h-16 tw-relative tw-overflow-hidden" style="background: linear-gradient(135deg, #185A75, #38bdf8);">
+                  <i class="fa-solid fa-building tw-absolute -tw-right-2 -tw-bottom-3 tw-text-6xl tw-text-white/10" aria-hidden="true"></i>
+                </div>
+                <div class="tw-px-5 tw-pb-5">
+                  <div class="tw-relative tw-z-10 tw-w-16 tw-h-16 -tw-mt-8 tw-mb-3 tw-p-2 tw-rounded tw-bg-white tw-shadow-md tw-ring-4 tw-ring-white tw-overflow-hidden tw-flex tw-items-center tw-justify-center">
+                    <img src="{{ org.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ org.name }}" class="tw-max-w-full tw-max-h-full tw-object-contain" />
+                  </div>
+                  <h2 class="tw-text-base tw-font-bold tw-text-gray-800 tw-m-0 tw-mb-1">
+                    <a href="{{ h.url_for(org.type ~ '.read', id=org.name) }}" class="tw-text-gray-800 tw-no-underline hover:tw-text-[#185A75] tw-transition-colors">{{ org.title or org.name }}</a>
+                  </h2>
+                  {% if org.description %}
+                    <p class="tw-text-xs tw-text-gray-500 tw-leading-relaxed tw-mt-2 tw-mb-3 tw-line-clamp-3">{{ h.markdown_extract(org.description, 180)|striptags }}</p>
+                  {% endif %}
+                  <a href="{{ h.url_for(org.type ~ '.read', id=org.name) }}" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-transition-colors" style="color: #185A75;">
+                    {{ _('View organization') }}<i class="fa-solid fa-arrow-right tw-text-xs" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </section>
+            {% endif %}
+          {% endblock %}
 
+          {% block package_license %}
+            <section class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-5">
+              <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-3">
+                <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+                  <i class="fa-solid fa-scale-balanced tw-text-sm" aria-hidden="true"></i>
+                </span>
+                <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-m-0">{{ _('License') }}</h2>
+              </div>
+              <p class="tw-text-sm tw-text-gray-600 tw-m-0">
+                {% if pkg.license_url %}
+                  <a href="{{ pkg.license_url }}" rel="dc:rights" class="tw-text-[#185A75] tw-no-underline hover:tw-underline">{{ pkg.license_title }}</a>
+                {% elif pkg.license_id %}
+                  <span property="dc:rights">{{ pkg.license_title }}</span>
+                {% else %}
+                  <span class="tw-text-gray-400">{{ _('No License Provided') }}</span>
+                {% endif %}
+              </p>
+              {% if pkg.isopen %}
+                <a href="http://opendefinition.org/okd/" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-3 tw-text-xs tw-font-semibold tw-no-underline" style="color: #34d399;"
+                  aria-label="{{ _('This dataset satisfies the Open Definition.') }}" data-bs-title="{{ _('This dataset satisfies the Open Definition.') }}" data-bs-toggle="tooltip">
+                  <i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{ _('Open Definition compliant') }}
+                </a>
+              {% endif %}
+            </section>
+          {% endblock %}
+
+          {% block package_social %}
+            <section class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-5">
+              <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-3">
+                <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+                  <i class="fa-solid fa-share-nodes tw-text-sm" aria-hidden="true"></i>
+                </span>
+                <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-m-0">{{ _('Share') }}</h2>
+              </div>
+              {% set current_url = h.full_current_url() %}
+              <div class="tw-flex tw-items-center tw-gap-2">
+                <a href="https://x.com/share?url={{ current_url }}" target="_blank" rel="noopener" aria-label="{{ _('X') }}"
+                  class="tw-inline-flex tw-items-center tw-justify-center tw-w-10 tw-h-10 tw-rounded tw-border tw-border-gray-200 tw-text-gray-600 tw-no-underline hover:tw-text-white hover:tw-border-transparent hover:tw-bg-[#0D3748] tw-transition-colors">
+                  <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer.php?u={{ current_url }}" target="_blank" rel="noopener" aria-label="{{ _('Facebook') }}"
+                  class="tw-inline-flex tw-items-center tw-justify-center tw-w-10 tw-h-10 tw-rounded tw-border tw-border-gray-200 tw-text-gray-600 tw-no-underline hover:tw-text-white hover:tw-border-transparent hover:tw-bg-[#185A75] tw-transition-colors">
+                  <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                </a>
+              </div>
+            </section>
+          {% endblock %}
+
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -11,33 +11,46 @@ Example:
 #}
 {% block package_info %}
   {% if pkg %}
-    <section id="package-info" class="module module-narrow">
-      <div class="module context-info">
-        <div class="module-content">
-          {% block package_info_inner %}
-            {% block heading %}
-              <h2 class="heading">{{ h.dataset_display_name(pkg) }}</h2>
-            {% endblock %}
-            {% block nums %}
-              {% set num_followers = h.follow_count('dataset', pkg.id) %}
-              <div class="nums">
-                <dl>
-                  <dt>{{ _('Followers') }}</dt>
-                  <dd>{{ h.SI_number_span(num_followers) }}</dd>
-                </dl>
-              </div>
-            {% endblock %}
-            {% block follow_button %}
-              {% if current_user.is_authenticated %}
-                {% if error_message %}
-                  <div class="alert alert-danger">{{ error_message }}</div>
-                {% endif %}
-                {% snippet 'snippets/follow_button.html', am_following=am_following, obj_type='dataset', obj_id=pkg.id, anchor_type='package' %}
-              {% endif %}
-            {% endblock %}
-          {% endblock %}
+    <section id="package-info" class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-5">
+      {% block package_info_inner %}
+        <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-4">
+          <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+            <i class="fa-solid fa-chart-simple tw-text-sm" aria-hidden="true"></i>
+          </span>
+          <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-m-0">{{ _('Dataset stats') }}</h2>
         </div>
-      </div>
+
+        {% block nums %}
+          {% set num_followers = h.follow_count('dataset', pkg.id) %}
+          {% set num_resources = pkg.resources|length %}
+          {% set num_formats = h.dict_list_reduce(pkg.resources, 'format')|length %}
+          <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-4">
+            <div class="tw-text-center tw-rounded tw-py-3 tw-px-1" style="background-color: rgba(24,90,117,0.05);">
+              <div class="tw-text-xl tw-font-extrabold tw-leading-none" style="color: #185A75;">{{ h.SI_number_span(num_resources) }}</div>
+              <div class="tw-text-[11px] tw-text-gray-500 tw-mt-1">{{ _('Resources') }}</div>
+            </div>
+            <div class="tw-text-center tw-rounded tw-py-3 tw-px-1" style="background-color: rgba(24,90,117,0.05);">
+              <div class="tw-text-xl tw-font-extrabold tw-leading-none" style="color: #185A75;">{{ h.SI_number_span(num_formats) }}</div>
+              <div class="tw-text-[11px] tw-text-gray-500 tw-mt-1">{{ _('Formats') }}</div>
+            </div>
+            <div class="tw-text-center tw-rounded tw-py-3 tw-px-1" style="background-color: rgba(24,90,117,0.05);">
+              <div class="tw-text-xl tw-font-extrabold tw-leading-none" style="color: #185A75;">{{ h.SI_number_span(num_followers) }}</div>
+              <div class="tw-text-[11px] tw-text-gray-500 tw-mt-1">{{ _('Followers') }}</div>
+            </div>
+          </div>
+        {% endblock %}
+
+        {% block follow_button %}
+          {% if current_user.is_authenticated %}
+            {% if error_message %}
+              <div class="tw-rounded tw-border tw-border-red-100 tw-bg-red-50 tw-px-3 tw-py-2 tw-mb-3 tw-text-xs tw-text-red-700">{{ error_message }}</div>
+            {% endif %}
+            <div class="[&_.btn]:tw-flex [&_.btn]:tw-items-center [&_.btn]:tw-justify-center [&_.btn]:tw-gap-2 [&_.btn]:tw-w-full [&_.btn]:tw-px-4 [&_.btn]:tw-py-2.5 [&_.btn]:tw-rounded [&_.btn]:tw-text-sm [&_.btn]:tw-font-semibold [&_.btn]:tw-text-white [&_.btn]:tw-no-underline [&_.btn]:tw-cursor-pointer [&_.btn-success]:tw-bg-[#185A75] [&_.btn-danger]:tw-bg-gray-500">
+              {% snippet 'snippets/follow_button.html', am_following=am_following, obj_type='dataset', obj_id=pkg.id, anchor_type='package' %}
+            </div>
+          {% endif %}
+        {% endblock %}
+      {% endblock %}
     </section>
   {% endif %}
 {% endblock %}

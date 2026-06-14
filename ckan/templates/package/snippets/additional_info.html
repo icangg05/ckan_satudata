@@ -1,22 +1,19 @@
-<section class="additional-info">
-  <h3>{{ _('Additional Info') }}</h3>
-  <table class="table table-striped table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th scope="col">{{ _('Field') }}</th>
-        <th scope="col">{{ _('Value') }}</th>
-      </tr>
-    </thead>
-    <tbody>
+<section class="additional-info tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-6">
+  <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-4">
+    <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    </span>
+    <h2 class="tw-text-lg tw-font-bold tw-text-gray-800 tw-m-0">{{ _('Additional Info') }}</h2>
+  </div>
+  <table class="tw-w-full tw-text-sm">
+    <tbody class="[&_tr]:tw-border-b [&_tr]:tw-border-gray-100 [&_tr:last-child]:tw-border-0 [&_th]:tw-text-left [&_th]:tw-font-semibold [&_th]:tw-text-gray-500 [&_th]:tw-py-2.5 [&_th]:tw-pr-4 [&_th]:tw-align-top [&_th]:tw-whitespace-nowrap [&_td]:tw-py-2.5 [&_td]:tw-text-gray-700 [&_td]:tw-align-top [&_td]:tw-break-words [&_a]:tw-text-[#185A75] [&_a]:tw-no-underline hover:[&_a]:tw-underline">
       {% block package_additional_info %}
         {% if pkg_dict.url %}
           <tr>
             <th scope="row" class="dataset-label">{{ _('Source') }}</th>
             {% if h.is_url(pkg_dict.url) %}
               <td class="dataset-details" property="foaf:homepage">
-                <a href="{{ pkg_dict.url }}" rel="foaf:homepage" target="_blank">
-                  {{ pkg_dict.url }}
-                </a>
+                <a href="{{ pkg_dict.url }}" rel="foaf:homepage" target="_blank">{{ pkg_dict.url }}</a>
               </td>
             {% else %}
               <td class="dataset-details" property="foaf:homepage">{{ pkg_dict.url }}</td>
@@ -72,7 +69,6 @@
         {% if pkg_dict.metadata_created %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Created") }}</th>
-
             <td class="dataset-details">
                 {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pkg_dict.metadata_created %}
             </td>

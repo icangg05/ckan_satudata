@@ -6,40 +6,122 @@
   <li class="active">{{ h.nav_link(_(dataset_type.title() + 's'), named_route='%s.search' % dataset_type) }}</li>
 {% endblock %}
 
-{% block primary_content %}
-  {% snippet "package/snippets/search_results.html",
-    dataset_type=dataset_type,
-    fields_grouped=fields_grouped,
-    search_facets=search_facets,
-    facet_titles=facet_titles,
-    translated_fields=translated_fields,
-    remove_field=remove_field,
-    q=q,
-    sort_by_selected=sort_by_selected,
-    page=page,
-    query_error=query_error,
-    fields=fields
-  %}
+{% block content %}
+<div class="tw-font-sans tw-bg-sky-50 tw-min-h-screen">
 
-  {% block package_search_results_api %}
-    <section class="module">
-      <div class="module-content">
-        {% block package_search_results_api_inner %}
-          <small>
-            {% set api_link = h.link_to(_('API'), h.url_for('api.get_api', ver=3)) %}
-            {% set api_doc_link = h.link_to(_('API Docs'), 'https://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version)) %}
-            {% trans %} You can also access this registry using the {{ api_link }} (see {{ api_doc_link}}). {% endtrans %}
-          </small>
-        {% endblock %}
+  {# Header band — flush against the site header #}
+  <section class="tw-relative tw-overflow-hidden" style="background: linear-gradient(135deg, #0D3748, #185A75);">
+    <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <pattern id="ds-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.5" fill="#ffffff" fill-opacity="0.08"></circle>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#ds-dots)"></rect>
+    </svg>
+
+    <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-pt-8 tw-pb-12 md:tw-pt-10 md:tw-pb-14">
+      <nav class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-mb-5" style="color: #bde3f0;" aria-label="{{ _('Breadcrumb') }}">
+        <a href="{{ h.url_for('home.index') }}" class="tw-no-underline hover:tw-no-underline hover:tw-text-white tw-transition-colors" style="color: #bde3f0;">{{ _('Home') }}</a>
+        <i class="fa-solid fa-chevron-right tw-text-[9px] tw-opacity-60" aria-hidden="true"></i>
+        <span class="tw-text-white tw-font-medium">{{ _(dataset_type.title() + 's') }}</span>
+      </nav>
+
+      <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1.5 tw-mb-4 tw-rounded-full tw-text-[11px] tw-font-semibold tw-tracking-widest tw-uppercase tw-text-white tw-bg-white/10 tw-border tw-border-white/15 tw-backdrop-blur-md">
+        <i class="fa-solid fa-database tw-text-[10px]" style="color: #38bdf8;" aria-hidden="true"></i>
+        {{ _('Open Data') }}
       </div>
-    </section>
-  {% endblock %}
-{% endblock %}
 
+      <h1 class="tw-text-3xl md:tw-text-4xl tw-font-extrabold tw-text-white tw-m-0">
+        {{ h.humanize_entity_type('package', dataset_type, 'search title') or _(dataset_type.title() + 's') }}
+      </h1>
+      <p class="tw-text-sm md:tw-text-base tw-leading-relaxed tw-mt-3 tw-mb-0 tw-max-w-2xl" style="color: #bde3f0;">
+        {% trans %}Browse, filter and download datasets published on this open data portal.{% endtrans %}
+      </p>
+    </div>
 
-{% block secondary_content %}
-  {% snippet "package/snippets/search_facets.html",
-    facet_titles=facet_titles,
-    search_facets=search_facets
-  %}
+    {# bottom accent line #}
+    <div class="tw-absolute tw-bottom-0 tw-left-0 tw-w-full tw-h-1" style="background: linear-gradient(90deg, #185A75, #38bdf8, #fbbf24);"></div>
+  </section>
+
+  {# Main content: facets sidebar + results, on a decorated background #}
+  <div class="tw-relative tw-overflow-hidden">
+    {# Decorative background ornaments #}
+    <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+      {# dot grid #}
+      <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="ds-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.4" fill="#185A75" fill-opacity="0.10"></circle>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#ds-grid)"></rect>
+      </svg>
+
+      {# glowing color blobs #}
+      <div class="tw-absolute -tw-top-24 -tw-right-16 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.30), transparent 70%); animation-duration: 7s;"></div>
+      <div class="tw-absolute tw-top-1/2 -tw-left-24 tw-w-[26rem] tw-h-[26rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.16), transparent 70%); animation-duration: 9s;"></div>
+      <div class="tw-absolute tw-bottom-0 tw-right-1/4 tw-w-80 tw-h-80 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(24,90,117,0.12), transparent 70%); animation-duration: 8s;"></div>
+
+      {# floating geometric shapes #}
+      <div class="tw-absolute tw-top-24 tw-right-[10%] tw-w-12 tw-h-12 tw-rounded-2xl tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.10); border: 1.5px solid rgba(56,189,248,0.25); animation-duration: 6s;"></div>
+      <div class="tw-absolute tw-bottom-40 tw-left-[5%] tw-w-8 tw-h-8 tw-rounded-full tw-animate-bounce" style="background: rgba(251,191,36,0.15); border: 1.5px solid rgba(251,191,36,0.30); animation-duration: 7s; animation-delay: 1s;"></div>
+      <div class="tw-absolute tw-top-2/3 tw-right-[6%] tw-w-6 tw-h-6 tw-rotate-45 tw-animate-pulse" style="background: rgba(24,90,117,0.10); border: 1.5px solid rgba(24,90,117,0.22); animation-duration: 5s;"></div>
+
+      {# flowing wave lines #}
+      <svg class="tw-absolute tw-top-10 tw-left-1/2 -tw-translate-x-1/2 tw-w-[140%] tw-max-w-none" viewBox="0 0 1440 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,120 C240,60 480,180 720,120 C960,60 1200,180 1440,120" stroke="#185A75" stroke-opacity="0.12" stroke-width="2" fill="none"></path>
+        <path d="M0,170 C240,110 480,230 720,170 C960,110 1200,230 1440,170" stroke="#38bdf8" stroke-opacity="0.15" stroke-width="2" fill="none"></path>
+        <path d="M0,220 C240,160 480,280 720,220 C960,160 1200,280 1440,220" stroke="#fbbf24" stroke-opacity="0.12" stroke-width="2" fill="none"></path>
+      </svg>
+    </div>
+
+    <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-8 md:tw-py-10">
+      {{ self.flash() }}
+      <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-[280px_minmax(0,1fr)] tw-gap-6 lg:tw-gap-8 tw-items-start">
+
+      {% block secondary_content %}
+        <aside class="lg:tw-sticky lg:tw-top-6">
+          {% snippet "package/snippets/search_facets.html",
+            facet_titles=facet_titles,
+            search_facets=search_facets
+          %}
+        </aside>
+      {% endblock %}
+
+      {% block primary_content %}
+        <div role="main">
+          {% snippet "package/snippets/search_results.html",
+            dataset_type=dataset_type,
+            fields_grouped=fields_grouped,
+            search_facets=search_facets,
+            facet_titles=facet_titles,
+            translated_fields=translated_fields,
+            remove_field=remove_field,
+            q=q,
+            sort_by_selected=sort_by_selected,
+            page=page,
+            query_error=query_error,
+            fields=fields
+          %}
+
+          {% block package_search_results_api %}
+            <div class="tw-mt-6 tw-flex tw-items-start tw-gap-2.5 tw-rounded tw-border tw-border-gray-200 tw-bg-white tw-px-4 tw-py-3 tw-text-xs tw-text-gray-500">
+              <i class="fa-solid fa-code tw-mt-0.5" style="color: #185A75;" aria-hidden="true"></i>
+              <span>
+                {% block package_search_results_api_inner %}
+                  {% set api_link = h.link_to(_('API'), h.url_for('api.get_api', ver=3)) %}
+                  {% set api_doc_link = h.link_to(_('API Docs'), 'https://docs.ckan.org/en/{0}/api/'.format(g.ckan_doc_version)) %}
+                  {% trans %} You can also access this registry using the {{ api_link }} (see {{ api_doc_link}}). {% endtrans %}
+                {% endblock %}
+              </span>
+            </div>
+          {% endblock %}
+        </div>
+      {% endblock %}
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

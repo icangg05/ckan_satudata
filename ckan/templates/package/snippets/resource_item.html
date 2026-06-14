@@ -1,81 +1,74 @@
-{# Renders a single resource with icons and view links. res - A resource dict to
-render pkg - A package dict that the resource belongs to can_edit - Whether the
-user is allowed to edit the resource url_is_edit - Whether the link to the
-resource should be to editing it (set to False to make the link view the
-resource) url - URL of the resource details page(resource edit/read depending on
-url_is_edit, by default). Example: {% snippet
-"package/snippets/resource_item.html", res=resource, pkg=pkg, can_edit=True,
-url_is_edit=False %} #} {% set url_action = pkg.type ~ ('_resource.edit' if
-url_is_edit and can_edit else '_resource.read') %} {% set url = url or
-h.url_for(url_action, id=pkg.name, resource_id=res.id) %}
+{#
+Renders a single resource with icons and view links.
+res - A resource dict to render
+pkg - A package dict that the resource belongs to
+can_edit - Whether the user is allowed to edit the resource
+url_is_edit - Whether the link to the resource should be to editing it
+url - URL of the resource details page.
 
-<li class="resource-item" data-id="{{ res.id }}">
-  {% block resource_item_title %} {% set name_or_id = res.name or res.id %}
-  <a
-    class="heading"
-    href="{{ url }}"
-    aria-label="{{ _('Navigate to resource: {name_or_id}').format(name_or_id=name_or_id)}}"
-  >
-    {{ h.resource_display_name(res) | truncate(50) }}<span
-      class="format-label"
-      property="dc:format"
-      data-format="{{ res.format.lower() or 'data' }}"
-      >{{ h.get_translated(res, 'format') }}</span
-    >
+Example:
+  {% snippet "package/snippets/resource_item.html", res=resource, pkg=pkg, can_edit=True, url_is_edit=False %}
+#}
+{% set url_action = pkg.type ~ ('_resource.edit' if url_is_edit and can_edit else '_resource.read') %}
+{% set url = url or h.url_for(url_action, id=pkg.name, resource_id=res.id) %}
+{% set format = (res.format or '')|lower %}
+{% set icon_map = {
+  'csv': 'fa-file-csv', 'tsv': 'fa-file-csv',
+  'xls': 'fa-file-excel', 'xlsx': 'fa-file-excel',
+  'pdf': 'fa-file-pdf',
+  'json': 'fa-file-code', 'xml': 'fa-file-code', 'api': 'fa-plug',
+  'geojson': 'fa-map-location-dot', 'kml': 'fa-map-location-dot', 'shp': 'fa-map-location-dot', 'wms': 'fa-map-location-dot', 'wfs': 'fa-map-location-dot', 'gpkg': 'fa-map-location-dot',
+  'zip': 'fa-file-zipper', 'rar': 'fa-file-zipper', '7z': 'fa-file-zipper',
+  'doc': 'fa-file-word', 'docx': 'fa-file-word',
+  'txt': 'fa-file-lines',
+  'html': 'fa-globe',
+  'png': 'fa-file-image', 'jpg': 'fa-file-image', 'jpeg': 'fa-file-image', 'gif': 'fa-file-image', 'svg': 'fa-file-image'
+} %}
+{% set icon = icon_map.get(format, 'fa-file') %}
+
+<li class="resource-item tw-group tw-flex tw-items-start tw-gap-3 tw-rounded tw-border tw-border-gray-200 tw-p-3.5 tw-transition-all tw-duration-200 hover:tw-border-[#38bdf8]/50 hover:tw-shadow-sm" data-id="{{ res.id }}">
+
+  <a href="{{ url }}" class="tw-flex-shrink-0 tw-inline-flex tw-items-center tw-justify-center tw-w-11 tw-h-11 tw-rounded tw-no-underline tw-transition-colors" style="background-color: rgba(24,90,117,0.08); color: #185A75;" aria-hidden="true" tabindex="-1">
+    <i class="fa-solid {{ icon }} tw-text-lg"></i>
   </a>
-  {% endblock %} {% block resource_item_description %}
-  <p class="description">
-    {% if res.description %} {{ h.markdown_extract(h.get_translated(res,
-    'description'), extract_length=80) }} {% endif %}
-  </p>
-  {% endblock %} {% block resource_item_explore %} {% if not url_is_edit %}
-  <div class="dropdown btn-group">
-    <a
-      href="#"
-      class="btn btn-primary dropdown-toggle"
-      type="button"
-      id="dropdownExplorer"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
-      <i class="fa fa-share"></i>
-      {{ _('Explore') }}
-      <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="dropdownExplorer">
-      {% block resource_item_explore_links %} {% block explore_view %}
-      <li>
-        <a class="dropdown-item" href="{{ url }}">
-          <i class="fa fa-chart-bar"></i>
-          {{ _('Preview') }}
+
+  <div class="tw-flex-1 tw-min-w-0">
+    {% block resource_item_title %}
+      {% set name_or_id = res.name or res.id %}
+      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+        <a class="heading tw-text-sm tw-font-semibold tw-text-gray-800 tw-no-underline hover:tw-text-[#185A75] tw-transition-colors" href="{{ url }}"
+          aria-label="{{ _('Navigate to resource: {name_or_id}').format(name_or_id=name_or_id) }}">
+          {{ h.resource_display_name(res) | truncate(60) }}
         </a>
-      </li>
-      {% endblock explore_view %} {% if res.url and h.is_url(res.url) %}
-      <li>
-        <a
-          class="dropdown-item resource-url-analytics"
-          href="{{ res.url }}"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <i class="fa fa-arrow-circle-down"></i>
-          {{ _('Download') }}
-        </a>
-      </li>
-      {% endif %} {% if can_edit %}
-      <li>
-        {% link_for _('Edit resource'), named_route=pkg.type ~ '_resource.edit',
-        id=pkg.name, resource_id=res.id, class_='dropdown-item', icon='pencil'
-        %}
-      </li>
-      {% block resource_item_explore_inner scoped %}{% endblock %}
-      <li>
-        {% link_for _('Views'), named_route=pkg.type ~ '_resource.views',
-        id=pkg.name, resource_id=res.id, class_='dropdown-item',
-        icon='chart-bar' %}
-      </li>
-      {% endif %} {% endblock %}
-    </ul>
+        <span class="format-label tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded tw-text-[10px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: rgba(56,189,248,0.14); color: #185A75;"
+          property="dc:format" data-format="{{ format or 'data' }}">{{ h.get_translated(res, 'format') or _('data') }}</span>
+      </div>
+      {% endblock %}
+
+    {% block resource_item_description %}
+      {% if res.description %}
+        <p class="description tw-text-xs tw-text-gray-500 tw-leading-relaxed tw-mt-1 tw-mb-0 tw-line-clamp-2">{{ h.markdown_extract(h.get_translated(res, 'description'), extract_length=120) }}</p>
+      {% endif %}
+      {% endblock %}
   </div>
-  {% endif %} {% endblock %}
+
+  {% block resource_item_explore %}
+    {% if not url_is_edit %}
+      <div class="tw-flex tw-flex-shrink-0 tw-items-center tw-gap-1.5">
+        <a href="{{ url }}" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-rounded tw-text-xs tw-font-semibold tw-no-underline hover:tw-no-underline tw-border tw-border-gray-200 tw-text-gray-600 hover:tw-border-[#185A75] hover:tw-text-[#185A75] tw-transition-colors" aria-label="{{ _('Preview') }}">
+          <i class="fa-solid fa-eye" aria-hidden="true"></i><span class="tw-hidden sm:tw-inline">{{ _('Preview') }}</span>
+        </a>
+        {% if res.url and h.is_url(res.url) %}
+          <a href="{{ res.url }}" target="_blank" rel="noreferrer" class="resource-url-analytics tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-rounded tw-text-xs tw-font-semibold tw-text-white tw-no-underline hover:tw-no-underline tw-transition-colors hover:tw-shadow" style="background-color: #185A75;" aria-label="{{ _('Download') }}">
+            <i class="fa-solid fa-download" aria-hidden="true"></i><span class="tw-hidden sm:tw-inline">{{ _('Download') }}</span>
+          </a>
+        {% endif %}
+        {% if can_edit %}
+          <a href="{{ h.url_for(pkg.type ~ '_resource.edit', id=pkg.name, resource_id=res.id) }}" class="tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded tw-text-gray-400 tw-no-underline hover:tw-text-[#185A75] hover:tw-bg-gray-50 tw-transition-colors" aria-label="{{ _('Edit resource') }}" data-bs-title="{{ _('Edit resource') }}" data-bs-toggle="tooltip">
+            <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endblock %}
 </li>

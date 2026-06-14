@@ -1,8 +1,67 @@
-<div class="filters" id="search-facets" hx-swap-oob="true" hx-swap="none">
-  <div>
-    {% for facet in facet_titles %}
-      {% snippet 'snippets/facet_list.html', title=facet_titles[facet], name=facet, search_facets=search_facets %}
-    {% endfor %}
+{#
+Tailwind-redesigned facet sidebar for the dataset search page.
+Keeps the htmx contract: outer element id="search-facets" + hx-swap-oob="true"
+so the controller's out-of-band swap (search_htmx.html) still works.
+The shared snippets/facet_list.html is intentionally left untouched because it
+is reused by groups/organizations.
+#}
+<div id="search-facets" class="tw-hidden lg:tw-block tw-space-y-4" hx-swap-oob="true" hx-swap="none">
+
+  <div class="tw-flex tw-items-center tw-justify-between lg:tw-hidden tw-mb-1">
+    <h2 class="tw-text-sm tw-font-bold tw-text-gray-700 tw-m-0">{{ _('Filter Results') }}</h2>
+    <button type="button" onclick="document.getElementById('search-facets').classList.add('tw-hidden')"
+      class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-gray-500 tw-border-0 tw-bg-transparent tw-cursor-pointer">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>{{ _('close') }}
+    </button>
   </div>
-  <a class="close no-text hide-filters"><i class="fa fa-times-circle"></i><span class="text">{{ _('close') }}</span></a>
+
+  {% for facet in facet_titles %}
+    {% set items = h.get_facet_items_dict(facet, search_facets) %}
+    {% if items %}
+      <section class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-overflow-hidden">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-4 tw-py-3 tw-border-b tw-border-gray-100">
+          <i class="fa-solid fa-filter tw-text-xs" style="color: #185A75;" aria-hidden="true"></i>
+          <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-m-0">{{ facet_titles[facet] }}</h2>
+        </div>
+        <nav aria-label="{{ _('Filter by: {title}').format(title=facet_titles[facet]) }}" class="tw-p-2">
+          <ul class="tw-list-none tw-m-0 tw-p-0 tw-space-y-0.5">
+            {% for item in items %}
+              {% set href = h.remove_url_param(facet, item.name) if item.active else h.add_url_param(new_params={facet: item.name}) %}
+              {% set label = item.display_name|truncate(24) %}
+              {% set count = '%d' % item['count'] %}
+              <li>
+                <a hx-boost="true" href="{{ href }}"
+                  aria-label="{{ _('Search datasets by {name}: {label}').format(name=facet, label=label) }}"
+                  {% if item.display_name|length > 24 %}data-bs-title="{{ item.display_name }}" data-bs-toggle="tooltip"{% endif %}
+                  class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-rounded tw-px-3 tw-py-2 tw-text-sm tw-no-underline hover:tw-no-underline tw-transition-colors {% if item.active %}tw-font-semibold{% else %}hover:tw-bg-gray-50{% endif %}"
+                  style="{% if item.active %}background-color: #185A75; color: #ffffff;{% else %}color: #374151;{% endif %}">
+                  <span class="tw-flex tw-items-center tw-gap-2 tw-min-w-0">
+                    {% if item.active %}<i class="fa-solid fa-check tw-text-[11px]" aria-hidden="true"></i>{% endif %}
+                    <span class="tw-truncate">{{ label }}</span>
+                  </span>
+                  <span class="tw-flex-shrink-0 tw-text-xs tw-font-semibold tw-px-2 tw-py-0.5 tw-rounded-full"
+                    style="{% if item.active %}background-color: rgba(255,255,255,0.2); color: #ffffff;{% else %}background-color: #e0f4fb; color: #185A75;{% endif %}">{{ count }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+        {% if h.has_more_facets(facet, search_facets) or '_%s_limit' % facet in request.args %}
+          <div class="tw-px-4 tw-py-2.5 tw-border-t tw-border-gray-100">
+            {% if h.has_more_facets(facet, search_facets) %}
+              <a hx-boost="true" href="{{ h.remove_url_param('_%s_limit' % facet, replace=0) }}"
+                class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-no-underline tw-transition-colors" style="color: #185A75;">
+                <i class="fa-solid fa-plus tw-text-[10px]" aria-hidden="true"></i>{{ _('Show More {facet_type}').format(facet_type=facet_titles[facet]) }}
+              </a>
+            {% else %}
+              <a hx-boost="true" href="{{ h.remove_url_param('_%s_limit' % facet) }}"
+                class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-no-underline tw-transition-colors" style="color: #185A75;">
+                <i class="fa-solid fa-minus tw-text-[10px]" aria-hidden="true"></i>{{ _('Show Only Popular {facet_type}').format(facet_type=facet_titles[facet]) }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </section>
+    {% endif %}
+  {% endfor %}
 </div>

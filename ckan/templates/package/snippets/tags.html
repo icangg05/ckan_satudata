@@ -9,7 +9,22 @@
 
 #}
 {% if tags %}
-  <section class="tags">
-    {% snippet 'snippets/tag_list.html', tags=tags, _class='tag-list' %}
+  <section class="tags tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-6">
+    <div class="tw-flex tw-items-center tw-gap-2.5 tw-mb-4">
+      <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+        <i class="fa-solid fa-tags" aria-hidden="true"></i>
+      </span>
+      <h2 class="tw-text-lg tw-font-bold tw-text-gray-800 tw-m-0">{{ _('Tags') }}</h2>
+    </div>
+    <div class="tw-flex tw-flex-wrap tw-gap-2">
+      {% for tag in tags %}
+        <a href="{% url_for 'dataset.search', tags=tag.name %}"
+          aria-label="{{ _('Search datasets with the tag: {name}').format(name=tag.display_name) }}"
+          class="tw-inline-flex tw-items-center tw-gap-1.5 tw-pl-2.5 tw-pr-3 tw-py-1.5 tw-rounded-full tw-text-xs tw-font-medium tw-no-underline hover:tw-no-underline tw-transition-all hover:-tw-translate-y-0.5"
+          style="background-color: #e0f4fb; color: #185A75;">
+          <i class="fa-solid fa-hashtag tw-text-[10px]" style="color: #38bdf8;" aria-hidden="true"></i>{{ tag.display_name|truncate(22) }}
+        </a>
+      {% endfor %}
+    </div>
   </section>
 {% endif %}

@@ -1,37 +1,208 @@
-<section class="module" id="search-results" hx-swap-oob="true" hx-swap="none">
-  <div class="module-content">
-    {% block page_primary_action %}
-      {% if h.check_access('package_create') %}
-        <div class="page_primary_action">
-          {% snippet 'snippets/add_dataset.html', dataset_type=dataset_type %}
+{#
+Tailwind-redesigned dataset search results (form + result list + pager).
+Keeps the htmx contract: outer element id="search-results" + hx-swap-oob="true"
+so the controller's out-of-band swap (search_htmx.html) still works.
+The shared snippets/search_form.html, snippets/package_list.html and
+snippets/package_item.html are intentionally left untouched because they are
+reused by groups/organizations.
+#}
+{% import 'macros/form.html' as form %}
+
+{% set sorting = sorting or [
+  (_('Relevance'), 'score desc, metadata_modified desc'),
+  (_('Name Ascending'), 'title_string asc'),
+  (_('Name Descending'), 'title_string desc'),
+  (_('Last Modified'), 'metadata_modified desc')
+  ]
+%}
+{% set placeholder = h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search datasets...') %}
+
+<div id="search-results" hx-swap-oob="true" hx-swap="none">
+
+  {% block page_primary_action %}
+    {% if h.check_access('package_create') %}
+      <div class="tw-flex tw-justify-end tw-mb-4">
+        <a href="{{ h.url_for(dataset_type ~ '.new') }}"
+          class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2.5 tw-rounded tw-text-sm tw-font-semibold tw-text-white tw-no-underline hover:tw-no-underline tw-transition-colors hover:tw-shadow-lg"
+          style="background-color: #185A75;">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          {{ h.humanize_entity_type('package', dataset_type, 'add link') or _('Add Dataset') }}
+        </a>
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block form %}
+    <form id="dataset-search-form" hx-boost="true" hx-disinherit="hx-boost" method="get" hx-trigger="change, submit" class="tw-mb-5">
+      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3">
+        <div class="tw-relative tw-flex-1">
+          <i class="fa-solid fa-magnifying-glass tw-absolute tw-left-4 tw-top-1/2 -tw-translate-y-1/2 tw-text-gray-400 tw-text-sm" aria-hidden="true"></i>
+          <input type="text" name="q" value="{{ q }}" autocomplete="off" placeholder="{{ placeholder }}" aria-label="{{ placeholder }}"
+            class="tw-w-full tw-rounded tw-border tw-border-gray-200 tw-bg-white tw-py-3 tw-pl-11 tw-pr-4 tw-text-sm tw-text-gray-800 tw-placeholder-gray-400 focus:tw-outline-none focus:tw-border-[#185A75] focus:tw-ring-2 focus:tw-ring-[#185A75]/20" />
         </div>
+        {% if sort_by_selected %}<input type="hidden" name="sort" value="{{ sort_by_selected }}">{% endif %}
+        {% if fields %}<span>{{ form.hidden_from_list(fields=fields) }}</span>{% endif %}
+        <button type="submit" value="search" aria-label="{{ _('Submit') }}"
+          class="tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-px-6 tw-py-3 tw-rounded tw-text-sm tw-font-semibold tw-text-white tw-transition-colors hover:tw-shadow-lg"
+          style="background-color: #185A75;">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>{{ _('Search') }}
+        </button>
+      </div>
+    </form>
+
+    {# Mobile: button to reveal the facet sidebar #}
+    <button type="button" onclick="document.getElementById('search-facets').classList.toggle('tw-hidden')"
+      class="lg:tw-hidden tw-inline-flex tw-items-center tw-gap-2 tw-mb-4 tw-px-4 tw-py-2 tw-rounded tw-border tw-border-gray-200 tw-bg-white tw-text-sm tw-font-semibold tw-text-gray-700 tw-cursor-pointer">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>{{ _('Filter Results') }}
+    </button>
+
+    {# Result count + active filters + sort #}
+    <div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-center sm:tw-justify-between tw-gap-3 tw-mb-4">
+      <h1 class="tw-text-base md:tw-text-lg tw-font-bold tw-text-gray-800 tw-m-0">
+        {% if not query_error %}
+          {% snippet 'snippets/search_result_text.html', query=q, count=page.item_count, type=dataset_type %}
+        {% else %}
+          {{ _('Error') }}
+        {% endif %}
+      </h1>
+      {% if sorting %}
+        <form hx-boost="true" hx-disinherit="hx-boost" method="get" hx-trigger="change, submit" class="tw-flex tw-items-center tw-gap-2">
+          {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+          {% if fields %}<span>{{ form.hidden_from_list(fields=fields) }}</span>{% endif %}
+          <label for="field-order-by" class="tw-text-xs tw-font-medium tw-text-gray-500 tw-whitespace-nowrap">{{ _('Order by') }}</label>
+          <select id="field-order-by" name="sort"
+            class="tw-rounded tw-border tw-border-gray-200 tw-bg-white tw-py-2 tw-px-3 tw-text-sm tw-text-gray-700 focus:tw-outline-none focus:tw-border-[#185A75]">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <option value="{{ value }}"{% if sort_by_selected == value %} selected="selected"{% endif %}>{{ label }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          <button class="js-hide tw-px-3 tw-py-2 tw-rounded tw-text-sm tw-font-semibold tw-text-white" style="background-color: #185A75;" type="submit">{{ _('Go') }}</button>
+        </form>
       {% endif %}
-    {% endblock %}
-    {% block form %}
-      {% set facets = {
-        'fields': fields_grouped,
-        'search': search_facets,
-        'titles': facet_titles,
-        'translated_fields': translated_fields,
-        'remove_field': remove_field }
-      %}
-      {% set sorting = [
-        (_('Relevance'), 'score desc, metadata_modified desc'),
-        (_('Name Ascending'), 'title_string asc'),
-        (_('Name Descending'), 'title_string desc'),
-        (_('Last Modified'), 'metadata_modified desc')
-        ]
-      %}
-      {% snippet 'snippets/search_form.html', form_id='dataset-search-form', type=dataset_type, query=q, sorting=sorting, sorting_selected=sort_by_selected, count=page.item_count, placeholder=h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search datasets...'), facets=facets, show_empty=request.args, error=query_error, fields=fields %}
-    {% endblock %}
-    {% block package_search_results_list %}
-      {% snippet 'snippets/package_list.html', packages=page.items %}
-    {% endblock %}
-  </div>
+    </div>
+
+    {% set facets = {
+      'fields': fields_grouped,
+      'search': search_facets,
+      'titles': facet_titles,
+      'translated_fields': translated_fields,
+      'remove_field': remove_field }
+    %}
+    {% if facets.fields %}
+      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-mb-5">
+        <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-400">{{ _('Filters') }}</span>
+        {% for field in facets.fields %}
+          {% set search_facets_items = facets.search.get(field)['items'] if facets.search and field in facets.search else [] %}
+          {% for value in facets.fields[field] %}
+            <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-pl-3 tw-pr-1.5 tw-py-1 tw-rounded-full tw-text-xs tw-font-medium" style="background-color: #e0f4fb; color: #185A75;">
+              <span class="tw-opacity-60">{{ facets.titles.get(field) }}:</span>
+              {%- if facets.translated_fields and (field,value) in facets.translated_fields -%}
+                {{ facets.translated_fields[(field,value)] }}
+              {%- else -%}
+                {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
+              {%- endif %}
+              <a href="{{ facets.remove_field(field, value) }}" hx-boost="true"
+                aria-label="{{ _('Remove applied filter: {value}').format(value=value) }}" data-bs-title="{{ _('Remove') }}" data-bs-toggle="tooltip"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-w-4 tw-h-4 tw-rounded-full tw-no-underline hover:tw-no-underline hover:tw-bg-[#185A75] hover:tw-text-white tw-transition-colors">
+                <i class="fa-solid fa-xmark tw-text-[10px]" aria-hidden="true"></i>
+              </a>
+            </span>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if query_error %}
+      <div class="tw-rounded tw-border tw-border-red-100 tw-bg-red-50 tw-px-4 tw-py-3 tw-mb-5 tw-text-sm tw-text-red-700">
+        {% trans %}<strong>There was an error while searching.</strong> Please try again.{% endtrans %}
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block package_search_results_list %}
+    {% if page.items %}
+      <ul class="tw-list-none tw-m-0 tw-p-0 tw-space-y-4">
+        {% for package in page.items %}
+          {% set title = package.title or package.name %}
+          {% set notes = h.markdown_extract(package.notes, extract_length=180) %}
+          <li class="tw-group tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-5 tw-transition-all tw-duration-300 hover:tw-shadow-lg hover:tw-border-[#38bdf8]/50 hover:-tw-translate-y-0.5">
+            <div class="tw-flex tw-items-start tw-gap-3">
+              <div class="tw-flex-shrink-0 tw-w-11 tw-h-11 tw-rounded tw-flex tw-items-center tw-justify-center tw-mt-0.5" style="background-color: rgba(24,90,117,0.08);">
+                <i class="fa-solid fa-database tw-text-base" style="color: #185A75;" aria-hidden="true"></i>
+              </div>
+              <div class="tw-flex-1 tw-min-w-0">
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+                  <h2 class="tw-text-lg tw-font-bold tw-m-0">
+                    <a href="{{ h.url_for('%s.read' % package.type, id=package.name) }}"
+                      aria-label="{{ _('Navigate to dataset: {title}').format(title=title|truncate(80)) }}"
+                      class="tw-text-gray-800 tw-no-underline hover:tw-text-[#185A75] tw-transition-colors">{{ title|truncate(80) }}</a>
+                  </h2>
+                  {% if package.private %}
+                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-[11px] tw-font-semibold tw-bg-gray-100 tw-text-gray-600">
+                      <i class="fa-solid fa-lock tw-text-[9px]" aria-hidden="true"></i>{{ _('Private') }}
+                    </span>
+                  {% endif %}
+                  {% if package.get('state', '').startswith('draft') %}
+                    <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-[11px] tw-font-semibold" style="background-color: #e0f4fb; color: #185A75;">{{ _('Draft') }}</span>
+                  {% elif package.get('state', '').startswith('deleted') %}
+                    <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-[11px] tw-font-semibold tw-bg-red-50 tw-text-red-600">{{ _('Deleted') }}</span>
+                  {% endif %}
+                </div>
+
+                {% if package.organization %}
+                  <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-gray-500 tw-mt-1.5">
+                    <i class="fa-solid fa-building tw-text-gray-400" aria-hidden="true"></i>
+                    <span class="tw-truncate">{{ package.organization.title or package.organization.name }}</span>
+                  </div>
+                {% endif %}
+
+                {% if notes %}
+                  <div class="tw-text-sm tw-text-gray-600 tw-leading-relaxed tw-mt-3 tw-line-clamp-2 [&_a]:tw-text-[#185A75]">{{ notes|urlize }}</div>
+                {% else %}
+                  <p class="tw-text-sm tw-text-gray-400 tw-italic tw-leading-relaxed tw-mt-3 tw-mb-0">{{ h.humanize_entity_type('package', package.type, 'no description') or _("There is no description for this dataset.") }}</p>
+                {% endif %}
+
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-mt-4 tw-pt-3 tw-border-t tw-border-gray-100">
+                  {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                    <a href="{{ h.url_for(package.type ~ '.read', id=package.name) }}" data-format="{{ resource.lower() }}"
+                      class="tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-rounded tw-text-[11px] tw-font-bold tw-uppercase tw-tracking-wide tw-no-underline hover:tw-no-underline tw-transition-colors"
+                      style="background-color: rgba(56,189,248,0.12); color: #185A75;">{{ resource }}</a>
+                  {% endfor %}
+                  {% if package.metadata_modified %}
+                    <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-gray-400">
+                      <i class="fa-solid fa-clock tw-text-[11px]" aria-hidden="true"></i>{{ h.render_datetime(package.metadata_modified) }}
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="tw-bg-white tw-rounded tw-border tw-border-gray-200 tw-py-16 tw-px-4 tw-text-center">
+        <i class="fa-solid fa-folder-open tw-text-5xl tw-text-gray-200" aria-hidden="true"></i>
+        <p class="tw-text-base tw-font-semibold tw-text-gray-600 tw-mt-4 tw-mb-1">
+          {% snippet 'snippets/search_result_text.html', query=q, count=0, type=dataset_type %}
+        </p>
+        {% if request.args %}
+          <p class="tw-text-sm tw-text-gray-400 tw-mb-0">{{ _('Please try another search.') }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endblock %}
 
   {% block page_pagination %}
-    <div hx-boost="true">
+    <div hx-boost="true"
+      class="tw-mt-8 tw-flex tw-justify-center
+        [&_.pagination]:tw-inline-flex [&_.pagination]:tw-items-center [&_.pagination]:tw-gap-1 [&_.pagination]:tw-list-none [&_.pagination]:tw-p-0 [&_.pagination]:tw-m-0
+        [&_.page-link]:tw-flex [&_.page-link]:tw-items-center [&_.page-link]:tw-justify-center [&_.page-link]:tw-min-w-[2.5rem] [&_.page-link]:tw-h-10 [&_.page-link]:tw-px-3 [&_.page-link]:tw-rounded [&_.page-link]:tw-border [&_.page-link]:tw-border-gray-200 [&_.page-link]:tw-bg-white [&_.page-link]:tw-text-gray-600 [&_.page-link]:tw-no-underline [&_.page-link]:tw-transition-colors
+        [&_.page-link:hover]:tw-bg-gray-50 [&_.page-link:hover]:tw-text-[#185A75]
+        [&_.active_.page-link]:tw-bg-[#185A75] [&_.active_.page-link]:tw-text-white [&_.active_.page-link]:tw-border-transparent
+        [&_.disabled_.page-link]:tw-opacity-40">
       {{ page.pager(q=q) }}
     </div>
   {% endblock %}
-</section>
+</div>

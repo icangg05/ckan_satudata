@@ -10,11 +10,22 @@
 
   #}
 
-<section id="dataset-resources" class="resources">
-  <h2>{{ _('Data and Resources') }}</h2>
+<section id="dataset-resources" class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-6">
+  <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-4">
+    <div class="tw-flex tw-items-center tw-gap-2.5">
+      <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-rounded" style="background-color: rgba(24,90,117,0.08); color: #185A75;">
+        <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
+      </span>
+      <h2 class="tw-text-lg tw-font-bold tw-text-gray-800 tw-m-0">{{ _('Data and Resources') }}</h2>
+    </div>
+    {% if resources %}
+      <span class="tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-rounded-full tw-text-xs tw-font-semibold" style="background-color: #e0f4fb; color: #185A75;">{{ resources|length }}</span>
+    {% endif %}
+  </div>
+
   {% block resource_list %}
     {% if resources %}
-      <ul class="{% block resource_list_class %}resource-list{% endblock %}">
+      <ul class="tw-list-none tw-m-0 tw-p-0 tw-space-y-3">
         {% block resource_list_inner %}
           {% set can_edit = can_edit or h.check_access('package_update', {'id':pkg.id }) %}
           {% for resource in resources %}
@@ -24,13 +35,16 @@
       </ul>
     {% else %}
       {% block resource_list_empty %}
-        {% if h.check_access('resource_create', {'package_id': pkg['id']}) %}
-          {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
-          <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
-          {% endtrans %}
-        {% else %}
-          <p class="empty">{{ _('This dataset has no data') }}</p>
-        {% endif %}
+        <div class="tw-rounded tw-border tw-border-dashed tw-border-gray-200 tw-py-10 tw-px-4 tw-text-center">
+          <i class="fa-solid fa-folder-open tw-text-4xl tw-text-gray-200" aria-hidden="true"></i>
+          {% if h.check_access('resource_create', {'package_id': pkg['id']}) %}
+            {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
+            <p class="tw-text-sm tw-text-gray-500 tw-mt-3 tw-mb-0">This dataset has no data, <a href="{{ url }}" class="tw-text-[#185A75] tw-font-semibold tw-no-underline hover:tw-underline">why not add some?</a></p>
+            {% endtrans %}
+          {% else %}
+            <p class="tw-text-sm tw-text-gray-500 tw-mt-3 tw-mb-0">{{ _('This dataset has no data') }}</p>
+          {% endif %}
+        </div>
       {% endblock %}
     {% endif %}
   {% endblock %}

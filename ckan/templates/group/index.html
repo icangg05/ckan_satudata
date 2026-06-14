@@ -1,44 +1,209 @@
 {% extends "page.html" %}
 
-
 {% block subtitle %}{{ h.humanize_entity_type('group', group_type, 'page title') or _('Groups') }}{% endblock %}
 
-{% block breadcrumb_content %}
-  <li class="active">{% link_for h.humanize_entity_type('group', group_type, 'breadcrumb') or _('Groups'), named_route=group_type+'.index' %}</li>
-{% endblock %}
+{% block maintag %}{% endblock %}
+{% block toolbar %}{% endblock %}
 
-{% block page_header %}{% endblock %}
+{% block content %}
+<div class="tw-font-sans">
+  <div id="content" class="tw-max-w-6xl tw-mx-auto tw-px-4">
+    {{ self.flash() }}
+  </div>
 
-{% block page_primary_action %}
-  {% if h.check_access('group_create') %}
-    {% link_for h.humanize_entity_type('group', group_type, 'add link') or _('Add Group'), named_route=group_type+'.new', class_='btn btn-primary', icon='plus-square' %}
-  {% endif %}
-{% endblock %}
+  <div role="main">
+    {# ---------------------------------------------------------------- HERO #}
+    <div class="tw-relative tw-flex tw-items-center" style="background-image: url('{{ h.url_for_static('/base/images/hero-abstract.svg') }}'); background-size: cover; background-position: center; background-color: #0D3748;">
+      <div class="tw-max-w-3xl tw-mx-auto tw-px-4 tw-pt-8 md:tw-pt-10 tw-pb-24 md:tw-pb-28 tw-w-full tw-text-center">
 
-{% block primary_content_inner %}
-  <h1 class="hide-heading">{{ h.humanize_entity_type('group', group_type, 'page title') or _('Groups') }}</h1>
-  {% block groups_search_form %}
-    {% snippet 'snippets/search_form.html', form_id='group-search-form', type=group_type, query=q, sorting_selected=sort_by_selected, count=page.item_count, placeholder=h.humanize_entity_type('group', group_type, 'search placeholder') or _('Search groups...'), show_empty=request.args, no_bottom_border=true if page.items, sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
-  {% endblock %}
-  {% block groups_list %}
-    {% if page.items or request.args %}
-      {% if page.items %}
-        {% snippet "group/snippets/group_list.html", groups=page.items %}
-      {% endif %}
-    {% else %}
-      <p class="empty">
-        {{ h.humanize_entity_type('group', group_type, 'no any objects') or _('There are currently no groups for this site.') }}
-        {% if h.check_access('group_create') %}
-          {% link_for _('How about creating one?'), named_route=group_type+'.new' %}</a>
+        <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-4 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase tw-text-white tw-bg-white/10 tw-border tw-border-white/20 tw-backdrop-blur-md">
+          <i class="fa-solid fa-layer-group tw-text-[11px]" style="color: #fbbf24;" aria-hidden="true"></i>
+          {{ _('Kelompok Data') }}
+        </div>
+
+        <h1 class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-white tw-mb-3">
+          {% block page_heading %}{{ h.humanize_entity_type('group', group_type, 'page title') or _('Groups') }}{% endblock %}
+        </h1>
+
+        <p class="tw-text-sm md:tw-text-base tw-leading-relaxed tw-mb-6" style="color: #bde3f0;">
+          {% trans %}Telusuri kelompok dataset berdasarkan tema atau topik
+          untuk menemukan data yang Anda butuhkan dengan lebih mudah.{% endtrans %}
+        </p>
+
+        {# ----------------------------------------------------- SEARCH FORM #}
+        {% block groups_search_form %}
+        <form id="group-search-form" class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-3 tw-max-w-xl tw-mx-auto" method="get" hx-boost="true" hx-disinherit="hx-boost" hx-trigger="change, submit">
+          <div class="tw-relative tw-flex-1">
+            <i class="fa-solid fa-magnifying-glass tw-absolute tw-left-4 tw-top-1/2 -tw-translate-y-1/2 tw-text-gray-400" aria-hidden="true"></i>
+            <input type="text" name="q" value="{{ q }}" autocomplete="off"
+              aria-label="{{ h.humanize_entity_type('group', group_type, 'search placeholder') or _('Search groups...') }}"
+              placeholder="{{ h.humanize_entity_type('group', group_type, 'search placeholder') or _('Search groups...') }}"
+              class="tw-w-full tw-h-12 tw-pl-11 tw-pr-4 tw-rounded-full tw-bg-white tw-text-sm tw-text-gray-800 tw-border-0 tw-shadow-lg focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-[#38bdf8]">
+          </div>
+          <select name="sort" aria-label="{{ _('Order by') }}"
+            class="tw-h-12 tw-px-4 tw-rounded-full tw-bg-white/10 tw-text-sm tw-text-white tw-border tw-border-white/20 tw-backdrop-blur-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-[#38bdf8]">
+            {% for label, value in [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+              <option value="{{ value }}" class="tw-text-gray-800" {% if sort_by_selected == value %}selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" value="search" aria-label="{{ _('Submit') }}"
+            class="tw-h-12 tw-px-6 tw-rounded-full tw-text-sm tw-font-semibold tw-text-white tw-border-0 tw-shadow-lg tw-transition-colors hover:tw-brightness-110" style="background-color: #185A75;">
+            {{ _('Search') }}
+          </button>
+        </form>
+        {% endblock %}
+
+        <div class="tw-mt-4 tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-x-6 tw-gap-y-2 tw-text-xs tw-font-medium" style="color: #7dd3ee;">
+          <span class="tw-inline-flex tw-items-center tw-gap-2">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            {{ ungettext('{num} kelompok', '{num} kelompok', page.item_count).format(num=page.item_count) }}
+          </span>
+          {% if h.check_access('group_create') %}
+          {% block page_primary_action %}
+            <a href="{{ h.url_for(group_type ~ '.new') }}" class="tw-inline-flex tw-items-center tw-gap-2 tw-text-white tw-no-underline hover:tw-text-white hover:tw-underline">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              {{ h.humanize_entity_type('group', group_type, 'add link') or _('Add Group') }}
+            </a>
+          {% endblock %}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="tw-absolute tw-bottom-0 tw-left-0 tw-w-full tw-leading-none tw-pointer-events-none">
+        <svg viewBox="0 0 1440 100" class="tw-w-full tw-h-12 md:tw-h-20 tw-block" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#e0f2fe" d="M0,40 C240,90 480,0 720,30 C960,60 1200,100 1440,50 L1440,100 L0,100 Z"></path>
+        </svg>
+      </div>
+    </div>
+
+    {# ------------------------------------------------------------- CONTENT #}
+    <div class="tw-relative tw-bg-sky-100 tw-overflow-hidden">
+      <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+        <div class="tw-absolute tw-inset-0" style="background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 100%);"></div>
+        <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="group-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.6" fill="#185A75" fill-opacity="0.18"></circle>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#group-dots)"></rect>
+        </svg>
+        <div class="tw-absolute -tw-top-32 -tw-right-20 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.45), transparent 70%); animation-duration: 6s;"></div>
+        <div class="tw-absolute tw-bottom-0 -tw-left-24 tw-w-[28rem] tw-h-[28rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.3), transparent 70%); animation-duration: 8s;"></div>
+      </div>
+
+      <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-py-16">
+
+        {# What are Groups? info banner #}
+        <div class="tw-flex tw-items-start tw-gap-4 tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-100 tw-p-5 tw-mb-10">
+          <div class="tw-flex-shrink-0 tw-w-11 tw-h-11 tw-rounded-full tw-flex tw-items-center tw-justify-center" style="background: rgba(24,90,117,0.08); color: #185A75;">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-mb-1">{{ _('What are Groups?') }}</h2>
+            <p class="tw-text-sm tw-text-gray-500 tw-leading-relaxed tw-mb-0">
+              {% trans %}You can use CKAN Groups to create and manage collections of datasets.
+              This could be to catalogue datasets for a particular project or team,
+              or on a particular theme, or as a very simple way to help people find
+              and search your own published datasets.{% endtrans %}
+            </p>
+          </div>
+        </div>
+
+        {# ----------------------------------------------------- GROUP GRID #}
+        {% block groups_list %}
+        {% if page.items %}
+          <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
+            {% for group in page.items %}
+              {% set url = h.url_for((group.type or 'group') ~ '.read', id=group.name) %}
+              <div class="tw-group tw-relative tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-100 tw-overflow-hidden tw-h-full tw-transition-all tw-duration-300 hover:tw-shadow-2xl hover:tw-shadow-[#185A75]/10 hover:-tw-translate-y-1.5 hover:tw-border-[#38bdf8]/40">
+
+                <div class="tw-relative tw-h-20 tw-overflow-hidden" style="background: linear-gradient(135deg, #185A75, #38bdf8);">
+                  <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-25" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="gi-pattern-{{ loop.index }}" width="22" height="22" patternUnits="userSpaceOnUse">
+                        <circle cx="2" cy="2" r="1.4" fill="#ffffff" fill-opacity="0.35"></circle>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#gi-pattern-{{ loop.index }})"></rect>
+                  </svg>
+                  <i class="fa-solid fa-layer-group tw-absolute -tw-right-3 -tw-bottom-4 tw-text-6xl tw-text-white/10 tw-transition-transform tw-duration-500 group-hover:tw-rotate-6 group-hover:tw-scale-110" aria-hidden="true"></i>
+                  {% if show_capacity and group.capacity %}
+                  <span class="tw-absolute tw-top-3 tw-right-4 tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2.5 tw-py-1 tw-rounded-full tw-text-[11px] tw-font-semibold tw-text-white tw-bg-white/15 tw-border tw-border-white/20 tw-backdrop-blur-md">
+                    <i class="fa-solid fa-user-shield tw-text-[10px]" aria-hidden="true"></i>
+                    {{ h.roles_translated().get(group.capacity, group.capacity) }}
+                  </span>
+                  {% endif %}
+                </div>
+
+                <div class="tw-relative tw-px-6 tw-pb-6">
+                  <div class="tw-flex tw-items-end tw-gap-4 -tw-mt-8 tw-mb-4">
+                    <div class="tw-flex-shrink-0 tw-w-16 tw-h-16 tw-rounded-xl tw-overflow-hidden tw-flex tw-items-center tw-justify-center tw-bg-white tw-shadow-md tw-ring-4 tw-ring-white tw-transition-transform tw-duration-300 group-hover:tw-scale-105 group-hover:-tw-rotate-2" style="background: rgba(24,90,117,0.08);">
+                      {% if group.image_display_url %}
+                        <img class="tw-w-full tw-h-full tw-object-cover" src="{{ group.image_display_url }}" alt="{{ group.name }}" />
+                      {% else %}
+                        <i class="fa-solid fa-layer-group tw-text-2xl" style="color:#185A75;" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <h3 class="tw-text-lg tw-font-bold tw-text-gray-800 tw-truncate tw-mb-2">
+                    <a class="tw-text-gray-800 tw-no-underline hover:tw-text-[#185A75] tw-transition-colors" href="{{ url }}">{{ group.display_name }}</a>
+                  </h3>
+
+                  {% if group.description %}
+                    <p class="tw-text-sm tw-text-gray-500 tw-leading-relaxed tw-mb-4 tw-line-clamp-2">{{ h.markdown_extract(group.description, extract_length=120)|striptags }}</p>
+                  {% else %}
+                    <p class="tw-text-sm tw-text-gray-400 tw-italic tw-leading-relaxed tw-mb-4">{{ _('Belum ada deskripsi untuk kelompok ini.') }}</p>
+                  {% endif %}
+
+                  <div class="tw-flex tw-items-center tw-gap-4 tw-text-xs tw-text-gray-500 tw-mb-4">
+                    <span class="tw-inline-flex tw-items-center tw-gap-1.5">
+                      <i class="fa-solid fa-database" style="color: #185A75;" aria-hidden="true"></i>
+                      {{ ungettext('{num} Dataset', '{num} Datasets', group.package_count or 0).format(num=group.package_count or 0) }}
+                    </span>
+                    {% if 'member_count' in group %}
+                    <span class="tw-inline-flex tw-items-center tw-gap-1.5">
+                      <i class="fa-solid fa-users" style="color: #185A75;" aria-hidden="true"></i>
+                      {{ ungettext('{num} Member', '{num} Members', group.member_count or 0).format(num=group.member_count or 0) }}
+                    </span>
+                    {% endif %}
+                  </div>
+
+                  <a href="{{ url }}" class="tw-flex tw-items-center tw-justify-between tw-gap-1.5 tw-text-sm tw-font-semibold tw-no-underline tw-text-[#185A75] tw-pt-3 tw-border-t tw-border-gray-100 tw-transition-all tw-duration-200 group-hover:tw-gap-3">
+                    {{ _('Lihat detail') }}
+                    <i class="fa-solid fa-arrow-right tw-text-xs tw-transition-transform tw-duration-200 group-hover:tw-translate-x-1" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% elif request.args %}
+          <div class="tw-text-center tw-py-16">
+            <i class="fa-solid fa-magnifying-glass tw-text-4xl tw-text-gray-300 tw-mb-4" aria-hidden="true"></i>
+            <p class="tw-text-gray-500">{{ _('Please try another search.') }}</p>
+          </div>
+        {% else %}
+          <div class="tw-text-center tw-py-16">
+            <i class="fa-solid fa-layer-group tw-text-4xl tw-text-gray-300 tw-mb-4" aria-hidden="true"></i>
+            <p class="tw-text-gray-500 tw-mb-0">
+              {{ h.humanize_entity_type('group', group_type, 'no any objects') or _('There are currently no groups for this site.') }}
+              {% if h.check_access('group_create') %}
+                <a class="tw-text-[#185A75] tw-font-semibold tw-no-underline hover:tw-underline" href="{{ h.url_for(group_type ~ '.new') }}">{{ _('How about creating one?') }}</a>
+              {% endif %}
+            </p>
+          </div>
         {% endif %}
-      </p>
-    {% endif %}
-  {% endblock %}
-  {% block page_pagination %}
-    {{ page.pager(q=q or '', sort=sort_by_selected or '') }}
-  {% endblock %}
-{% endblock %}
+        {% endblock %}
 
-{% block secondary_content %}
-  {% snippet "group/snippets/helper.html", group_type=group_type %}
+        {# ----------------------------------------------------- PAGINATION #}
+        {% block page_pagination %}
+        <div class="tw-mt-10 tw-flex tw-justify-center">
+          {{ page.pager(q=q or '', sort=sort_by_selected or '') }}
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
