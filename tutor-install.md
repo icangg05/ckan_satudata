@@ -1,3 +1,5 @@
+pada tags buat efek glasshmorphism dan tambahkan efek ketika dihover pula
+
 # Set permission datastore di database PostgreSQL container
 
 docker compose -f .devcontainer/docker-compose.yml exec ckan ckan -c ckan.ini datastore set-permissions

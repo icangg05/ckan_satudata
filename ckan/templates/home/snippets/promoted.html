@@ -1,27 +1,48 @@
 {% set intro = g.site_intro_text %}
 
-<div class="module-promotion card box">
-  <div>
-    {% if intro %}
-      {{ h.render_markdown(intro) }}
-    {% else %}
-      <h1 class="page-heading">{{ _("Welcome to CKAN") }}</h1>
-      <p>
-        {% trans %}This is a nice introductory paragraph about CKAN or the site
-        in general. We don't have any copy to go here yet but soon we will
-        {% endtrans %}
-      </p>
-    {% endif %}
+<div class="tw-text-white tw-mb-10">
+  <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-6 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase tw-border" style="background: rgba(125,211,238,0.08); border-color: rgba(125,211,238,0.25); color: #7dd3ee;">
+    <span class="tw-relative tw-flex tw-w-1.5 tw-h-1.5">
+      <span class="tw-animate-ping tw-absolute tw-inline-flex tw-h-full tw-w-full tw-rounded-full tw-opacity-75" style="background-color: #34d399;"></span>
+      <span class="tw-relative tw-inline-flex tw-w-1.5 tw-h-1.5 tw-rounded-full" style="background-color: #34d399;"></span>
+    </span>
+    {{ _("Platform Data Terbuka") }}
   </div>
 
-  {% block home_image %}
-    <section class="featured media-overlay hidden-xs">
-      <h2 class="media-heading">{% block home_image_caption %}{{ _("This is a featured section") }}{% endblock %}</h2>
-      {% block home_image_content %}
-        <a class="media-image" href="#">
-          <img class="img-fluid" src="{{ h.url_for_static('/base/images/hero.webp') }}" alt="{{ _('Placeholder') }}" />
-        </a>
-      {% endblock %}
-    </section>
-  {% endblock %}
+  <p class="tw-text-xs md:tw-text-sm tw-font-bold tw-tracking-[0.25em] tw-uppercase tw-mb-4" style="color: #fbbf24;">
+    {{ _("Kota Kendari") }} &middot; {{ _("Sulawesi Tenggara") }}
+  </p>
+
+  <h1 class="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-leading-tight tw-mb-6">
+    <p>
+    <span class="tw-text-white">{{ _("Data Publik") }}</span>
+    <span class="tw-text-[#38bdf8]">{{ _("Kota Kendari") }}</span>
+    </p>
+    <span class="tw-block tw-text-white">{{ _("Terbuka & Terpadu") }}</span>
+  </h1>
+  {% if intro %}
+    <div class="tw-text-[#bde3f0] tw-leading-relaxed tw-max-w-2xl tw-mx-auto [&_h1]:tw-text-white [&_h2]:tw-text-white [&_h3]:tw-text-white [&_a]:tw-text-[#7dd3ee]">
+      {{ h.render_markdown(intro) }}
+    </div>
+  {% endif %}
+
+  {% set org_count = search_facets.organization.items|length if search_facets and search_facets.organization else 0 %}
+  {% set group_count = search_facets.groups.items|length if search_facets and search_facets.groups else 0 %}
+
+  <div class="tw-flex tw-items-center tw-justify-center tw-gap-6 md:tw-gap-10 tw-mt-10">
+    <div class="tw-text-center">
+      <div class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-white">{{ h.localised_SI_number(g.package_count or 0) }}<span style="color:#fbbf24;">+</span></div>
+      <div class="tw-text-[11px] tw-uppercase tw-tracking-widest tw-text-[#bde3f0] tw-mt-1">{{ _("Dataset") }}</div>
+    </div>
+    <div class="tw-w-px tw-h-10" style="background: rgba(255,255,255,0.15);"></div>
+    <div class="tw-text-center">
+      <div class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-white">{{ org_count }}</div>
+      <div class="tw-text-[11px] tw-uppercase tw-tracking-widest tw-text-[#bde3f0] tw-mt-1">{{ _("Organisasi") }}</div>
+    </div>
+    <div class="tw-w-px tw-h-10" style="background: rgba(255,255,255,0.15);"></div>
+    <div class="tw-text-center">
+      <div class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-white">{{ group_count }}</div>
+      <div class="tw-text-[11px] tw-uppercase tw-tracking-widest tw-text-[#bde3f0] tw-mt-1">{{ _("Kelompok") }}</div>
+    </div>
+  </div>
 </div>

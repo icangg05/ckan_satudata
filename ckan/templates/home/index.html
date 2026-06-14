@@ -6,33 +6,33 @@
 {% block toolbar %}{% endblock %}
 
 {% block content %}
-<div class="homepage">
-  <div id="content" class="container">
+<div class="tw-font-sans">
+  <div id="content" class="tw-max-w-6xl tw-mx-auto tw-px-4">
     {{ self.flash() }}
   </div>
   {% block primary_content %}
   <div role="main">
-    <div class="main hero">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            {% block promoted %}
-            {% snippet 'home/snippets/promoted.html' %}
-            {% endblock %}
-          </div>
-          <div class="col-md-6">
-            {% block search %}
-            {% snippet 'home/snippets/search.html', search_facets=search_facets %}
-            {% endblock %}
-          </div>
-        </div>
+    <div class="tw-relative tw-flex tw-items-center" style="background-image: url('{{ h.url_for_static('/base/images/hero-abstract.svg') }}'); background-size: cover; background-position: center; background-color: #0D3748;">
+      <div class="tw-max-w-3xl tw-mx-auto tw-px-4 tw-pt-12 md:tw-pt-16 tw-pb-24 md:tw-pb-32 tw-w-full tw-text-center">
+        {% block promoted %}
+        {% snippet 'home/snippets/promoted.html' %}
+        {% endblock %}
+        {% block search %}
+        {% snippet 'home/snippets/search.html', search_facets=search_facets %}
+        {% endblock %}
+      </div>
+
+      <div class="tw-absolute tw-bottom-0 tw-left-0 tw-w-full tw-leading-none tw-pointer-events-none">
+        <svg viewBox="0 0 1440 100" class="tw-w-full tw-h-12 md:tw-h-20 tw-block" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#f9fafb" d="M0,40 C240,90 480,0 720,30 C960,60 1200,100 1440,50 L1440,100 L0,100 Z"></path>
+        </svg>
       </div>
     </div>
 
-    <div class="main module-feeds">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
+    <div class="tw-bg-gray-50">
+      <div class="tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-py-16">
+        <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8">
+          <div>
             {# Note: this featured_group block is used as an example in the theming
             tutorial in the docs! If you change this code, be sure to check
             whether you need to update the docs. #}
@@ -42,7 +42,7 @@
             {% endblock %}
             {# End template block example. #}
           </div>
-          <div class="col-md-6">
+          <div>
             {% block featured_organization %}
             {% snippet 'home/snippets/featured_organization.html' %}
             {% endblock %}

@@ -1,22 +1,31 @@
-{% set tags = h.get_facet_items_dict('tags', search_facets, limit=3) %}
-{% set placeholder = _('E.g. environment') %}
+{% set tags = h.get_facet_items_dict('tags', search_facets, limit=5) %}
+{% set placeholder = _('Cari dataset, misalnya: kependudukan, peta wilayah...') %}
 {% set dataset_type = h.default_package_type() %}
 
-<div class="module-search card box">
-  <form class="module-content search-form" method="get" action="{% url_for dataset_type ~ '.search' %}">
-    <h3 class="heading">{{ _("Search data") }}</h3>
-    <div class="search-input form-group search-giant">
-      <input aria-label="{% block header_site_search_label %}{{ h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search datasets') }}{% endblock %}" id="field-main-search" type="text" class="form-control" name="q" value="" autocomplete="off" placeholder="{% block search_placeholder %}{{ placeholder }}{% endblock %}" />
-      <button class="btn" type="submit" aria-labelledby="search-label">
-        <i class="fa fa-search"></i>
-        <span class="sr-only" id="search-label">{{ _('Search') }}</span>
-      </button>
+<form method="get" action="{% url_for dataset_type ~ '.search' %}">
+  <div class="tw-flex tw-items-stretch tw-bg-white tw-rounded-full tw-shadow-xl tw-overflow-hidden tw-max-w-xl tw-mx-auto">
+    <div class="tw-flex tw-items-center tw-pl-5 tw-text-gray-400">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
     </div>
-  </form>
-  <div class="tags">
-    <h3>{{ _('Popular tags') }}</h3>
-    {% for tag in tags %}
-      <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}" aria-label="{{ _('Search datasets with the tag: {tag}').format(tag=tag.display_name) }}"> {{ tag.display_name|truncate(22) }}</a>
-    {% endfor %}
+    <input aria-label="{% block header_site_search_label %}{{ h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search datasets') }}{% endblock %}" id="field-main-search" type="text" name="q" value="" autocomplete="off" placeholder="{% block search_placeholder %}{{ placeholder }}{% endblock %}"
+      class="tw-flex-1 tw-min-w-0 tw-border-0 tw-bg-transparent tw-py-4 tw-px-3 tw-text-sm tw-text-gray-800 tw-placeholder-gray-400 focus:tw-outline-none focus:tw-ring-0" />
+    <button type="submit" aria-labelledby="search-label"
+      class="tw-m-1.5 tw-px-6 tw-rounded-full tw-text-white tw-text-sm tw-font-semibold tw-flex tw-items-center tw-justify-center tw-transition-colors" style="background-color: #185A75;">
+      {{ _('Cari') }}
+      <span class="tw-sr-only" id="search-label">{{ _('Search') }}</span>
+    </button>
   </div>
+</form>
+
+{% if tags %}
+<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-5">
+  <span class="tw-text-xs tw-font-bold tw-tracking-widest tw-uppercase tw-mr-1" style="color: #fbbf24;">{{ _('Populer') }}:</span>
+  {% for tag in tags %}
+    <a href="{% url_for 'dataset.search', tags=tag.name %}" aria-label="{{ _('Search datasets with the tag: {tag}').format(tag=tag.display_name) }}"
+      class="tw-inline-flex tw-items-center tw-px-4 tw-py-2 tw-rounded-lg tw-border tw-text-sm tw-font-medium tw-text-[#bde3f0] tw-no-underline hover:tw-no-underline tw-backdrop-blur-md tw-transition-all tw-duration-300 hover:tw-bg-white/15 hover:tw-border-white/30 hover:-tw-translate-y-0.5 hover:tw-shadow-lg hover:tw-shadow-black/10"
+      style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+      {{ tag.display_name|truncate(22) }}
+    </a>
+  {% endfor %}
 </div>
+{% endif %}
