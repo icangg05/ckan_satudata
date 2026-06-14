@@ -14,7 +14,7 @@ Example:
   {{ h.csrf_input() }}
 
   {% if error_summary %}
-  <div class="tw-flex tw-items-start tw-gap-3 tw-rounded-xl tw-px-4 tw-py-3 tw-text-sm"
+  <div class="tw-flex tw-items-start tw-gap-3 tw-rounded tw-px-4 tw-py-3 tw-text-sm"
     style="background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;" role="alert">
     <i class="fa-solid fa-circle-exclamation tw-mt-0.5" aria-hidden="true"></i>
     <div>
@@ -39,7 +39,7 @@ Example:
       </span>
       <input id="field-login" name="login" type="text" value="" autocomplete="username"
         placeholder="{{ _('Enter your username or email') }}"
-        class="tw-w-full tw-rounded-xl tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-4 tw-text-sm tw-text-gray-900
+        class="tw-w-full tw-rounded tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-4 tw-text-sm tw-text-gray-900
                tw-outline-none tw-transition-all tw-duration-200 tw-placeholder-gray-400
                {% if error_summary %}tw-border-red-300 focus:tw-border-red-400{% else %}tw-border-gray-200 focus:tw-border-[#185A75]{% endif %}"
         style="box-shadow:0 1px 2px rgba(0,0,0,0.04);"
@@ -65,7 +65,7 @@ Example:
       </span>
       <input id="field-password" name="password" type="password" value="" autocomplete="current-password"
         placeholder="{{ _('Enter your password') }}"
-        class="tw-w-full tw-rounded-xl tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-11 tw-text-sm tw-text-gray-900
+        class="tw-w-full tw-rounded tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-11 tw-text-sm tw-text-gray-900
                tw-outline-none tw-transition-all tw-duration-200 tw-placeholder-gray-400
                {% if error_summary %}tw-border-red-300 focus:tw-border-red-400{% else %}tw-border-gray-200 focus:tw-border-[#185A75]{% endif %}"
         style="box-shadow:0 1px 2px rgba(0,0,0,0.04);"
@@ -94,7 +94,7 @@ Example:
 
   {% block login_button %}
   <button type="submit"
-    class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-rounded-xl tw-py-3 tw-px-4
+    class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-rounded tw-py-3 tw-px-4
            tw-text-sm tw-font-semibold tw-text-white tw-border-0 tw-cursor-pointer
            tw-transition-all tw-duration-200 hover:tw-shadow-lg"
     style="background:#185A75;"

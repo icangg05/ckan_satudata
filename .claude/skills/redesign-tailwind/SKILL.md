@@ -107,3 +107,6 @@ values (arbitrary values like `tw-text-[#185A75]` also work but inline
 - Card: `tw-bg-white tw-rounded-2xl tw-shadow-sm tw-border tw-border-gray-100 tw-p-6`
 - Pill/badge: `tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-rounded-full tw-text-xs tw-font-semibold tw-uppercase`
 - Full-viewport hero: `tw-min-h-screen tw-flex tw-items-center`
+- Border radius: prefer the plain `tw-rounded` utility instead of sized
+  variants (`tw-rounded-lg`, `tw-rounded-xl`, `tw-rounded-2xl`, etc.), unless
+  a pill/badge needs `tw-rounded-full`.

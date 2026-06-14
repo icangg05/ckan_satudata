@@ -18,12 +18,17 @@
 </form>
 
 {% if tags %}
-<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-5">
-  <span class="tw-text-xs tw-font-bold tw-tracking-widest tw-uppercase tw-mr-1" style="color: #fbbf24;">{{ _('Populer') }}:</span>
+<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-6">
+  <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-bold tw-tracking-widest tw-uppercase tw-mr-1" style="color: #fbbf24;">
+    <i class="fa-solid fa-fire" aria-hidden="true"></i>{{ _('Populer') }}
+  </span>
   {% for tag in tags %}
     <a href="{% url_for 'dataset.search', tags=tag.name %}" aria-label="{{ _('Search datasets with the tag: {tag}').format(tag=tag.display_name) }}"
-      class="tw-inline-flex tw-items-center tw-px-4 tw-py-2 tw-rounded-lg tw-border tw-text-sm tw-font-medium tw-text-[#bde3f0] tw-no-underline hover:tw-no-underline tw-backdrop-blur-md tw-transition-all tw-duration-300 hover:tw-bg-white/15 hover:tw-border-white/30 hover:-tw-translate-y-0.5 hover:tw-shadow-lg hover:tw-shadow-black/10"
-      style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+      class="tw-group tw-inline-flex tw-items-center tw-gap-2 tw-pl-3 tw-pr-4 tw-py-2 tw-rounded tw-border tw-text-sm tw-font-medium tw-text-[#bde3f0] tw-no-underline hover:tw-no-underline tw-backdrop-blur-lg tw-transition-all tw-duration-300 hover:tw-text-white hover:tw-border-white/30 hover:-tw-translate-y-0.5 hover:tw-shadow-lg hover:tw-shadow-black/30"
+      style="background: rgba(13,55,72,0.45); border-color: rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);"
+      onmouseover="this.style.background='rgba(13,55,72,0.65)';"
+      onmouseout="this.style.background='rgba(13,55,72,0.45)';">
+      <i class="fa-solid fa-hashtag tw-text-[11px] tw-transition-colors tw-duration-300" style="color: #38bdf8;" aria-hidden="true"></i>
       {{ tag.display_name|truncate(22) }}
     </a>
   {% endfor %}

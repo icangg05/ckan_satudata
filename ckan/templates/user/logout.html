@@ -2,13 +2,91 @@
 
 {% block subtitle %}{{ _('Logged Out') }}{% endblock %}
 
-{% block primary_content %}
-  <section class="module">
-    <div class="module-content">
-      <h1 class="page-heading">
-      	{% block page_heading %}{{ _('Logged Out') }}{% endblock %}
+{% block content %}
+<div class="main tw-relative tw-overflow-hidden tw-py-12"
+  style="background:linear-gradient(160deg, #eef4f8 0%, #f1f5f9 45%, #e6f1f7 100%);">
+
+  {# ── Background ornaments ── #}
+  <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-z-0" aria-hidden="true">
+
+    {# dot-grid texture #}
+    <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="logout-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="1.5" cy="1.5" r="1.5" fill="rgba(24,90,117,0.07)" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#logout-dots)" />
+    </svg>
+
+    {# soft floating gradient blobs #}
+    <div class="tw-absolute tw-rounded-full tw-animate-pulse" style="top:-120px; right:-110px; width:360px; height:360px; background:radial-gradient(circle, rgba(56,189,248,0.18), transparent 70%); animation-duration:6s;"></div>
+    <div class="tw-absolute tw-rounded-full tw-animate-pulse" style="bottom:-150px; left:-110px; width:400px; height:400px; background:radial-gradient(circle, rgba(24,90,117,0.14), transparent 70%); animation-duration:8s;"></div>
+    <div class="tw-absolute tw-rounded-full tw-animate-pulse" style="top:35%; left:-80px; width:220px; height:220px; background:radial-gradient(circle, rgba(125,211,238,0.16), transparent 70%); animation-duration:7s;"></div>
+
+    {# geometric accents #}
+    <div class="tw-absolute tw-rounded tw-animate-bounce tw-hidden md:tw-block"
+      style="top:18%; right:9%; width:46px; height:46px; border:2px solid rgba(56,189,248,0.30); transform:rotate(15deg); animation-duration:5s;"></div>
+    <div class="tw-absolute tw-rounded-full tw-animate-ping tw-hidden md:tw-block"
+      style="bottom:24%; right:16%; width:10px; height:10px; background:#34d399; animation-duration:3s;"></div>
+    <div class="tw-absolute tw-rounded-full tw-hidden md:tw-block"
+      style="top:62%; right:6%; width:14px; height:14px; background:rgba(251,191,36,0.55);"></div>
+    <i class="fa-solid fa-database tw-absolute tw-hidden lg:tw-block" style="top:28%; left:6%; font-size:22px; color:rgba(24,90,117,0.12); transform:rotate(-12deg);" aria-hidden="true"></i>
+    <i class="fa-solid fa-chart-simple tw-absolute tw-hidden lg:tw-block" style="bottom:14%; left:13%; font-size:26px; color:rgba(56,189,248,0.16);" aria-hidden="true"></i>
+  </div>
+
+  <div id="content" class="tw-relative tw-z-10 tw-max-w-md tw-mx-auto px-2 pb-3">
+
+    {% block primary_content %}
+    <div class="tw-relative tw-overflow-hidden tw-rounded tw-bg-white tw-text-center tw-px-8 tw-py-12 sm:tw-px-12"
+      style="box-shadow:0 20px 50px -12px rgba(13,55,72,0.25), 0 0 0 1px rgba(13,55,72,0.04);">
+
+      {# top accent bar #}
+      <div class="tw-absolute tw-inset-x-0 tw-top-0 tw-h-1.5" style="background:linear-gradient(90deg, #0D3748, #185A75, #38bdf8);"></div>
+
+      {# success icon #}
+      <div class="tw-relative tw-mx-auto tw-mb-7 tw-flex tw-items-center tw-justify-center tw-w-20 tw-h-20 tw-rounded-full"
+        style="background:rgba(52,211,153,0.12);">
+        <span class="tw-absolute tw-inline-flex tw-w-full tw-h-full tw-rounded-full tw-animate-ping" style="background:rgba(52,211,153,0.18);"></span>
+        <span class="tw-relative tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full" style="background:#34d399;">
+          <i class="fa-solid fa-check tw-text-white tw-text-2xl" aria-hidden="true"></i>
+        </span>
+      </div>
+
+      <h1 class="tw-text-2xl tw-font-bold tw-text-gray-900 tw-m-0">
+        {% block page_heading %}{{ _('Logged Out') }}{% endblock %}
       </h1>
-      <p>{% trans %}You are now logged out.{% endtrans %}</p>
+      <p class="tw-text-sm tw-text-gray-500 tw-m-0 tw-mt-2 tw-leading-relaxed">
+        {% trans %}You are now logged out. Thank you for using the open data portal — come back anytime to explore the city's data.{% endtrans %}
+      </p>
+
+      <div class="tw-flex tw-flex-col tw-gap-3 tw-mt-8">
+        <a href="{{ h.url_for('user.login') }}"
+          class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-rounded tw-py-3 tw-px-4
+                 tw-text-sm tw-font-semibold tw-text-white tw-no-underline hover:tw-no-underline
+                 tw-transition-all tw-duration-200 hover:tw-shadow-lg"
+          style="background:#185A75;"
+          onmouseover="this.style.background='#0D3748';"
+          onmouseout="this.style.background='#185A75';">
+          <i class="fa-solid fa-right-to-bracket tw-text-xs" aria-hidden="true"></i>
+          {{ _('Sign in again') }}
+        </a>
+        <a href="{{ h.url_for('home.index') }}"
+          class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-rounded tw-py-3 tw-px-4
+                 tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-transition-all tw-duration-200"
+          style="color:#185A75; background:#e0f4fb; border:1px solid #bde3f0;"
+          onmouseover="this.style.background='#d0edf8';" onmouseout="this.style.background='#e0f4fb';">
+          <i class="fa-solid fa-house tw-text-xs" aria-hidden="true"></i>
+          {{ _('Back to homepage') }}
+        </a>
+      </div>
+
+      <div class="tw-mt-8 tw-text-xs tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-400">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        {% trans %}Your session has been securely closed{% endtrans %}
+      </div>
     </div>
-  </section>
+    {% endblock %}
+  </div>
+</div>
 {% endblock %}
