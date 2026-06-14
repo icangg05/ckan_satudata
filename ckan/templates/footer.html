@@ -1,56 +1,176 @@
-<footer class="site-footer">
-  <div class="container">
-    {% block footer_content %}
-    <div class="row">
-      <div class="col-md-8 footer-links">
-        {% block footer_nav %}
-        <div class="row">
-          <div class="col-md-6" style="margin-bottom: 20px;">
-            <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Satu Data Kota Kendari</h4>
-            <p style="color: #a0aab5; line-height: 1.6; font-size: 13px;">
-              Portal resmi Satu Data Kota Kendari menyajikan data akurat, mutakhir, terpadu, dan dapat dipertanggungjawabkan yang diproduksi oleh perangkat daerah di lingkungan Pemerintah Kota Kendari.
-            </p>
-          </div>
-          <div class="col-md-3" style="margin-bottom: 20px;">
-            <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Menu</h4>
-            <ul class="list-unstyled">
-              {% block footer_links %}
-              <li><a href="{{ h.url_for('home.about') }}">{{ _('Tentang Kami') }}</a></li>
-              <li><a href="{{ h.url_for('dataset.search') }}">{{ _('Data') }}</a></li>
-              <li><a href="{{ h.url_for('organization.index') }}">{{ _('Organisasi') }}</a></li>
-              {% endblock %}
-            </ul>
-          </div>
-          <div class="col-md-3" style="margin-bottom: 20px;">
-            <h4 class="footer-heading" style="color: #ffffff; margin-bottom: 15px; font-weight: bold;">Tautan Lain</h4>
-            <ul class="list-unstyled">
-              <li><a href="{{ h.url_for('group.index') }}">{{ _('Grup') }}</a></li>
-              <li><a href="https://kendarikota.go.id" target="_blank" rel="noopener noreferrer">Portal Kota Kendari</a></li>
-            </ul>
-          </div>
-        </div>
-        {% endblock %}
-      </div>
-      <div class="col-md-4 attribution">
-        {% block footer_attribution %}
-        <div class="footer-logo-box" style="margin-bottom: 15px;">
-          <img src="/uploads/admin/2026-06-08-125615.974681LambangKotaKendari.webp" alt="Lambang Kota Kendari" style="height: 55px; vertical-align: middle;">
-          <span style="color: #ffffff; font-size: 15px; font-weight: bold; margin-left: 10px; display: inline-block; vertical-align: middle;">Pemerintah Kota Kendari</span>
-        </div>
-        {% endblock %}
-        {% block footer_lang %}
-          {% snippet "snippets/language_selector.html" %}
-        {% endblock %}
-      </div>
-    </div>
-    <hr style="border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0 10px 0;">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <p style="color: #8a96a3; font-size: 12px; margin-bottom: 0;">
-          &copy; 2026 Pemerintah Kota Kendari. Hak Cipta Dilindungi Undang-Undang.
-        </p>
-      </div>
-    </div>
-    {% endblock %}
+<footer class="tw-bg-[#185A75] tw-text-white tw-relative tw-overflow-hidden">
+
+  <div class="tw-absolute tw-top-0 tw-left-0 tw-w-full tw-h-[3px]"
+    style="background: linear-gradient(to right, transparent, #7dd3ee 30%, #38bdf8 70%, transparent);">
   </div>
+
+  <div class="tw-absolute tw-top-0 tw-right-0 tw-w-[220px] tw-h-[220px] tw-pointer-events-none tw-opacity-[0.06]">
+    <svg viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="150" cy="30" r="80" stroke="white" stroke-width="1.5" />
+      <circle cx="150" cy="30" r="55" stroke="white" stroke-width="1" />
+      <circle cx="150" cy="30" r="30" stroke="white" stroke-width="0.8" />
+    </svg>
+  </div>
+
+  <div
+    class="tw-absolute tw-bottom-0 tw-left-[-20px] tw-w-[140px] tw-h-[100px] tw-pointer-events-none tw-opacity-[0.05]">
+    <svg viewBox="0 0 140 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="0" cy="100" r="90" stroke="white" stroke-width="1.5" />
+      <circle cx="0" cy="100" r="60" stroke="white" stroke-width="1" />
+    </svg>
+  </div>
+
+  <div
+    class="tw-absolute tw-top-[-60px] tw-right-[-60px] tw-w-[220px] tw-h-[220px] tw-rounded-full tw-pointer-events-none"
+    style="background: radial-gradient(circle, rgba(125,211,238,0.18) 0%, transparent 70%);">
+  </div>
+
+  <div class="tw-max-w-6xl tw-mx-auto tw-px-6 tw-pt-7 tw-pb-5 tw-relative tw-z-10">
+    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-10">
+
+      <div class="md:tw-col-span-1">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-3">
+          <div class="tw-w-[3px] tw-h-[22px] tw-rounded-full tw-flex-shrink-0"
+            style="background: linear-gradient(to bottom, #7dd3ee, #38bdf8);"></div>
+          <h4 class="tw-text-white tw-text-base tw-font-bold tw-m-0">
+            {{ g.site_title }}
+          </h4>
+        </div>
+        <p class="tw-text-[#bde3f0] tw-text-sm tw-leading-relaxed tw-mb-4">
+          Portal resmi Satu Data Kota Kendari menyajikan data akurat, mutakhir,
+          terpadu, dan dapat dipertanggungjawabkan yang diproduksi oleh
+          perangkat daerah di lingkungan Pemerintah Kota Kendari.
+        </p>
+        <div class="tw-flex tw-items-center tw-gap-1.5">
+          <div class="tw-w-1.5 tw-h-1.5 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-90"></div>
+          <div class="tw-w-1.5 tw-h-1.5 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-50"></div>
+          <div class="tw-w-1.5 tw-h-1.5 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-30"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-4">
+          <svg class="tw-w-3 tw-h-3 tw-text-[#7dd3ee]" fill="none" stroke="currentColor" viewBox="0 0 12 12">
+            <path d="M1 6h10M6 1l5 5-5 5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h4 class="tw-text-[#7dd3ee] tw-text-[11px] tw-font-medium tw-uppercase tw-tracking-widest tw-m-0">
+            Menu
+          </h4>
+        </div>
+        <ul class="tw-list-none tw-p-0 tw-m-0">
+          {% block footer_links %}
+          {% set dataset_type = h.default_package_type() %}
+          {% set org_type = h.default_group_type('organization') %}
+          {% set group_type = h.default_group_type('group') %}
+          <li class="tw-border-b tw-border-white/[0.06] tw-py-1.5 tw-w-fit">
+            <a href="{{ h.url_for(dataset_type ~ '.search') }}"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              {{ h.humanize_entity_type('package', dataset_type, 'main nav') or _('Datasets') }}
+            </a>
+          </li>
+          <li class="tw-border-b tw-border-white/[0.06] tw-py-1.5 tw-w-fit">
+            <a href="{{ h.url_for(org_type ~ '.index') }}"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              {{ h.humanize_entity_type('organization', org_type, 'main nav') or _('Organizations') }}
+            </a>
+          </li>
+          <li class="tw-border-b tw-border-white/[0.06] tw-py-1.5 tw-w-fit">
+            <a href="{{ h.url_for(group_type ~ '.index') }}"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              {{ h.humanize_entity_type('group', group_type, 'main nav') or _('Groups') }}
+            </a>
+          </li>
+          <li class="tw-py-1.5 tw-w-fit">
+            <a href="{{ h.url_for('home.about') }}"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              {{ _('About') }}
+            </a>
+          </li>
+          {% endblock %}
+        </ul>
+      </div>
+
+      <div>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-4">
+          <svg class="tw-w-3 tw-h-3 tw-text-[#7dd3ee]" fill="none" stroke="currentColor" viewBox="0 0 12 12">
+            <path d="M1 6h10M6 1l5 5-5 5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h4 class="tw-text-[#7dd3ee] tw-text-[11px] tw-font-medium tw-uppercase tw-tracking-widest tw-m-0">
+            Tautan Lain
+          </h4>
+        </div>
+        <ul class="tw-list-none tw-p-0 tw-m-0 tw-mb-5">
+          <li class="tw-py-1.5">
+            <a href="https://kendarikota.go.id" target="_blank" rel="noopener noreferrer"
+              class="tw-text-[#e0f4fb] tw-text-sm tw-no-underline hover:tw-text-white tw-transition-colors tw-duration-150 tw-inline-flex tw-items-center tw-gap-2">
+              <span class="tw-w-1 tw-h-1 tw-rounded-full tw-bg-[#7dd3ee] tw-opacity-70 tw-flex-shrink-0"></span>
+              Portal Kota Kendari
+              <svg class="tw-w-3 tw-h-3 tw-text-[#7dd3ee]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        {% block footer_attribution %}
+        <div
+          class="tw-flex tw-items-center tw-gap-2.5 tw-mb-3 tw-bg-white/10 tw-rounded-xl tw-p-3 tw-border tw-border-white/15 tw-relative tw-overflow-hidden">
+          <div
+            class="tw-absolute tw-top-[-10px] tw-right-[-10px] tw-w-[50px] tw-h-[50px] tw-rounded-full tw-pointer-events-none"
+            style="background: rgba(125,211,238,0.12);"></div>
+          <img
+            src="{{ h.url_for_static_or_external('/uploads/admin/' + g.site_logo) if g.site_logo and not g.site_logo.startswith('http') else h.url_for_static_or_external(g.site_logo) }}"
+            alt="{{ g.site_title }}" class="tw-h-9 tw-w-auto tw-object-contain tw-flex-shrink-0 tw-relative tw-z-10" />
+          <span class="tw-text-white tw-text-xs tw-font-bold tw-leading-snug tw-relative tw-z-10">
+            Pemerintah Kota<br />Kendari
+          </span>
+        </div>
+        {% endblock %}
+
+        {% block footer_lang %}
+        <div
+          class="tw-w-full tw-inline-flex tw-items-center tw-gap-2 tw-bg-black/20 tw-border tw-border-white/10 tw-rounded-md tw-px-3 tw-py-1.5">
+          {% snippet "snippets/language_selector.html" %}
+        </div>
+        {% endblock %}
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tw-bg-[#0A3545] tw-py-2 tw-relative">
+    <div class="tw-absolute tw-top-0 tw-left-0 tw-w-full tw-h-[1px]"
+      style="background: linear-gradient(to right, transparent, rgba(125,211,238,0.4) 25%, rgba(56,189,248,0.4) 75%, transparent);">
+    </div>
+    <div
+      class="tw-max-w-6xl tw-mx-auto tw-px-6 tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-justify-between tw-gap-3">
+      <p class="tw-text-[#90cfe6] tw-text-[11px] tw-m-0">
+        &copy; 2026 Pemerintah Kota Kendari. Hak Cipta Dilindungi Undang-Undang.
+      </p>
+      <div class="tw-flex tw-items-center tw-gap-1.5">
+        <a href="#" aria-label="Facebook"
+          class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
+          <i class="fa-brands fa-facebook-f tw-text-[#bde3f0] tw-text-xs"></i>
+        </a>
+        <a href="#" aria-label="Instagram"
+          class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
+          <i class="fa-brands fa-instagram tw-text-[#bde3f0] tw-text-xs"></i>
+        </a>
+        <a href="#" aria-label="Twitter/X"
+          class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
+          <i class="fa-brands fa-x-twitter tw-text-[#bde3f0] tw-text-xs"></i>
+        </a>
+        <a href="#" aria-label="YouTube"
+          class="tw-w-7 tw-h-7 tw-rounded-md tw-bg-white/[0.08] tw-border tw-border-white/[0.12] tw-flex tw-items-center tw-justify-center hover:tw-bg-white/20 tw-transition-colors tw-duration-150">
+          <i class="fa-brands fa-youtube tw-text-[#bde3f0] tw-text-xs"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
 </footer>

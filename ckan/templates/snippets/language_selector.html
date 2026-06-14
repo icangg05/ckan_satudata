@@ -1,17 +1,243 @@
 {% set current_lang = request.environ.CKAN_LANG %}
-<form class="lang-select" action="{% url_for 'util.internal_redirect' %}" data-module="select-switch" method="POST">
+
+<style>
+  .lang-dropdown {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #0d3d52;
+    border: 0.5px solid rgba(125, 211, 238, 0.25);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 9999;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+    display: none;
+  }
+
+  .lang-search {
+    width: 100%;
+    background: #0a2e3d;
+    border: none;
+    border-bottom: 0.5px solid rgba(125, 211, 238, 0.15);
+    outline: none;
+    color: #e0f4fb;
+    font-size: 12px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+  }
+
+  .lang-search::placeholder {
+    color: #90cfe6;
+    opacity: 0.6;
+  }
+
+  .lang-list {
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  .lang-list::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .lang-list::-webkit-scrollbar-thumb {
+    background: rgba(125, 211, 238, 0.3);
+    border-radius: 2px;
+  }
+
+  .lang-option {
+    padding: 7px 10px;
+    font-size: 12px;
+    color: #e0f4fb;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lang-option:hover {
+    background: rgba(125, 211, 238, 0.12);
+    color: #fff;
+  }
+
+  .lang-option.is-focused {
+    background: rgba(125, 211, 238, 0.18);
+    color: #fff;
+  }
+
+  .lang-option.is-selected .lang-check {
+    opacity: 1;
+  }
+
+  .lang-check {
+    opacity: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .lang-wrapper {
+    position: relative;
+    width: 100%;
+  }
+</style>
+
+<form id="lang-select-form" class="tw-w-full" action="{{ h.url_for('util.internal_redirect') }}" method="POST">
   {{ h.csrf_input() }}
-  <div class="form-group">
-    <label for="field-lang-select">{{ _('Language') }}</label>
-    <select id="field-lang-select" name="url" data-module="autocomplete" data-module-dropdown-class="lang-dropdown" data-module-container-class="lang-container">
-      {% for locale in h.get_available_locales() %}
-        <option value="{% url_for h.current_url(), locale=locale.short_name %}" {% if locale.short_name == current_lang %}selected="selected"{% endif %}>
-          {{ locale.display_name or locale.english_name }}
-        </option>
-      {% endfor %}
-    </select>
+  <input type="hidden" name="url" id="lang-url-input" value="" />
+
+  <div class="lang-wrapper" id="langWrapper">
+
+    <div id="langTrigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+      style="display:flex;align-items:center;gap:8px;cursor:pointer;width:100%;background:rgba(0,0,0,0.2);border:0.5px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 10px;box-sizing:border-box;">
+      <svg width="14" height="14" fill="none" stroke="#7dd3ee" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      </svg>
+      <span id="langSelectedLabel"
+        style="color:#e0f4fb;font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        {% for locale in h.get_available_locales() %}
+        {% if locale.short_name == current_lang %}{{ locale.display_name or locale.english_name }}{% endif %}
+        {% endfor %}
+      </span>
+      <svg id="langChevron" width="12" height="12" fill="none" stroke="#7dd3ee" viewBox="0 0 24 24"
+        style="flex-shrink:0;transition:transform 0.15s;" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+
+    <div class="lang-dropdown" id="langDropdown" role="listbox">
+      <input class="lang-search" id="langSearch" type="text" placeholder="{{ _('Cari bahasa...') }}" autocomplete="off"
+        aria-label="{{ _('Cari bahasa') }}" />
+      <div class="lang-list" id="langList">
+        {% for locale in h.get_available_locales() %}
+        <div class="lang-option{% if locale.short_name == current_lang %} is-selected{% endif %}" role="option"
+          data-url="{{ h.url_for(h.current_url(), locale=locale.short_name) }}"
+          data-label="{{ locale.display_name or locale.english_name }}">
+          <span>{{ locale.display_name or locale.english_name }}</span>
+          <svg class="lang-check" width="12" height="12" fill="none" stroke="#7dd3ee" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
   </div>
-  <button class="btn btn-secondary d-none " type="submit">{{ _('Go') }}</button>
 </form>
 
+<script>
+  (function () {
+    var trigger = document.getElementById('langTrigger');
+    var dropdown = document.getElementById('langDropdown');
+    var search = document.getElementById('langSearch');
+    var list = document.getElementById('langList');
+    var label = document.getElementById('langSelectedLabel');
+    var chevron = document.getElementById('langChevron');
+    var urlInput = document.getElementById('lang-url-input');
+    var form = document.getElementById('lang-select-form');
+    var allOpts = Array.from(list.querySelectorAll('.lang-option'));
+    var isOpen = false;
+    var focusIdx = -1;
 
+    function visibleOpts() {
+      return allOpts.filter(function (o) { return o.style.display !== 'none'; });
+    }
+
+    function setFocus(idx) {
+      var opts = visibleOpts();
+      opts.forEach(function (o) { o.classList.remove('is-focused'); });
+      focusIdx = idx;
+      if (idx >= 0 && idx < opts.length) {
+        opts[idx].classList.add('is-focused');
+        opts[idx].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function selectOpt(opt) {
+      allOpts.forEach(function (o) {
+        o.classList.remove('is-selected');
+        o.querySelector('.lang-check').style.opacity = '0';
+      });
+      opt.classList.add('is-selected');
+      opt.querySelector('.lang-check').style.opacity = '1';
+      label.textContent = opt.dataset.label;
+      urlInput.value = opt.dataset.url;
+      closeDropdown();
+      form.submit();
+    }
+
+    function openDropdown() {
+      isOpen = true;
+      dropdown.style.display = 'block';
+      chevron.style.transform = 'rotate(180deg)';
+      trigger.setAttribute('aria-expanded', 'true');
+      search.value = '';
+      allOpts.forEach(function (o) { o.style.display = 'flex'; });
+      focusIdx = -1;
+      setTimeout(function () { search.focus(); }, 50);
+    }
+
+    function closeDropdown() {
+      isOpen = false;
+      dropdown.style.display = 'none';
+      chevron.style.transform = 'rotate(0deg)';
+      trigger.setAttribute('aria-expanded', 'false');
+      focusIdx = -1;
+    }
+
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      isOpen ? closeDropdown() : openDropdown();
+    });
+
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); isOpen ? closeDropdown() : openDropdown(); }
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    search.addEventListener('click', function (e) { e.stopPropagation(); });
+
+    search.addEventListener('input', function () {
+      var q = this.value.toLowerCase();
+      allOpts.forEach(function (o) {
+        o.style.display = o.dataset.label.toLowerCase().includes(q) ? 'flex' : 'none';
+        o.classList.remove('is-focused');
+      });
+      focusIdx = -1;
+    });
+
+    search.addEventListener('keydown', function (e) {
+      var opts = visibleOpts();
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setFocus(Math.min(focusIdx + 1, opts.length - 1));
+      }
+      else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setFocus(Math.max(focusIdx - 1, 0));
+      }
+      else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (opts.length === 0) return;
+        var target = focusIdx >= 0 ? opts[focusIdx] : opts[0];
+        selectOpt(target);
+      }
+      else if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    allOpts.forEach(function (opt) {
+      opt.addEventListener('click', function () { selectOpt(opt); });
+      opt.addEventListener('mouseenter', function () {
+        var opts = visibleOpts();
+        setFocus(opts.indexOf(opt));
+      });
+    });
+
+    document.addEventListener('click', function () { if (isOpen) closeDropdown(); });
+  })();
+</script>

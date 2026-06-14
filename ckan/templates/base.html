@@ -74,6 +74,7 @@
       {# TODO: store just name of asset instead of path to it. #}
       {% set theme = h.get_rtl_theme() if h.is_rtl_language() else g.theme %}
       {% asset theme %}
+      {% asset 'vendor/fontawesome' %}
     {% endblock %}
 
     {# render all assets included in styles block #}
@@ -89,6 +90,33 @@
     {%- block head_extras %}
     {% endblock %}
 
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+      body, button, input, select, textarea, .tw-font-sans {
+        font-family: 'Inter', sans-serif !important;
+      }
+    </style>
+
+    <!-- Tailwind Play CDN with tw- prefix -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        prefix: 'tw-',
+        corePlugins: {
+          preflight: false,
+        },
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
   </head>
 
   {# Allows custom attributes to be added to the <body> tag #}
