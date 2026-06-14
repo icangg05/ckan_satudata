@@ -24,14 +24,62 @@
 
       <div class="tw-absolute tw-bottom-0 tw-left-0 tw-w-full tw-leading-none tw-pointer-events-none">
         <svg viewBox="0 0 1440 100" class="tw-w-full tw-h-12 md:tw-h-20 tw-block" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#f9fafb" d="M0,40 C240,90 480,0 720,30 C960,60 1200,100 1440,50 L1440,100 L0,100 Z"></path>
+          <path fill="#e0f2fe" d="M0,40 C240,90 480,0 720,30 C960,60 1200,100 1440,50 L1440,100 L0,100 Z"></path>
         </svg>
       </div>
     </div>
 
-    <div class="tw-bg-gray-50">
-      <div class="tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-py-16">
-        <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8">
+    <div class="tw-relative tw-bg-sky-100 tw-overflow-hidden">
+      {# Decorative background ornaments #}
+      <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+        {# subtle vertical fade to white so cards sit on a cleaner base #}
+        <div class="tw-absolute tw-inset-0" style="background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 100%);"></div>
+
+        {# dot grid #}
+        <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="featured-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.6" fill="#185A75" fill-opacity="0.18"></circle>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#featured-dots)"></rect>
+        </svg>
+
+        {# glowing color blobs #}
+        <div class="tw-absolute -tw-top-32 -tw-right-20 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.45), transparent 70%); animation-duration: 6s;"></div>
+        <div class="tw-absolute tw-bottom-0 -tw-left-24 tw-w-[28rem] tw-h-[28rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.3), transparent 70%); animation-duration: 8s;"></div>
+        <div class="tw-absolute tw-top-1/2 tw-left-1/3 tw-w-72 tw-h-72 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(24,90,117,0.18), transparent 70%); animation-duration: 7s;"></div>
+
+        {# floating geometric shapes #}
+        <div class="tw-absolute tw-top-16 tw-left-[8%] tw-w-16 tw-h-16 tw-rounded-2xl tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.15); border: 1.5px solid rgba(56,189,248,0.3); animation-duration: 5s;"></div>
+        <div class="tw-absolute tw-top-1/3 tw-right-[10%] tw-w-10 tw-h-10 tw-rounded-full tw-animate-bounce" style="background: rgba(251,191,36,0.2); border: 1.5px solid rgba(251,191,36,0.4); animation-duration: 6s; animation-delay: 1s;"></div>
+        <div class="tw-absolute tw-bottom-24 tw-left-[14%] tw-w-12 tw-h-12 tw-rotate-45 tw-animate-pulse" style="background: rgba(24,90,117,0.1); border: 1.5px solid rgba(24,90,117,0.25); animation-duration: 4s;"></div>
+        <div class="tw-absolute tw-bottom-1/3 tw-right-[16%] tw-w-6 tw-h-6 tw-rounded-lg tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.25); animation-duration: 7s; animation-delay: 0.5s;"></div>
+
+        {# flowing wave lines #}
+        <svg class="tw-absolute tw-top-8 tw-left-1/2 -tw-translate-x-1/2 tw-w-[140%] tw-max-w-none" viewBox="0 0 1440 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,100 C240,40 480,160 720,100 C960,40 1200,160 1440,100" stroke="#185A75" stroke-opacity="0.18" stroke-width="2" fill="none"></path>
+          <path d="M0,150 C240,90 480,210 720,150 C960,90 1200,210 1440,150" stroke="#38bdf8" stroke-opacity="0.22" stroke-width="2" fill="none"></path>
+          <path d="M0,200 C240,140 480,260 720,200 C960,140 1200,260 1440,200" stroke="#fbbf24" stroke-opacity="0.18" stroke-width="2" fill="none"></path>
+        </svg>
+      </div>
+
+      <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-pt-8 md:tw-pb-20">
+        <div class="tw-text-center tw-max-w-2xl tw-mx-auto tw-mb-10 md:tw-mb-14">
+          <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-4 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase" style="background: rgba(24,90,117,0.08); color: #185A75;">
+            <i class="fa-solid fa-compass tw-text-[11px] tw-animate-spin" style="animation-duration: 6s;" aria-hidden="true"></i>
+            {{ _('Eksplorasi Data') }}
+          </div>
+          <h2 class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-gray-800 tw-mb-3">
+            {{ _('Group & Organization') }}
+            <span class="tw-block tw-mx-auto tw-mt-3 tw-w-16 tw-h-1.5 tw-rounded-full" style="background: linear-gradient(90deg, #185A75, #38bdf8, #fbbf24);"></span>
+          </h2>
+          <p class="tw-text-sm md:tw-text-base tw-text-gray-500 tw-leading-relaxed tw-mb-0">
+            {% trans %}Explore datasets by featured thematic groups and provider
+            organizations highlighted on this portal.{% endtrans %}
+          </p>
+        </div>
+        <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-6 md:tw-gap-8">
           <div>
             {# Note: this featured_group block is used as an example in the theming
             tutorial in the docs! If you change this code, be sure to check
