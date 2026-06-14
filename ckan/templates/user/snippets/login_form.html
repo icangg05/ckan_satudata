@@ -9,28 +9,99 @@ Example:
   {% snippet "user/snippets/login_form.html", action=g.login_handler, error_summary=error_summary %}
 
 #}
-{% import 'macros/form.html' as form %}
 
-{% set username_error = true if error_summary %}
-{% set password_error = true if error_summary %}
-
-<form action="{{ action }}" method="post">
+<form action="{{ action }}" method="post" class="tw-flex tw-flex-col tw-gap-5">
   {{ h.csrf_input() }}
-  {{ form.errors(errors=error_summary) }}
 
-  {{ form.input('login', label=_("Username or Email"), id='field-login', value="", error=username_error, classes=["control-medium"]) }}
+  {% if error_summary %}
+  <div class="tw-flex tw-items-start tw-gap-3 tw-rounded-xl tw-px-4 tw-py-3 tw-text-sm"
+    style="background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;" role="alert">
+    <i class="fa-solid fa-circle-exclamation tw-mt-0.5" aria-hidden="true"></i>
+    <div>
+      <p class="tw-m-0 tw-font-semibold">{{ _('Login failed') }}</p>
+      <ul class="tw-m-0 tw-mt-1 tw-list-none tw-p-0 tw-space-y-0.5">
+        {% for key, error in error_summary.items() %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
 
-  {{ form.input('password', label=_("Password"), id='field-password', type="password", value="", error=password_error, classes=["control-medium"]) }}
+  {# ── Username / Email ── #}
+  <div class="tw-flex tw-flex-col tw-gap-1.5">
+    <label for="field-login" class="tw-text-sm tw-font-semibold tw-text-gray-700">
+      {{ _("Username or Email") }}
+    </label>
+    <div class="tw-relative">
+      <span class="tw-absolute tw-inset-y-0 tw-left-0 tw-flex tw-items-center tw-pl-3.5 tw-text-gray-400 tw-pointer-events-none">
+        <i class="fa-solid fa-user tw-text-sm" aria-hidden="true"></i>
+      </span>
+      <input id="field-login" name="login" type="text" value="" autocomplete="username"
+        placeholder="{{ _('Enter your username or email') }}"
+        class="tw-w-full tw-rounded-xl tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-4 tw-text-sm tw-text-gray-900
+               tw-outline-none tw-transition-all tw-duration-200 tw-placeholder-gray-400
+               {% if error_summary %}tw-border-red-300 focus:tw-border-red-400{% else %}tw-border-gray-200 focus:tw-border-[#185A75]{% endif %}"
+        style="box-shadow:0 1px 2px rgba(0,0,0,0.04);"
+        onfocus="this.style.boxShadow='0 0 0 3px rgba(24,90,117,0.12)';"
+        onblur="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.04)';" />
+    </div>
+  </div>
 
-  {{ form.checkbox('remember', label=_("Remember me"), id='field-remember', checked=true, value="63072000") }}
+  {# ── Password ── #}
+  <div class="tw-flex tw-flex-col tw-gap-1.5">
+    <div class="tw-flex tw-items-center tw-justify-between">
+      <label for="field-password" class="tw-text-sm tw-font-semibold tw-text-gray-700">
+        {{ _("Password") }}
+      </label>
+      <a href="{{ h.url_for('user.request_reset') }}"
+        class="tw-text-xs tw-font-medium tw-no-underline hover:tw-underline" style="color:#185A75;">
+        {{ _('Forgot your password?') }}
+      </a>
+    </div>
+    <div class="tw-relative">
+      <span class="tw-absolute tw-inset-y-0 tw-left-0 tw-flex tw-items-center tw-pl-3.5 tw-text-gray-400 tw-pointer-events-none">
+        <i class="fa-solid fa-lock tw-text-sm" aria-hidden="true"></i>
+      </span>
+      <input id="field-password" name="password" type="password" value="" autocomplete="current-password"
+        placeholder="{{ _('Enter your password') }}"
+        class="tw-w-full tw-rounded-xl tw-border tw-bg-white tw-py-2.5 tw-pl-10 tw-pr-11 tw-text-sm tw-text-gray-900
+               tw-outline-none tw-transition-all tw-duration-200 tw-placeholder-gray-400
+               {% if error_summary %}tw-border-red-300 focus:tw-border-red-400{% else %}tw-border-gray-200 focus:tw-border-[#185A75]{% endif %}"
+        style="box-shadow:0 1px 2px rgba(0,0,0,0.04);"
+        onfocus="this.style.boxShadow='0 0 0 3px rgba(24,90,117,0.12)';"
+        onblur="this.style.boxShadow='0 1px 2px rgba(0,0,0,0.04)';" />
+      <button type="button" tabindex="-1" aria-label="{{ _('Show password') }}"
+        class="tw-absolute tw-inset-y-0 tw-right-0 tw-flex tw-items-center tw-pr-3.5 tw-text-gray-400
+               hover:tw-text-gray-600 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-transition-colors"
+        onclick="var p=document.getElementById('field-password'); var i=this.querySelector('i'); if(p.type==='password'){p.type='text'; i.className='fa-solid fa-eye-slash tw-text-sm';}else{p.type='password'; i.className='fa-solid fa-eye tw-text-sm';}">
+        <i class="fa-solid fa-eye tw-text-sm" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  {# ── Remember me ── #}
+  <label for="field-remember" class="tw-flex tw-items-center tw-gap-2.5 tw-cursor-pointer tw-select-none tw-w-fit">
+    <input id="field-remember" name="remember" type="checkbox" checked value="63072000"
+      class="tw-h-4 tw-w-4 tw-rounded tw-border-gray-300 tw-cursor-pointer"
+      style="accent-color:#185A75;" />
+    <span class="tw-text-sm tw-text-gray-600">{{ _("Remember me") }}</span>
+  </label>
 
   {% if g.recaptcha_publickey %}
     {% snippet "user/snippets/recaptcha.html", public_key=g.recaptcha_publickey %}
   {% endif %}
 
-  <div class="form-actions">
-    {% block login_button %}
-    <button class="btn btn-primary" type="submit">{{ _('Login') }}</button>
-    {% endblock %}
-  </div>
+  {% block login_button %}
+  <button type="submit"
+    class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-rounded-xl tw-py-3 tw-px-4
+           tw-text-sm tw-font-semibold tw-text-white tw-border-0 tw-cursor-pointer
+           tw-transition-all tw-duration-200 hover:tw-shadow-lg"
+    style="background:#185A75;"
+    onmouseover="this.style.background='#0D3748';"
+    onmouseout="this.style.background='#185A75';">
+    <i class="fa-solid fa-right-to-bracket tw-text-xs" aria-hidden="true"></i>
+    {{ _('Login') }}
+  </button>
+  {% endblock %}
 </form>
