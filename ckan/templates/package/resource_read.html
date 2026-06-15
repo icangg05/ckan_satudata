@@ -85,7 +85,7 @@
             {% block resource_content %}
               <div class="tw-p-6 md:tw-p-8">
                 {# Title + actions #}
-                <div class="tw-flex tw-flex-col md:tw-flex-row md:tw-items-start md:tw-justify-between tw-gap-4 tw-mb-4">
+                <div class="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
                   <div class="tw-min-w-0">
                     {% if res.format %}
                       <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1 tw-mb-3 tw-rounded-full tw-text-[11px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: #e0f4fb; color: #185A75;">
@@ -97,9 +97,9 @@
                     {% endblock %}
                   </div>
 
-                  <div class="tw-flex-shrink-0">
+                  <div class="tw-min-w-0">
                     {% block resource_actions %}
-                      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 md:tw-justify-end">
+                      <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
                         {% block resource_actions_inner %}
                           {% block action_manage %}
                             {% if h.check_access('package_update', {'id':pkg.id }) %}

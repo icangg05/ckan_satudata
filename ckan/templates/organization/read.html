@@ -1,29 +1,31 @@
 {% extends "organization/read_base.html" %}
 
-{% block primary_content %}
-  <article class="module">
-    {% block page_header %}
-      {{ super() }}
-    {% endblock %}
-    {% snippet "package/snippets/search_results.html",
-      dataset_type=dataset_type,
-      fields_grouped=fields_grouped,
-      search_facets=search_facets,
-      facet_titles=facet_titles,
-      translated_fields=translated_fields,
-      remove_field=remove_field,
-      q=q,
-      sort_by_selected=sort_by_selected,
-      page=page,
-      query_error=query_error,
-      fields=fields
-    %}
-  </article>
-{% endblock %}
+{% block org_body %}
+  <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-[280px_minmax(0,1fr)] tw-gap-6 lg:tw-gap-8 tw-items-start">
 
-{% block organization_facets %}
-  {% snippet "package/snippets/search_facets.html",
-    facet_titles=facet_titles,
-    search_facets=search_facets
-  %}
+    {% block secondary_content %}
+      <aside class="lg:tw-sticky lg:tw-top-6">
+        {% snippet "package/snippets/search_facets.html",
+          facet_titles=facet_titles,
+          search_facets=search_facets
+        %}
+      </aside>
+    {% endblock %}
+
+    <div role="main">
+      {% snippet "package/snippets/search_results.html",
+        dataset_type=dataset_type,
+        fields_grouped=fields_grouped,
+        search_facets=search_facets,
+        facet_titles=facet_titles,
+        translated_fields=translated_fields,
+        remove_field=remove_field,
+        q=q,
+        sort_by_selected=sort_by_selected,
+        page=page,
+        query_error=query_error,
+        fields=fields
+      %}
+    </div>
+  </div>
 {% endblock %}

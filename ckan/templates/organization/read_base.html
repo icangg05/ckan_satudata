@@ -9,21 +9,103 @@
   <li class="active">{% link_for group_dict.display_name|truncate(35), named_route=group_type+'.read', id=group_dict.name, title=group_dict.display_name %}</li>
 {% endblock %}
 
-{% block content_action %}
-  {% if h.check_access('organization_update', {'id': group_dict.id}) %}
-    {% link_for _('Manage'), named_route=group_type+'.edit', id=group_dict.name, class_='btn btn-secondary', icon='wrench' %}
-  {% endif %}
-{% endblock %}
+{# ---- reusable nav tab ---- #}
+{% macro org_tab(view, route, icon, label) %}
+  {% set is_active = (g.view == view) %}
+  <a href="{{ h.url_for(group_type ~ '.' ~ route, id=group_dict.name) }}"
+     class="tw-inline-flex tw-items-center tw-gap-2 tw-px-5 tw-py-2.5 tw-rounded tw-text-sm tw-font-semibold tw-no-underline hover:tw-no-underline tw-transition-all {{ 'tw-shadow-md' if is_active else 'tw-border tw-border-gray-200 hover:tw-border-[#38bdf8] hover:tw-shadow-sm' }}"
+     style="{{ 'background-color: #185A75; color: #ffffff;' if is_active else 'background-color: #ffffff; color: #374151;' }}"
+     {% if is_active %}aria-current="page"{% endif %}>
+    <i class="fa-solid fa-{{ icon }} {{ '' if is_active else 'tw-text-gray-400' }}" aria-hidden="true"></i>{{ label }}
+  </a>
+{% endmacro %}
 
-{% block content_primary_nav %}
-  {{ h.build_nav_icon(group_type + '.read', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets'), id=group_dict.name, icon='sitemap') }}
-  {{ h.build_nav_icon(group_type + '.members', _('Members'), id=group_dict.name, icon='users') }}
-  {{ h.build_nav_icon(group_type + '.about', _('About'), id=group_dict.name, icon='info-circle') }}
-{% endblock %}
+{# Override the whole page content with a custom Tailwind layout shared by the
+   organization read / about / members pages. #}
+{% block content %}
+<div class="tw-font-sans tw-relative tw-overflow-hidden" style="background: linear-gradient(180deg, #cfe8f7 0%, #e0f2fe 25%, #eef6fb 60%, #f1f5f9 100%);">
 
-{% block secondary_content %}
-  {% snippet 'organization/snippets/info.html', organization=group_dict, show_nums=true, group_type=group_type, am_following=am_following %}
-  {% block organization_facets %}{% endblock %}
+  {# ---------------- Decorative background ornaments ---------------- #}
+  <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+
+    {# dot grid #}
+    <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="orgread-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.5" fill="#185A75" fill-opacity="0.14"></circle>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#orgread-dots)"></rect>
+    </svg>
+
+    {# glowing color blobs #}
+    <div class="tw-absolute -tw-top-32 -tw-right-24 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.40), transparent 70%); animation-duration: 6s;"></div>
+    <div class="tw-absolute tw-top-1/2 -tw-left-32 tw-w-[30rem] tw-h-[30rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(24,90,117,0.16), transparent 70%); animation-duration: 8s;"></div>
+    <div class="tw-absolute tw-bottom-0 tw-right-1/4 tw-w-80 tw-h-80 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%); animation-duration: 7s;"></div>
+
+    {# floating geometric shapes #}
+    <div class="tw-absolute tw-top-24 tw-left-[6%] tw-w-16 tw-h-16 tw-rounded-2xl tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.14); border: 1.5px solid rgba(56,189,248,0.28); animation-duration: 5s;"></div>
+    <div class="tw-absolute tw-top-1/3 tw-right-[7%] tw-w-10 tw-h-10 tw-rounded-full tw-animate-bounce" style="background: rgba(251,191,36,0.18); border: 1.5px solid rgba(251,191,36,0.38); animation-duration: 6s; animation-delay: 1s;"></div>
+    <div class="tw-absolute tw-bottom-28 tw-left-[10%] tw-w-12 tw-h-12 tw-rotate-45 tw-animate-pulse" style="background: rgba(24,90,117,0.08); border: 1.5px solid rgba(24,90,117,0.22); animation-duration: 4s;"></div>
+    <div class="tw-absolute tw-bottom-1/4 tw-right-[12%] tw-w-6 tw-h-6 tw-rounded-lg tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.22); animation-duration: 7s; animation-delay: 0.5s;"></div>
+
+    {# flowing wave lines #}
+    <svg class="tw-absolute tw-top-10 tw-left-1/2 -tw-translate-x-1/2 tw-w-[140%] tw-max-w-none tw-opacity-70" viewBox="0 0 1440 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,100 C240,40 480,160 720,100 C960,40 1200,160 1440,100" stroke="#185A75" stroke-opacity="0.16" stroke-width="2" fill="none"></path>
+      <path d="M0,150 C240,90 480,210 720,150 C960,90 1200,210 1440,150" stroke="#38bdf8" stroke-opacity="0.20" stroke-width="2" fill="none"></path>
+      <path d="M0,200 C240,140 480,260 720,200 C960,140 1200,260 1440,200" stroke="#fbbf24" stroke-opacity="0.16" stroke-width="2" fill="none"></path>
+    </svg>
+
+    {# soft fade to keep lower content area calm #}
+    <div class="tw-absolute tw-inset-0" style="background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 100%);"></div>
+  </div>
+
+  <div class="tw-relative tw-z-10 tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-8">
+
+    {{ self.flash() }}
+
+    {% block breadcrumb %}
+    <nav aria-label="{{ _('Breadcrumb') }}" class="tw-mb-6">
+      <ol class="tw-flex tw-flex-wrap tw-items-center tw-gap-x-2 tw-gap-y-1 tw-text-sm tw-list-none tw-m-0 tw-p-0
+                 [&_li]:tw-flex [&_li]:tw-items-center [&_li]:tw-gap-2
+                 [&_li:not(:first-child)]:before:tw-content-['/'] [&_li:not(:first-child)]:before:tw-text-gray-300
+                 [&_a]:tw-text-gray-500 [&_a]:tw-no-underline hover:[&_a]:tw-text-[#185A75]
+                 [&_li.active_a]:tw-text-gray-800 [&_li.active_a]:tw-font-semibold">
+        {% snippet 'snippets/home_breadcrumb_item.html' %}
+        {{ self.breadcrumb_content() }}
+      </ol>
+    </nav>
+    {% endblock %}
+
+    {# ---------------- Organization profile hero ---------------- #}
+    {% snippet 'organization/snippets/info.html', organization=group_dict, show_nums=true, group_type=group_type, am_following=am_following %}
+
+    {# ---------------- Section tabs ---------------- #}
+    <nav aria-label="{{ _('Organization sections') }}" class="tw-flex tw-flex-wrap tw-gap-2 tw-mt-6 tw-mb-6">
+      {{ org_tab('read', 'read', 'sitemap', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets')) }}
+      {{ org_tab('members', 'members', 'users', _('Members')) }}
+      {{ org_tab('about', 'about', 'circle-info', _('About')) }}
+    </nav>
+
+    {# ---------------- Page body ---------------- #}
+    {% block org_body %}
+      <div class="tw-bg-white tw-rounded tw-border tw-border-gray-200 tw-shadow-xl tw-p-6 md:tw-p-8
+                  [&_h1]:tw-text-2xl [&_h1]:tw-font-extrabold [&_h1]:tw-text-gray-800 [&_h1]:tw-mb-4
+                  [&_h2]:tw-text-xl [&_h2]:tw-font-bold [&_h2]:tw-text-gray-800 [&_h2]:tw-mt-5 [&_h2]:tw-mb-2
+                  [&_h3]:tw-text-lg [&_h3]:tw-font-bold [&_h3]:tw-text-gray-800 [&_h3]:tw-mt-5 [&_h3]:tw-mb-2
+                  [&_p]:tw-text-gray-600 [&_p]:tw-leading-relaxed [&_p]:tw-mb-3
+                  [&_a]:tw-text-[#185A75]
+                  [&_ul]:tw-list-disc [&_ul]:tw-pl-5 [&_ul]:tw-mb-3 [&_ol]:tw-list-decimal [&_ol]:tw-pl-5 [&_ol]:tw-mb-3
+                  [&_.page-heading]:tw-text-xl [&_.page-heading]:tw-font-bold [&_.page-heading]:tw-text-gray-800 [&_.page-heading]:tw-mb-4
+                  [&_table]:tw-w-full [&_table]:tw-text-sm [&_table]:tw-border [&_table]:tw-border-gray-200 [&_table]:tw-rounded [&_table]:tw-overflow-hidden
+                  [&_th]:tw-text-left [&_th]:tw-bg-gray-50 [&_th]:tw-px-4 [&_th]:tw-py-2.5 [&_th]:tw-font-semibold [&_th]:tw-text-gray-600 [&_th]:tw-border-b [&_th]:tw-border-gray-200
+                  [&_td]:tw-px-4 [&_td]:tw-py-2.5 [&_td]:tw-text-gray-700 [&_td]:tw-border-b [&_td]:tw-border-gray-100">
+        {% block primary_content_inner %}{% endblock %}
+      </div>
+    {% endblock %}
+
+  </div>
+</div>
 {% endblock %}
 
 {% block links %}

@@ -206,7 +206,7 @@
           {% set group_type = h.default_group_type('group') %}
 
           {% set is_home_active = h.page_is_active('home.index') %}
-          {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', ["dataset", "resource"]) %}
+          {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', [dataset_type, dataset_type ~ '_resource', "resource"]) %}
           {% set is_org_active = h.page_is_active(org_type ~ '.index', ['organization']) %}
           {% set is_group_active = h.page_is_active(group_type ~ '.index', ['group']) %}
           {% set is_about_active = h.page_is_active('home.about') %}
@@ -313,7 +313,7 @@
         {% set org_type = h.default_group_type('organization') %}
         {% set group_type = h.default_group_type('group') %}
         {% set is_home_active = h.page_is_active('home.index') %}
-        {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', ["dataset", "resource"]) %}
+        {% set is_dataset_active = h.page_is_active(dataset_type ~ '.search', [dataset_type, dataset_type ~ '_resource', "resource"]) %}
         {% set is_org_active = h.page_is_active(org_type ~ '.index', ['organization']) %}
         {% set is_group_active = h.page_is_active(group_type ~ '.index', ['group']) %}
         {% set is_about_active = h.page_is_active('home.about') %}

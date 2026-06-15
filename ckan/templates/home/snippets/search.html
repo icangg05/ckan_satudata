@@ -20,7 +20,7 @@
 {% if tags %}
 <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-6">
   <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-bold tw-tracking-widest tw-uppercase tw-mr-1" style="color: #fbbf24;">
-    <i class="fa-solid fa-fire" aria-hidden="true"></i>{{ _('Populer') }}
+    <i class="fa-solid fa-tags" aria-hidden="true"></i>{{ _('Tags') }}
   </span>
   {% for tag in tags %}
     <a href="{% url_for 'dataset.search', tags=tag.name %}" aria-label="{{ _('Search datasets with the tag: {tag}').format(tag=tag.display_name) }}"

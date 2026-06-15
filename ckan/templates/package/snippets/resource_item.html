@@ -25,10 +25,23 @@ Example:
   'png': 'fa-file-image', 'jpg': 'fa-file-image', 'jpeg': 'fa-file-image', 'gif': 'fa-file-image', 'svg': 'fa-file-image'
 } %}
 {% set icon = icon_map.get(format, 'fa-file') %}
+{% set color_map = {
+  'csv': '#16a34a', 'tsv': '#16a34a',
+  'xls': '#1d6f42', 'xlsx': '#1d6f42',
+  'pdf': '#dc2626',
+  'json': '#d97706', 'xml': '#d97706', 'api': '#7c3aed',
+  'geojson': '#0d9488', 'kml': '#0d9488', 'shp': '#0d9488', 'wms': '#0d9488', 'wfs': '#0d9488', 'gpkg': '#0d9488',
+  'zip': '#ca8a04', 'rar': '#ca8a04', '7z': '#ca8a04',
+  'doc': '#2563eb', 'docx': '#2563eb',
+  'txt': '#64748b',
+  'html': '#ea580c',
+  'png': '#db2777', 'jpg': '#db2777', 'jpeg': '#db2777', 'gif': '#db2777', 'svg': '#db2777'
+} %}
+{% set color = color_map.get(format, '#185A75') %}
 
 <li class="resource-item tw-group tw-flex tw-items-start tw-gap-3 tw-rounded tw-border tw-border-gray-200 tw-p-3.5 tw-transition-all tw-duration-200 hover:tw-border-[#38bdf8]/50 hover:tw-shadow-sm" data-id="{{ res.id }}">
 
-  <a href="{{ url }}" class="tw-flex-shrink-0 tw-inline-flex tw-items-center tw-justify-center tw-w-11 tw-h-11 tw-rounded tw-no-underline tw-transition-colors" style="background-color: rgba(24,90,117,0.08); color: #185A75;" aria-hidden="true" tabindex="-1">
+  <a href="{{ url }}" class="tw-flex-shrink-0 tw-inline-flex tw-items-center tw-justify-center tw-w-11 tw-h-11 tw-rounded tw-no-underline tw-transition-colors" style="background-color: {{ color }}14; color: {{ color }};" aria-hidden="true" tabindex="-1">
     <i class="fa-solid {{ icon }} tw-text-lg"></i>
   </a>
 
@@ -40,7 +53,7 @@ Example:
           aria-label="{{ _('Navigate to resource: {name_or_id}').format(name_or_id=name_or_id) }}">
           {{ h.resource_display_name(res) | truncate(60) }}
         </a>
-        <span class="format-label tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded tw-text-[10px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: rgba(56,189,248,0.14); color: #185A75;"
+        <span class="format-label tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded tw-text-[10px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: {{ color }}1f; color: {{ color }};"
           property="dc:format" data-format="{{ format or 'data' }}">{{ h.get_translated(res, 'format') or _('data') }}</span>
       </div>
       {% endblock %}

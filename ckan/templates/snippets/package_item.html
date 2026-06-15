@@ -54,9 +54,22 @@ Example:
           {% block resources_outer %}
             <ul class="dataset-resources list-unstyled">
               {% block resources_inner %}
+                {% set fmt_color_map = {
+                  'csv': '#16a34a', 'tsv': '#16a34a',
+                  'xls': '#1d6f42', 'xlsx': '#1d6f42',
+                  'pdf': '#dc2626',
+                  'json': '#d97706', 'xml': '#d97706', 'api': '#7c3aed',
+                  'geojson': '#0d9488', 'kml': '#0d9488', 'shp': '#0d9488', 'wms': '#0d9488', 'wfs': '#0d9488', 'gpkg': '#0d9488',
+                  'zip': '#ca8a04', 'rar': '#ca8a04', '7z': '#ca8a04',
+                  'doc': '#2563eb', 'docx': '#2563eb',
+                  'txt': '#64748b',
+                  'html': '#ea580c',
+                  'png': '#db2777', 'jpg': '#db2777', 'jpeg': '#db2777', 'gif': '#db2777', 'svg': '#db2777'
+                } %}
                 {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                {% set fmt_color = fmt_color_map.get(resource.lower(), '#185A75') %}
                 <li>
-                  <a href="{{ h.url_for(package.type ~ '.read', id=package.name) }}" class="badge badge-default" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                  <a href="{{ h.url_for(package.type ~ '.read', id=package.name) }}" class="badge badge-default" data-format="{{ resource.lower() }}" style="background-color: {{ fmt_color }}1f; color: {{ fmt_color }};">{{ resource }}</a>
                 </li>
                 {% endfor %}
               {% endblock %}

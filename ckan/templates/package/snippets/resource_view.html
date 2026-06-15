@@ -1,8 +1,8 @@
 {% import 'macros/form.html' as form %}
 
 {% block resource_view %}
-  <div id="view-{{ resource_view['id'] }}" class="resource-view" data-id="{{ resource_view['id'] }}" data-title="{{ resource_view['title'] }}" data-description="{{ resource_view['descripion'] }}">
-  <div class="actions">
+  <div id="view-{{ resource_view['id'] }}" class="resource-view tw-relative tw-mt-0" data-id="{{ resource_view['id'] }}" data-title="{{ resource_view['title'] }}" data-description="{{ resource_view['descripion'] }}">
+  <div class="actions tw-flex tw-flex-wrap tw-justify-end tw-gap-2 tw-mb-3">
     <a class="btn btn-secondary"
        target="_blank"
        rel="noreferrer"
@@ -19,8 +19,10 @@
       {{ _("Embed") }}
     </a>
   </div>
-  <p class="desc">{{ h.render_markdown(resource_view['description']) }}</p>
-    <div class="m-top ckanext-datapreview">
+  {% if resource_view['description'] %}
+    <p class="desc tw-mb-3 tw-text-gray-600">{{ h.render_markdown(resource_view['description']) }}</p>
+  {% endif %}
+    <div class="ckanext-datapreview tw-pt-2">
       {% if not to_preview and h.resource_view_is_filterable(resource_view) %}
         {% snippet 'package/snippets/resource_view_filters.html', resource=resource %}
       {% endif %}

@@ -1,75 +1,121 @@
 {#
-  Embeds a organization within the sidebar of a page.
+  Embeds an organization profile hero at the top of the organization page.
+  Tailwind-redesigned. The root element keeps id="organization-info" because
+  the follow/unfollow views (ckan/views/group.py) re-render this whole snippet
+  and the follow button swaps it via hx-target="#organization-info".
 
-  organization    - The organization dict.
+  organization - The organization dict.
 
-  {% snippet 'snippets/organization, organization=group_dict %}
-
-  #}
-{% set organization = organization or group%}
-{% set url = h.url_for(organization.type + '.read', id=organization.name, ) %}
+  {% snippet 'organization/snippets/info.html', organization=group_dict %}
+#}
+{% set organization = organization or group %}
+{% set url = h.url_for(organization.type + '.read', id=organization.name) %}
 {% set dataset_type = h.default_package_type() %}
+{% set num_followers = h.follow_count('group', organization.id) %}
 
 {% block info %}
-  <section id="organization-info" class="module module-narrow">
-    <div class="module context-info">
-    <div class="module-content">
-      {% block inner %}
-      {% block image %}
-        <div class="image">
-          <a href="{{ url }}">
-            <img src="{{ organization.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" width="200" alt="{{ organization.name }}" />
+<section id="organization-info" class="tw-font-sans">
+  {% block inner %}
+  <div class="tw-bg-white tw-rounded tw-border tw-border-gray-200 tw-shadow-xl tw-overflow-hidden">
+
+    {# brand accent bar #}
+    <div class="tw-h-2 tw-w-full" style="background: linear-gradient(90deg, #0D3748, #185A75 40%, #38bdf8 75%, #fbbf24);"></div>
+
+    <div class="tw-p-6 md:tw-p-8">
+      <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-6 md:tw-gap-8">
+
+        {% block image %}
+        <div class="tw-flex-shrink-0 tw-mx-auto md:tw-mx-0">
+          <a href="{{ url }}" class="tw-block tw-w-28 tw-h-28 md:tw-w-32 md:tw-h-32 tw-rounded tw-overflow-hidden tw-border tw-border-gray-100 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <img src="{{ organization.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ organization.name }}" class="tw-w-full tw-h-full tw-object-cover" />
           </a>
         </div>
-      {% endblock %}
-      {% block heading %}
-      <h2 class="heading">{{ organization.title or organization.name }}
-        {% if organization.state == 'deleted' %}
-          [{{ _('Deleted') }}]
-        {% endif %}
-      </h2>
-      {% endblock %}
-      {% block description %}
-      {% if organization.description %}
-        <p class="description">
-          {{ h.markdown_extract(organization.description, 180) }}
-        </p>
-        <p class="read-more">
-          {% link_for _('read more'), named_route=organization.type ~ '.about', id=organization.name %}
-        </p>
-      {% else %}
-        <p class="empty">{{ h.humanize_entity_type('organization', organization.type, 'no description') or _('There is no description for this organization.') }}</p>
-      {% endif %}
-      {% endblock %}
-      {% if show_nums %}
-        {% block nums %}
-        {% set num_followers = h.follow_count('group', organization.id) %}
-        <div class="nums">
-          <dl>
-            <dt>{{ _('Followers') }}</dt>
-            <dd>{{ h.SI_number_span(num_followers) }}</dd>
-          </dl>
-          <dl>
-            <dt>{{ h.humanize_entity_type('package', dataset_type, 'facet label') or _('Datasets') }}</dt>
-            <dd>{{ h.SI_number_span(organization.package_count) }}</dd>
-          </dl>
-          <dl>
-            <dt>{{ _('Members') }}</dt>
-            <dd>{{ h.member_count(organization.id) }}</dd>
-          </dl>
-        </div>
         {% endblock %}
-        {% block follow %}
-        {% if current_user.is_authenticated %}
-          {% if error_message %}
-            <div class="alert alert-danger">{{ error_message }}</div>
+
+        <div class="tw-flex-1 tw-min-w-0 tw-w-full">
+
+          <div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-start sm:tw-justify-between tw-gap-4">
+
+            <div class="tw-min-w-0">
+              {% block heading %}
+              <span class="tw-inline-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1 tw-mb-3 tw-rounded-full tw-text-[11px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: #e0f4fb; color: #185A75;">
+                <i class="fa-solid fa-building-columns" aria-hidden="true"></i>{{ h.humanize_entity_type('organization', organization.type, 'facet label') or _('Organization') }}
+              </span>
+              <h1 class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-gray-800 tw-leading-tight tw-m-0 tw-break-words">
+                {{ organization.title or organization.name }}
+                {% if organization.state == 'deleted' %}
+                  <span class="tw-text-sm tw-font-semibold tw-text-red-600 tw-align-middle">[{{ _('Deleted') }}]</span>
+                {% endif %}
+              </h1>
+              {% endblock %}
+
+              {% block description %}
+              {% if organization.description %}
+                <p class="tw-text-sm md:tw-text-base tw-text-gray-600 tw-leading-relaxed tw-mt-3 tw-mb-2 tw-break-words">{{ h.markdown_extract(organization.description, 180) }}</p>
+                <a href="{{ h.url_for(organization.type ~ '.about', id=organization.name) }}" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-sm tw-font-semibold tw-no-underline hover:tw-underline" style="color: #185A75;">
+                  {{ _('read more') }}<i class="fa-solid fa-arrow-right tw-text-xs" aria-hidden="true"></i>
+                </a>
+              {% else %}
+                <p class="tw-text-sm tw-text-gray-400 tw-italic tw-mt-3 tw-mb-0">{{ h.humanize_entity_type('organization', organization.type, 'no description') or _('There is no description for this organization.') }}</p>
+              {% endif %}
+              {% endblock %}
+            </div>
+
+            {# actions: follow + manage #}
+            <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-flex-shrink-0">
+              {% block follow %}
+              {% if current_user.is_authenticated %}
+                {% if error_message %}
+                  <div class="tw-w-full tw-rounded tw-border tw-border-red-100 tw-bg-red-50 tw-px-3 tw-py-2 tw-text-sm tw-text-red-700">{{ error_message }}</div>
+                {% endif %}
+                <div class="tw-inline-block
+                            [&_.btn]:tw-inline-flex [&_.btn]:tw-items-center [&_.btn]:tw-gap-2 [&_.btn]:tw-px-5 [&_.btn]:tw-h-10 [&_.btn]:tw-rounded [&_.btn]:tw-text-sm [&_.btn]:tw-font-semibold [&_.btn]:tw-no-underline [&_.btn]:tw-border-0 [&_.btn]:tw-cursor-pointer [&_.btn]:tw-transition-opacity hover:[&_.btn]:tw-opacity-90
+                            [&_.btn-success]:tw-text-white [&_.btn-danger]:tw-text-white
+                            [&_.btn-success]:tw-bg-[#185A75] [&_.btn-danger]:tw-bg-rose-500">
+                  {% snippet 'snippets/follow_button.html', am_following=am_following, obj_type='organization', obj_id=organization.id %}
+                </div>
+              {% endif %}
+              {% endblock %}
+              {% if h.check_access('organization_update', {'id': organization.id}) %}
+                <a href="{{ h.url_for(organization.type ~ '.edit', id=organization.name) }}"
+                   class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-5 tw-rounded tw-text-sm tw-font-semibold tw-no-underline tw-border tw-border-gray-300 tw-text-gray-700 tw-bg-white hover:tw-bg-gray-50 tw-transition-colors">
+                  <i class="fa-solid fa-wrench" aria-hidden="true"></i>{{ _('Manage') }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if show_nums %}
+          {% block nums %}
+          <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-3 tw-mt-5">
+            <div class="tw-flex tw-items-center tw-gap-3 tw-rounded tw-border tw-border-gray-100 tw-px-4 tw-py-3" style="background-color: #f8fafc;">
+              <span class="tw-flex tw-items-center tw-justify-center tw-w-10 tw-h-10 tw-rounded tw-flex-shrink-0" style="background-color: #e0f4fb; color: #185A75;"><i class="fa-solid fa-database" aria-hidden="true"></i></span>
+              <div class="tw-min-w-0">
+                <div class="tw-text-xl tw-font-extrabold tw-text-gray-800 tw-leading-none">{{ h.SI_number_span(organization.package_count) }}</div>
+                <div class="tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500 tw-mt-1">{{ h.humanize_entity_type('package', dataset_type, 'facet label') or _('Datasets') }}</div>
+              </div>
+            </div>
+            <div class="tw-flex tw-items-center tw-gap-3 tw-rounded tw-border tw-border-gray-100 tw-px-4 tw-py-3" style="background-color: #f8fafc;">
+              <span class="tw-flex tw-items-center tw-justify-center tw-w-10 tw-h-10 tw-rounded tw-flex-shrink-0" style="background-color: rgba(251,191,36,0.15); color: #b45309;"><i class="fa-solid fa-heart" aria-hidden="true"></i></span>
+              <div class="tw-min-w-0">
+                <div class="tw-text-xl tw-font-extrabold tw-text-gray-800 tw-leading-none">{{ h.SI_number_span(num_followers) }}</div>
+                <div class="tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500 tw-mt-1">{{ _('Followers') }}</div>
+              </div>
+            </div>
+            <div class="tw-flex tw-items-center tw-gap-3 tw-rounded tw-border tw-border-gray-100 tw-px-4 tw-py-3" style="background-color: #f8fafc;">
+              <span class="tw-flex tw-items-center tw-justify-center tw-w-10 tw-h-10 tw-rounded tw-flex-shrink-0" style="background-color: rgba(52,211,153,0.15); color: #047857;"><i class="fa-solid fa-user-group" aria-hidden="true"></i></span>
+              <div class="tw-min-w-0">
+                <div class="tw-text-xl tw-font-extrabold tw-text-gray-800 tw-leading-none">{{ h.member_count(organization.id) }}</div>
+                <div class="tw-text-[11px] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500 tw-mt-1">{{ _('Members') }}</div>
+              </div>
+            </div>
+          </div>
+          {% endblock %}
           {% endif %}
-          {% snippet 'snippets/follow_button.html', am_following=am_following, obj_type='organization', obj_id=organization.id %}
-        {% endif %}
-        {% endblock %}
-      {% endif %}
-      {% endblock %}
+        </div>
       </div>
     </div>
-  </section>
+  </div>
   {% endblock %}
+</section>
+{% endblock %}
