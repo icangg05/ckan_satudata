@@ -127,7 +127,7 @@ reused by groups/organizations.
         {% for package in page.items %}
           {% set title = package.title or package.name %}
           {% set notes = h.markdown_extract(package.notes, extract_length=180) %}
-          <li class="tw-group tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-p-5 tw-transition-all tw-duration-300 hover:tw-shadow-lg hover:tw-border-[#38bdf8]/50 hover:-tw-translate-y-0.5">
+          <li class="tw-group tw-bg-white tw-rounded tw-shadow-md tw-border tw-border-gray-200 tw-p-5 tw-transition-all tw-duration-300 hover:tw-shadow-lg hover:tw-border-[#38bdf8]/50 hover:-tw-translate-y-0.5">
             <div class="tw-flex tw-items-start tw-gap-3">
               <div class="tw-flex-shrink-0 tw-w-11 tw-h-11 tw-rounded tw-flex tw-items-center tw-justify-center tw-mt-0.5" style="background-color: rgba(24,90,117,0.08);">
                 <i class="fa-solid fa-database tw-text-base" style="color: #185A75;" aria-hidden="true"></i>

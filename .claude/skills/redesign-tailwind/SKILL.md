@@ -27,8 +27,12 @@ icons. Already-redesigned references: [header.html](../../../ckan/templates/head
     `hover:tw-bg-white/10`).
   - `corePlugins: { preflight: false }` — Tailwind's reset is disabled, so
     existing CKAN base styles still apply unless overridden.
-  - `content` scans `./ckan/templates/**/*.html` to find which `tw-*`
-    classes are actually used.
+  - `content` scans `./ckan/templates/**/*.html` **and**
+    `./ckanext/**/templates/**/*.html` to find which `tw-*` classes are
+    actually used — so `tw-*` classes added inside extension templates
+    (e.g. `ckanext/datastore/...`) are compiled too. If you redesign a page
+    that an extension overrides, restyle the extension's template/snippet
+    and rebuild as normal.
   - Font is `Inter` (Google Fonts), already wired to `body`/`.tw-font-sans`.
   - No Tailwind plugins (e.g. typography/`prose`) are loaded — **never use
     `tw-prose`** classes; style markdown output manually with arbitrary
@@ -99,6 +103,30 @@ values (arbitrary values like `tw-text-[#185A75]` also work but inline
 9. Use `tw-animate-pulse` / `tw-animate-ping` for subtle live-indicator
    animations (Tailwind's built-in animation utilities work fine with the
    `tw-` prefix, no plugin needed).
+10. **Never leave a page background flat/plain.** Every redesigned page
+    should sit on a decorated background, not a single solid colour —
+    otherwise white cards visually merge into the background and text gets
+    hard to read. Add a decorative ornament layer (pola, garis, bentuk,
+    animasi keren) behind the content and make the cards clearly pop:
+    - Wrap the page in `tw-relative tw-overflow-hidden` and give it a soft
+      **gradient** base (sky/teal tints work well, e.g.
+      `linear-gradient(180deg, #cfe8f7 0%, #e0f2fe 25%, #f1f5f9 100%)`) so
+      white cards contrast against it.
+    - Add an absolutely-positioned, `aria-hidden`,
+      `tw-pointer-events-none` ornament layer with a mix of: an SVG **dot
+      grid** pattern, blurred glowing **blobs** (`tw-blur-3xl
+      tw-animate-pulse` with `radial-gradient` brand colours), floating
+      **geometric shapes** (rounded squares / circles / rotated diamonds
+      using `tw-animate-bounce` / `tw-animate-pulse`), and flowing **wave
+      lines** as an SVG path. See `home/index.html` and
+      `package/resource_read.html` for the established pattern, and reuse
+      the brand-colour opacities there.
+    - Keep ornaments *behind* opaque cards (content layer gets
+      `tw-relative tw-z-10`) so they never reduce text readability — they
+      should only show through the gaps between cards.
+    - Strengthen card separation on the busier background: bump shadows
+      (`tw-shadow-md` for sidebar cards, `tw-shadow-xl` for the main/focal
+      card) rather than the flat `tw-shadow-sm`.
 
 ## Common layout primitives used so far
 

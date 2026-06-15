@@ -3,13 +3,13 @@
 {% block resource_actions_inner %}
   {{ super() }}
   {% if res.datastore_active %}
-    <li>{% snippet 'package/snippets/data_api_button.html', resource=res %}</li>
+    {% snippet 'package/snippets/data_api_button.html', resource=res %}
   {% endif %}
 {% endblock %}
 
 {% block download_resource_button %}
 {% if res.datastore_active %}
-    <button class="btn btn-primary dropdown-toggle" role="button" id="dropdownDownloadFormat" data-bs-toggle="dropdown" aria-expanded="false" aria-label="list of downloadable formats"></button>
+    <button class="dropdown-toggle tw-inline-flex tw-items-center tw-justify-center tw-px-3 tw-h-10 tw-rounded-r tw-text-white hover:tw-opacity-90 tw-transition-opacity" style="background-color: #185A75; border: 0; border-left: 1px solid rgba(255,255,255,0.3); cursor: pointer;" role="button" id="dropdownDownloadFormat" data-bs-toggle="dropdown" aria-expanded="false" aria-label="list of downloadable formats"></button>
     <ul class="dropdown-menu" aria-labelledby="dropdownDownloadFormat">
       <li>
         <a class="dropdown-item" href="{{ h.url_for('datastore.dump', resource_id=res.id, bom=True) }}"
@@ -44,7 +44,10 @@
 {% block action_manage_inner %}
   {{ super() }}
   {% if res.datastore_active and h.datastore_show_resource_actions() %}
-    <li>{% link_for _('Data Dictionary'), named_route='datastore.dictionary', id=pkg.name, resource_id=res.id, class_='btn btn-secondary', icon='code' %}</li>
+    <a href="{{ h.url_for('datastore.dictionary', id=pkg.name, resource_id=res.id) }}"
+       class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-4 tw-rounded tw-text-sm tw-font-semibold tw-no-underline tw-border tw-border-gray-300 tw-text-gray-700 tw-bg-white hover:tw-bg-gray-50 tw-transition-colors">
+      <i class="fa-solid fa-code" aria-hidden="true"></i>{{ _('Data Dictionary') }}
+    </a>
   {% endif %}
 {% endblock %}
 

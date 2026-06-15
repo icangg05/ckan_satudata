@@ -6,5 +6,5 @@ resource: the resource
 {% if resource.datastore_active %}
   {% set loading_text = _('Loading...') %}
   {% set api_info_url = h.url_for('datastore.api_info', resource_id=resource.id) %}
-  <a class="btn btn-success" href="{{ api_info_url }}" data-module="api-info" data-module-template="{{ api_info_url }}" data-loading-text="{{ loading_text }}"><i class="fa fa-flask fa-lg"></i> {{ _('Data API') }}</a>
+  <a class="tw-inline-flex tw-items-center tw-gap-2 tw-h-10 tw-px-5 tw-rounded tw-text-sm tw-font-semibold tw-text-white tw-no-underline tw-shadow-sm hover:tw-opacity-90 tw-transition-opacity" style="background-color: #16a34a;" href="{{ api_info_url }}" data-module="api-info" data-module-template="{{ api_info_url }}" data-loading-text="{{ loading_text }}"><i class="fa-solid fa-flask" aria-hidden="true"></i> {{ _('Data API') }}</a>
 {% endif %}

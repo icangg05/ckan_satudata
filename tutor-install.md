@@ -1,4 +1,5 @@
-pada tags buat efek glasshmorphism dan tambahkan efek ketika dihover pula
+pada background halaman tersebut masih terlalu polos, tambahkan design ornamen, pola, garis, bentuk, dengan animasi keren atau lainnya. pindahkan 'Additional Information' di bawah card sosial.
+secara visual antara background dan card sperti menyatu sehingga mata user kurang bisa membaca teks
 
 # Set permission datastore di database PostgreSQL container
 

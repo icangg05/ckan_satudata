@@ -18,7 +18,7 @@ is reused by groups/organizations.
   {% for facet in facet_titles %}
     {% set items = h.get_facet_items_dict(facet, search_facets) %}
     {% if items %}
-      <section class="tw-bg-white tw-rounded tw-shadow-sm tw-border tw-border-gray-200 tw-overflow-hidden">
+      <section class="tw-bg-white tw-rounded tw-shadow-md tw-border tw-border-gray-200 tw-overflow-hidden">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-4 tw-py-3 tw-border-b tw-border-gray-100">
           <i class="fa-solid fa-filter tw-text-xs" style="color: #185A75;" aria-hidden="true"></i>
           <h2 class="tw-text-sm tw-font-bold tw-text-gray-800 tw-m-0">{{ facet_titles[facet] }}</h2>
