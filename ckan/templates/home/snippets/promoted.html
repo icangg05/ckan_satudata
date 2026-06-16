@@ -26,8 +26,8 @@
     </div>
   {% endif %}
 
-  {% set org_count = search_facets.organization.items|length if search_facets and search_facets.organization else 0 %}
-  {% set group_count = search_facets.groups.items|length if search_facets and search_facets.groups else 0 %}
+  {% set org_count = h.get_organization_count() %}
+  {% set group_count = h.get_group_count() %}
 
   <div class="tw-flex tw-items-center tw-justify-center tw-gap-6 md:tw-gap-10 tw-mt-10">
     <div class="tw-text-center">

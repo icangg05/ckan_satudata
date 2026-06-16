@@ -2578,6 +2578,24 @@ def get_dataset_count() -> dict[str, int]:
 
 
 @core_helper
+def get_organization_count() -> int:
+    '''Returns the total number of organizations in the database.'''
+    context: Context = {'ignore_auth': True}
+    orgs = logic.get_action('organization_list')(
+        context, {'all_fields': False})
+    return len(orgs)
+
+
+@core_helper
+def get_group_count() -> int:
+    '''Returns the total number of groups in the database.'''
+    context: Context = {'ignore_auth': True}
+    groups = logic.get_action('group_list')(
+        context, {'all_fields': False})
+    return len(groups)
+
+
+@core_helper
 def featured_group_org(items: list[str], get_action: str, list_action: str,
                        count: int) -> list[dict[str, Any]]:
     def get_group(id: str):
