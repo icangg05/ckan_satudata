@@ -9,7 +9,10 @@ from flask import Blueprint
 import ckan.lib.base as base
 from ckan.lib.helpers import helper_functions as h
 from ckan.common import _, current_user
-from ckan.views.user import _extra_template_variables
+from ckan.views.user import (
+    _extra_template_variables,
+    _set_organisation_datasets,
+)
 from ckan.types import Context
 
 log = logging.getLogger(__name__)
@@ -38,6 +41,8 @@ def datasets() -> str:
         u'user_obj': current_user,
         u'include_datasets': True}
     extra_vars = _extra_template_variables(context, data_dict)
+    _set_organisation_datasets(context, current_user.name,
+                               extra_vars['user_dict'])
     return base.render(u'user/dashboard_datasets.html', extra_vars)
 
 

@@ -105,7 +105,7 @@ def _guess_group_type(expecting_name: bool = False) -> str:
 def index(group_type: str, is_organization: bool) -> str:
     extra_vars: dict[str, Any] = {}
     page = h.get_page_number(request.args) or 1
-    items_per_page = config.get('ckan.datasets_per_page')
+    items_per_page = 21 if is_organization else config.get('ckan.datasets_per_page')
 
     context: Context = {
         u'user': current_user.name,

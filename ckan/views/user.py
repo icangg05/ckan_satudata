@@ -72,6 +72,30 @@ def _extra_template_variables(context: Context,
     return extra
 
 
+def _set_organisation_datasets(context: Context, user_id: str,
+                               user_dict: dict[str, Any]) -> None:
+    '''Replace a user's "created datasets" list with every dataset that
+    belongs to the organisation(s) the user is a member of.
+
+    This lets a single OPD admin see and manage all of their organisation's
+    datasets from their profile and dashboard, instead of only the ones they
+    personally created. Also keeps the sidebar dataset count in sync.
+    '''
+    user_orgs = logic.get_action('organization_list_for_user')(
+        context, {'id': user_id, 'permission': 'read'})
+    org_names = [org['name'] for org in user_orgs]
+    if org_names:
+        fq = ' OR '.join('organization:"%s"' % name for name in org_names)
+        org_search = logic.get_action('package_search')(
+            context,
+            {'fq': '(%s)' % fq, 'rows': 1000, 'include_private': True})
+        datasets = org_search['results']
+    else:
+        datasets = []
+    user_dict['datasets'] = datasets
+    user_dict['number_created_packages'] = len(datasets)
+
+
 def index():
     page_number = h.get_page_number(request.args)
     q = request.args.get('q', '')
@@ -143,6 +167,7 @@ def read(id: str) -> Union[Response, str]:
     g.fields = []
 
     extra_vars = _extra_template_variables(context, data_dict)
+    _set_organisation_datasets(context, id, extra_vars['user_dict'])
 
     am_following: bool = False
     if not extra_vars['is_myself']:
@@ -173,6 +198,7 @@ def read_organizations(id: str) -> Union[Response, str]:
     g.fields = []
 
     extra_vars = _extra_template_variables(context, data_dict)
+    _set_organisation_datasets(context, id, extra_vars['user_dict'])
     return base.render(u'user/read_organizations.html', extra_vars)
 
 
@@ -192,6 +218,7 @@ def read_groups(id: str) -> Union[Response, str]:
     # any ideas?
 
     extra_vars = _extra_template_variables(context, data_dict)
+    _set_organisation_datasets(context, id, extra_vars['user_dict'])
     return base.render(u'user/read_groups.html', extra_vars)
 
 
@@ -208,7 +235,12 @@ class ApiTokenView(MethodView):
             'id': id,
             'user_obj': current_user,
         }
-        extra_vars = _extra_template_variables({}, data_dict)
+        context: Context = {
+            'user': current_user.name,
+            'auth_user_obj': current_user,
+        }
+        extra_vars = _extra_template_variables(context, data_dict)
+        _set_organisation_datasets(context, id, extra_vars['user_dict'])
         extra_vars['tokens'] = reversed(tokens)
         extra_vars['data'] = data_dict
         extra_vars['errors'] = None

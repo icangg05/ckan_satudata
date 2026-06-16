@@ -1,0 +1,54 @@
+{#
+  Compact organisation / group info card for the narrow edit & manage
+  sidebar (the col-md-3 secondary column).
+
+  Unlike organization/snippets/info.html — a full-width hero that uses
+  md:tw-flex-row (a viewport-based breakpoint) and therefore places the logo
+  and title side-by-side even inside the slim sidebar, wrapping the title one
+  character per line — this card always stacks vertically so it stays tidy and
+  readable regardless of the sidebar width.
+
+  group - the organization or group dict.
+
+  {% snippet 'snippets/group_info_compact.html', group=group_dict %}
+#}
+{% set group = group or organization %}
+{% set is_org = group.type == 'organization' %}
+{% set url = h.url_for(group.type ~ '.read', id=group.name) %}
+{% set placeholder = '/base/images/placeholder-' ~ ('organization' if is_org else 'group') ~ '.png' %}
+
+<section class="tw-font-sans">
+  <div class="tw-bg-white tw-rounded tw-border tw-border-gray-200 tw-shadow-md tw-overflow-hidden">
+
+    {# brand accent bar #}
+    <div class="tw-h-2 tw-w-full" style="background: linear-gradient(90deg, #0D3748, #185A75 40%, #38bdf8 75%, #fbbf24);"></div>
+
+    <div class="tw-p-5">
+      {% block image %}
+      <a href="{{ url }}" class="tw-block tw-w-24 tw-h-24 tw-mx-auto tw-mb-4 tw-rounded tw-overflow-hidden tw-border tw-border-gray-100 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+        <img src="{{ group.image_display_url or h.url_for_static(placeholder) }}" alt="{{ group.name }}" class="tw-w-full tw-h-full tw-object-cover" />
+      </a>
+      {% endblock %}
+
+      {% block heading %}
+      <div class="tw-text-center">
+        <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1 tw-mb-3 tw-rounded-full tw-text-[11px] tw-font-bold tw-uppercase tw-tracking-wide" style="background-color: #e0f4fb; color: #185A75;">
+          <i class="fa-solid {{ 'fa-building-columns' if is_org else 'fa-users' }}" aria-hidden="true"></i>{{ h.humanize_entity_type(group.type, group.type, 'facet label') or (_('Organization') if is_org else _('Group')) }}
+        </span>
+        <h2 class="tw-text-lg tw-font-extrabold tw-text-gray-800 tw-leading-snug tw-m-0 tw-break-words">
+          {{ group.title or group.name }}
+          {% if group.state == 'deleted' %}
+            <span class="tw-text-xs tw-font-semibold tw-text-red-600">[{{ _('Deleted') }}]</span>
+          {% endif %}
+        </h2>
+      </div>
+      {% endblock %}
+
+      {% block description %}
+      {% if group.description %}
+        <p class="tw-text-sm tw-text-gray-600 tw-leading-relaxed tw-mt-3 tw-mb-0 tw-break-words">{{ h.markdown_extract(group.description, 140) }}</p>
+      {% endif %}
+      {% endblock %}
+    </div>
+  </div>
+</section>
