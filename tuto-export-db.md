@@ -1,3 +1,5 @@
+docker exec devcontainer-db-1 pg_dump -U ckan_default ckan_default > /home/icang/Desktop/website/private/ckan/backup_ckan_$(date +%Y%m%d).sql
+
 1. Export database di local
 
 # Masuk ke container db local
