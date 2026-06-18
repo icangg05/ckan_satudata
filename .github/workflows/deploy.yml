@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -20,16 +17,22 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          command_timeout: 20m
+          command_timeout: 30m
           script: |
             set -e
             cd /var/www/ckan_satudata
 
-            echo "Pull latest code..."
-            git pull origin main
+            echo "Sync code with remote..."
+            git fetch --all
+            git reset --hard origin/main
 
-            echo "Rebuild Docker..."
-            docker compose -f .devcontainer/docker-compose.yml down
-            docker compose -f .devcontainer/docker-compose.yml up -d --build
+            echo "Build images..."
+            docker compose -f .devcontainer/docker-compose.yml build
 
-            echo "Done building..."
+            echo "Restart services..."
+            docker compose -f .devcontainer/docker-compose.yml up -d
+
+            echo "Cleanup old images..."
+            docker image prune -f
+
+            echo "Done."
