@@ -23,14 +23,10 @@ jobs:
             cd /var/www/ckan_satudata
 
             echo "Sync code with remote..."
-            git fetch --all
-            git reset --hard origin/main
+            git pull origin main
 
-            echo "Build images..."
-            docker compose -f .devcontainer/docker-compose.yml build
-
-            echo "Restart services..."
-            docker compose -f .devcontainer/docker-compose.yml up -d
+            echo "Restart and build services..."
+            docker compose -f .devcontainer/docker-compose.yml up -d --build
 
             echo "Cleanup old images..."
             docker image prune -f
