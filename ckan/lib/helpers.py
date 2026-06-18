@@ -2578,6 +2578,63 @@ def get_dataset_count() -> dict[str, int]:
 
 
 @core_helper
+def get_monthly_dataset_counts(
+        months: int = 12,
+        demo: Optional[bool] = None) -> list[dict[str, Any]]:
+    '''Jumlah dataset publik yang diupload (metadata_created) per bulan,
+    untuk `months` bulan terakhir termasuk bulan berjalan. Bulan tanpa upload
+    diisi 0 sehingga grafik selalu punya `months` titik (urut lama -> baru).
+
+    Mode demo: jika aktif, kembalikan data dummy berisi angka acak untuk tiap
+    bulan (berguna untuk melihat grafik terisi saat database masih kosong).
+    Aktif/nonaktif lewat config ``ckan.monthly_chart_demo = true`` di ckan.ini.
+    '''
+    bulan_id = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+                'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+
+    # siapkan ember bulanan 'YYYY-MM' -> 0, dari bulan terlama ke bulan ini
+    today = datetime.date.today()
+    keys = []
+    y, m = today.year, today.month
+    for _i in range(months):
+        keys.append('{0:04d}-{1:02d}'.format(y, m))
+        m -= 1
+        if m == 0:
+            m = 12
+            y -= 1
+    buckets = {key: 0 for key in reversed(keys)}
+
+    # tentukan apakah mode demo aktif (lewat config ckan.ini)
+    if demo is None:
+        demo = asbool(config.get('ckan.monthly_chart_demo', False))
+
+    if demo:
+        # data dummy: jumlah acak per bulan
+        import random
+        for key in buckets:
+            buckets[key] = random.randint(3, 40)
+    else:
+        result = logic.get_action('package_search')(
+            {'ignore_auth': True},
+            {'q': '*:*', 'fq': 'capacity:"public"', 'rows': 100000,
+             'fl': 'metadata_created', 'sort': 'metadata_created asc'})
+        for pkg in result['results']:
+            created = pkg.get('metadata_created')
+            if not created:
+                continue
+            key = created[:7]  # 'YYYY-MM' dari ISO string
+            if key in buckets:
+                buckets[key] += 1
+
+    out = []
+    for key, count in buckets.items():
+        yy, mm = key.split('-')
+        out.append({'label': '{0} {1}'.format(bulan_id[int(mm) - 1], yy),
+                    'count': count})
+    return out
+
+
+@core_helper
 def get_organization_count() -> int:
     '''Returns the total number of organizations in the database.'''
     context: Context = {'ignore_auth': True}

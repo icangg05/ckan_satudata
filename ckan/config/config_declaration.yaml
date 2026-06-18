@@ -1229,6 +1229,15 @@ groups:
           an organization and datasets on the home page in the default templates (1
           group and 2 datasets are displayed).
 
+      - key: ckan.monthly_chart_demo
+        type: bool
+        default: false
+        example: "true"
+        description: |
+          If enabled, the "datasets uploaded per month" chart on the home page is
+          filled with random dummy data instead of real data from the database.
+          Useful to preview the chart when the portal has little or no data yet.
+
       - key: ckan.default_group_sort
         default: title
         example: name
