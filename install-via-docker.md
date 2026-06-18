@@ -61,6 +61,7 @@ docker exec -i devcontainer-db-1 psql -U ckan_default -d datastore_default < bac
 
 # 5. ⭐ Setup datastore — bikin view _table_metadata & beri SELECT ke read-user
 #    untuk tabel yang baru di-restore. WAJIB dijalankan SETELAH restore datastore.
+#    IMPORTANT!: jika error, kemungkinan masih proses running program. tunggu beberapa detik sampai halaman terload
 docker exec devcontainer-ckan-1 ckan -c /workspace/ckan.ini datastore set-permissions \
   | docker exec -i devcontainer-db-1 psql -U ckan_default -d postgres -v ON_ERROR_STOP=1
 
