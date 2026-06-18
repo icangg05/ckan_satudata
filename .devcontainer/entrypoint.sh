@@ -24,4 +24,10 @@ mkdir -p /workspace/ckan_storage/storage
 
 ckan -c /workspace/ckan.ini db init
 
+# Setup permission datastore + bikin view _table_metadata (WAJIB agar upload Excel/CSV
+# bisa masuk datastore). Idempotent, aman dijalankan setiap container start.
+ckan -c /workspace/ckan.ini datastore set-permissions \
+    | PGPASSWORD=pass psql -U ckan_default -h localhost -d postgres
+echo "✅ datastore permissions di-setup"
+
 exec ckan -c /workspace/ckan.ini run --host 0.0.0.0 --port 5000

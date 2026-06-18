@@ -5,6 +5,24 @@
 {% block maintag %}{% endblock %}
 {% block toolbar %}{% endblock %}
 
+{# AOS (Animate On Scroll) — hanya di halaman home #}
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.AOS) {
+        AOS.init({ duration: 700, easing: 'ease-out-cubic', once: true, offset: 80 });
+      }
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
 <div class="tw-font-sans">
   <div id="content" class="tw-max-w-6xl tw-mx-auto tw-px-4">
@@ -28,6 +46,10 @@
         </svg>
       </div>
     </div>
+
+    {% block leadership %}
+    {% snippet 'home/snippets/leadership.html' %}
+    {% endblock %}
 
     <div class="tw-relative tw-bg-sky-100 tw-overflow-hidden">
       {# Decorative background ornaments #}
@@ -65,7 +87,7 @@
       </div>
 
       <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-pt-8 md:tw-pb-20">
-        <div class="tw-text-center tw-max-w-2xl tw-mx-auto tw-mb-10 md:tw-mb-14">
+        <div class="tw-text-center tw-max-w-2xl tw-mx-auto tw-mb-10 md:tw-mb-14" data-aos="fade-up">
           <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-4 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase" style="background: rgba(24,90,117,0.08); color: #185A75;">
             <i class="fa-solid fa-compass tw-text-[11px] tw-animate-spin" style="animation-duration: 6s;" aria-hidden="true"></i>
             {{ _('Eksplorasi Data') }}
@@ -79,20 +101,29 @@
             organizations highlighted on this portal.{% endtrans %}
           </p>
         </div>
+        {% set featured_groups = h.get_featured_groups() %}
+        {# Jika tidak ada data group, ambil 2 organisasi untuk mengisi kedua
+           kolom; jika ada group, cukup 1 organisasi seperti biasa. #}
+        {% set featured_orgs = h.get_featured_organizations() if featured_groups else h.get_featured_organizations(2) %}
         <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-6 md:tw-gap-8">
-          <div>
+          <div data-aos="fade-up">
             {# Note: this featured_group block is used as an example in the theming
             tutorial in the docs! If you change this code, be sure to check
             whether you need to update the docs. #}
             {# Start template block example. #}
-            {% block featured_group %}
-            {% snippet 'home/snippets/featured_group.html' %}
+            {% block featured_group scoped %}
+            {% if featured_groups %}
+            {% snippet 'home/snippets/featured_group.html', groups=featured_groups %}
+            {% else %}
+            {# Tidak ada data group: tampilkan organisasi pertama sebagai pengganti. #}
+            {% snippet 'home/snippets/featured_organization.html', organizations=featured_orgs[:1] %}
+            {% endif %}
             {% endblock %}
             {# End template block example. #}
           </div>
-          <div>
-            {% block featured_organization %}
-            {% snippet 'home/snippets/featured_organization.html' %}
+          <div data-aos="fade-up" data-aos-delay="120">
+            {% block featured_organization scoped %}
+            {% snippet 'home/snippets/featured_organization.html', organizations=featured_orgs[1:2] if not featured_groups else featured_orgs %}
             {% endblock %}
           </div>
         </div>

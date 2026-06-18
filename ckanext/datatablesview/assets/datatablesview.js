@@ -527,9 +527,13 @@ this.ckan.module('datatables_view', function (jQuery) {
         },
         responsive: responsiveSettings,
         scrollX: scrollXflag,
-        scrollY: 400,
-        scrollResize: true,
-        scrollCollapse: false,
+        // Cap the table height: vertical scroll lives INSIDE the table body.
+        // scrollResize stays off so the iframe (sized by the data-viewer module)
+        // fits this fixed height exactly and the container gets no extra
+        // scrollbar. scrollCollapse keeps short tables from showing empty space.
+        scrollY: 500,
+        scrollResize: false,
+        scrollCollapse: true,
         lengthMenu: pagelengthchoices,
         dom: 'lBifrt<"resourceinfo"><"sortinfo">p',
         stateLoadParams: function (settings, data) {

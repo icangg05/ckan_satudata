@@ -35,7 +35,7 @@
 ## .. warning:: This option should be set to ``False`` for a public site.
 ##    With debug mode enabled, a visitor to your site could execute malicious
 ##    commands.
-debug = false
+debug = true
 
 [app:main]
 
@@ -49,8 +49,8 @@ config.mode = strict
 # testing = false
 ckan.devserver.host = localhost
 ckan.devserver.port = 5000
-ckan.devserver.threaded = false
-ckan.devserver.multiprocess = 1
+ckan.devserver.threaded = true
+ckan.devserver.multiprocess = 0
 ckan.devserver.watch_patterns =
 ckan.devserver.ssl_cert =
 ckan.devserver.ssl_key =
@@ -162,8 +162,16 @@ ckan.cors.origin_allow_all = false
 ckan.cors.origin_whitelist =
 
 ## Plugins Settings ############################################################
-ckan.plugins =
+ckan.plugins = datastore datapusher image_view text_view webpage_view datatables_view
 ckan.download_proxy =
+
+## Datastore Settings ##########################################################
+ckan.datastore.write_url = postgresql://ckan_default:pass@localhost/datastore_default
+ckan.datastore.read_url = postgresql://datastore_default:pass@localhost/datastore_default
+
+## Datapusher Settings #########################################################
+ckan.datapusher.url = http://localhost:8800/
+ckan.datapusher.api_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlVGtFZ0IxY3U5NnFJS1RsMkVlQnZpNllUdk9UeUJpS2pOdE4zbjNlMGE0IiwiaWF0IjoxNzgxMjUxNTY2fQ.HJ4NMrxUiC9IhE63HLV-mOuqy-vvd_TmW4rDAKi6OIQ
 
 ## Front-End Settings ##########################################################
 ckan.site_title = CKAN
@@ -172,7 +180,7 @@ ckan.site_intro_text =
 ckan.site_logo = /base/images/ckan-logo.png
 ckan.site_about =
 ckan.theme = css/main
-ckan.favicon = /base/images/ckan.ico
+ckan.favicon = /uploads/admin/2026-06-08-055511.145823LambangKotaKendari.webp
 ckan.datasets_per_page = 20
 package_hide_extras =
 ckan.recaptcha.publickey =
@@ -217,11 +225,14 @@ ckan.files.authenticated_uploads.storages =
 
 ## Uploader Settings ###########################################################
 ckan.upload.admin.types = image
-ckan.upload.admin.mimetypes = image/png image/jpeg image/gif image/webp
+ckan.upload.admin.mimetypes = *
+; ckan.upload.admin.mimetypes = image/png image/jpeg image/gif image/webp
 ckan.upload.user.types = image
-ckan.upload.user.mimetypes = image/png image/jpg image/jpeg image/gif image/webp
+ckan.upload.user.mimetypes = *
+; ckan.upload.user.mimetypes = image/png image/jpg image/jpeg image/gif image/webp
 ckan.upload.group.types = image
-ckan.upload.group.mimetypes = image/png image/jpg image/jpeg image/gif image/webp
+ckan.upload.group.mimetypes = *
+; ckan.upload.group.mimetypes = image/png image/jpg image/jpeg image/gif image/webp
 
 ## Webassets Settings ##########################################################
 ckan.webassets.path =

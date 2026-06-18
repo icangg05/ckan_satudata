@@ -2,7 +2,7 @@
 {% set placeholder = _('Cari dataset, misalnya: kependudukan, peta wilayah...') %}
 {% set dataset_type = h.default_package_type() %}
 
-<form method="get" action="{% url_for dataset_type ~ '.search' %}">
+<form method="get" action="{% url_for dataset_type ~ '.search' %}" data-aos="fade-up" data-aos-delay="500">
   <div class="tw-flex tw-items-stretch tw-bg-white tw-rounded-full tw-shadow-xl tw-overflow-hidden tw-max-w-xl tw-mx-auto">
     <div class="tw-flex tw-items-center tw-pl-5 tw-text-gray-400">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -18,7 +18,7 @@
 </form>
 
 {% if tags %}
-<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-6">
+<div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2.5 tw-mt-6" data-aos="fade-up" data-aos-delay="600">
   <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-bold tw-tracking-widest tw-uppercase tw-mr-1" style="color: #fbbf24;">
     <i class="fa-solid fa-tags" aria-hidden="true"></i>{{ _('Tags') }}
   </span>

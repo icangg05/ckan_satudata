@@ -1,7 +1,7 @@
 {% set intro = g.site_intro_text %}
 
 <div class="tw-text-white tw-mb-10">
-  <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-6 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase tw-border" style="background: rgba(125,211,238,0.08); border-color: rgba(125,211,238,0.25); color: #7dd3ee;">
+  <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-1.5 tw-mb-6 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase tw-border" style="background: rgba(125,211,238,0.08); border-color: rgba(125,211,238,0.25); color: #7dd3ee;" data-aos="fade-down">
     <span class="tw-relative tw-flex tw-w-1.5 tw-h-1.5">
       <span class="tw-animate-ping tw-absolute tw-inline-flex tw-h-full tw-w-full tw-rounded-full tw-opacity-75" style="background-color: #34d399;"></span>
       <span class="tw-relative tw-inline-flex tw-w-1.5 tw-h-1.5 tw-rounded-full" style="background-color: #34d399;"></span>
@@ -9,11 +9,11 @@
     {{ _("Platform Data Terbuka") }}
   </div>
 
-  <p class="tw-text-xs md:tw-text-sm tw-font-bold tw-tracking-[0.25em] tw-uppercase tw-mb-4" style="color: #fbbf24;">
+  <p class="tw-text-xs md:tw-text-sm tw-font-bold tw-tracking-[0.25em] tw-uppercase tw-mb-4" style="color: #fbbf24;" data-aos="fade-up" data-aos-delay="100">
     {{ _("Kota Kendari") }} &middot; {{ _("Sulawesi Tenggara") }}
   </p>
 
-  <h1 class="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-leading-tight tw-mb-6">
+  <h1 class="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-leading-tight tw-mb-6" data-aos="fade-up" data-aos-delay="200">
     <p>
     <span class="tw-text-white">{{ _("Data Publik") }}</span>
     <span class="tw-text-[#38bdf8]">{{ _("Kota Kendari") }}</span>
@@ -21,7 +21,7 @@
     <span class="tw-block tw-text-white">{{ _("Terbuka & Terpadu") }}</span>
   </h1>
   {% if intro %}
-    <div class="tw-text-[#bde3f0] tw-leading-relaxed tw-max-w-2xl tw-mx-auto [&_h1]:tw-text-white [&_h2]:tw-text-white [&_h3]:tw-text-white [&_a]:tw-text-[#7dd3ee]">
+    <div class="tw-text-[#bde3f0] tw-leading-relaxed tw-max-w-2xl tw-mx-auto [&_h1]:tw-text-white [&_h2]:tw-text-white [&_h3]:tw-text-white [&_a]:tw-text-[#7dd3ee]" data-aos="fade-up" data-aos-delay="300">
       {{ h.render_markdown(intro) }}
     </div>
   {% endif %}
@@ -29,7 +29,7 @@
   {% set org_count = h.get_organization_count() %}
   {% set group_count = h.get_group_count() %}
 
-  <div class="tw-flex tw-items-center tw-justify-center tw-gap-6 md:tw-gap-10 tw-mt-10">
+  <div class="tw-flex tw-items-center tw-justify-center tw-gap-6 md:tw-gap-10 tw-mt-10" data-aos="zoom-in" data-aos-delay="400">
     <div class="tw-text-center">
       <div class="tw-text-2xl md:tw-text-3xl tw-font-extrabold tw-text-white">{{ h.localised_SI_number(g.package_count or 0) }}<span style="color:#fbbf24;">+</span></div>
       <div class="tw-text-[11px] tw-uppercase tw-tracking-widest tw-text-[#bde3f0] tw-mt-1">{{ _("Dataset") }}</div>

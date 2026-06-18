@@ -77,15 +77,13 @@ div.DTFC_LeftBodyWrapper {
 }
 
 
-/* for dynamic resizing of datatable, needed for scrollresize */
+/* Let the table flow naturally so the iframe sizes to its real content
+   height (scrollResize is disabled). Only the table keeps its own
+   horizontal scroll — no extra scrollbar on the container. */
 #resize_wrapper {
-	position: absolute;
-	top: 0.1em;
-	left: 0.1em;
-	right: 0.1em;
-	bottom: 0.1em;
+  position: relative;
+  width: 100%;
   max-width: 100vw;
-  max-height: 100vh;
 }
 
 /* fine-tune positioning of various info elements for Bootstrap */
@@ -97,7 +95,7 @@ div.DTFC_LeftBodyWrapper {
   text-align: right;
   display: inline-flex;
   float: right;
-  margin-top: -1.4em;
+  margin-top: 0;
 }
 
 #filterinfoicon {
@@ -114,7 +112,7 @@ div.sortinfo {
 }
 
 #dtprv_paginate {
-  margin-top: -2.5em;
+  margin-top: 0;
 }
 
 i.fa-info-circle {
@@ -300,6 +298,16 @@ body.dt-view {
   vertical-align: middle;
 }
 
+/* Clear grid borders so column/row separators are obvious */
+.dt-view table.dataTable,
+.dt-view table.dataTable th,
+.dt-view table.dataTable td {
+  border: 1px solid #dbe3ec;
+}
+.dt-view table.dataTable {
+  border-collapse: collapse;
+}
+
 /* Softer zebra striping */
 .dt-view table.dataTable.table-striped > tbody > tr:nth-of-type(odd) > * {
   background-color: #fafcfe;
@@ -371,6 +379,46 @@ body.dt-view {
   border-radius: 6px;
   padding: 3px 8px;
   font-size: 13px;
+}
+
+/* ---- Layout fix: info, search & pagination tidak saling tabrak ---- */
+/* Baris info "Showing x to y of z entries" — sendiri, rata kiri */
+.dt-view #dtprv_info,
+.dt-view .dataTables_info {
+  clear: both;
+  float: none;
+  text-align: left;
+  padding-top: 6px;
+  margin-bottom: 8px;
+}
+
+/* Kotak Search — rata kanan di barisnya sendiri, tidak ditarik ke atas */
+.dt-view #dtprv_filter,
+.dt-view .dataTables_filter {
+  float: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Pagination — beri jarak jelas dari teks (resourceinfo / sortinfo) di atasnya */
+.dt-view #dtprv_paginate,
+.dt-view .dataTables_paginate {
+  clear: both;
+  float: none !important;
+  margin-top: 18px !important;
+  padding-top: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Sembunyikan teks resourceinfo & sortinfo di bawah tabel — langsung ke pagination */
+.dt-view div.resourceinfo,
+.dt-view div.sortinfo {
+  display: none !important;
 }
 
 /* Pagination */

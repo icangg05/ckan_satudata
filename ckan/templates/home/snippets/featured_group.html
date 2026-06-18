@@ -1,4 +1,4 @@
-{% set groups = h.get_featured_groups() %}
+{% set groups = groups if groups is defined else h.get_featured_groups() %}
 
 {% for group in groups %}
   {% set url = h.url_for(group.type ~ '.read', id=group.name) %}

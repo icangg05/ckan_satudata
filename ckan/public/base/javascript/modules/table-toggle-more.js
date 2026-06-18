@@ -20,11 +20,11 @@ this.ckan.module('table-toggle-more', function($) {
         var cols = $('thead tr th', this.el).length;
         var template_more = [
           '<tr class="toggle-show toggle-show-more">',
-          '<td colspan="'+cols+'">',
-          '<small>',
-          '<a href="#" class="show-more">' + this._('Show more') + '</a>',
-          '<a href="#" class="show-less">' + this._('Hide') + '</a>',
-          '</small>',
+          '<td colspan="'+cols+'" class="tw-py-3 tw-text-center">',
+          '<a href="#" class="show-more tw-text-[#185A75] tw-text-sm tw-font-semibold tw-no-underline hover:tw-underline">' +
+            '<i class="fa-solid fa-chevron-down tw-text-xs" aria-hidden="true"></i> ' + this._('Show more') + '</a>',
+          '<a href="#" class="show-less tw-text-[#185A75] tw-text-sm tw-font-semibold tw-no-underline hover:tw-underline">' +
+            '<i class="fa-solid fa-chevron-up tw-text-xs" aria-hidden="true"></i> ' + this._('Hide') + '</a>',
           '</td>',
           '</tr>'
         ].join('\n');

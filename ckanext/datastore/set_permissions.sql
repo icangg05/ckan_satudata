@@ -101,6 +101,7 @@ DO $body$
             LEFT OUTER JOIN pg_trigger AS t
                 ON t.tgrelid = relname::regclass AND t.tgname = 'zfulltext'
             WHERE relkind = 'r'::"char" AND t.tgname IS NULL
+                AND relname NOT LIKE '\_%'
                 AND relnamespace = (
                     SELECT oid FROM pg_namespace WHERE nspname='public')),
             'SELECT 1;');

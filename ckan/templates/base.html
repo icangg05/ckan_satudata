@@ -130,6 +130,15 @@
     {% block body_extras -%}
     {%- endblock %}
 
+    {% block header_debug %}
+    {% if g.debug and not g.debug_supress_header %}
+    <div class="tw-fixed tw-bottom-3 tw-left-3 tw-z-[9999] tw-rounded tw-bg-gray-900/90 tw-px-3 tw-py-2 tw-text-xs tw-font-mono tw-leading-snug tw-text-gray-100 tw-shadow-lg tw-backdrop-blur tw-pointer-events-none">
+      <div><span class="tw-text-gray-400">Blueprint:</span> {{ g.blueprint }}</div>
+      <div><span class="tw-text-gray-400">View:</span> {{ g.view }}</div>
+    </div>
+    {% endif %}
+    {% endblock %}
+
     {# render all assets included in scripts block and everywhere else #}
     {# make sure there are no calls to `asset` tag after this point #}
     {{ h.render_assets('style') }}

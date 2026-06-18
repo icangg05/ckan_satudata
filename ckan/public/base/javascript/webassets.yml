@@ -42,6 +42,7 @@ ckan:
     - modules/autocomplete.js
     - modules/custom-fields.js
     - modules/data-viewer.js
+    - modules/datastore-refresh.js
     - modules/table-selectable-rows.js
     - modules/resource-form.js
     - modules/resource-upload-field.js

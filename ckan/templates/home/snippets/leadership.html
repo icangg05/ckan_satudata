@@ -1,0 +1,100 @@
+{#
+  Satu Data highlight section — 2 columns.
+  Left: foto Walikota & Wakil Walikota Kota Kendari (walikota-dan-wakil.webp,
+  sudah memuat kedua figur beserta nama/jabatannya).
+  Right: pesan/ajakan seputar portal Satu Data Kota Kendari.
+#}
+<div class="tw-relative tw-overflow-hidden" style="background: linear-gradient(180deg, #e0f2fe 0%, #eef6fb 45%, #e0f2fe 100%);">
+  {# Decorative background ornaments #}
+  <div class="tw-absolute tw-inset-0 tw-pointer-events-none tw-overflow-hidden" aria-hidden="true">
+    {# dot grid #}
+    <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="leadership-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.6" fill="#185A75" fill-opacity="0.16"></circle>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#leadership-dots)"></rect>
+    </svg>
+    {# glowing color blobs #}
+    <div class="tw-absolute -tw-top-24 tw-right-0 tw-w-96 tw-h-96 tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(56,189,248,0.4), transparent 70%); animation-duration: 7s;"></div>
+    <div class="tw-absolute -tw-bottom-24 -tw-left-20 tw-w-[28rem] tw-h-[28rem] tw-rounded-full tw-blur-3xl tw-animate-pulse" style="background: radial-gradient(circle, rgba(251,191,36,0.28), transparent 70%); animation-duration: 9s;"></div>
+    {# big star outline #}
+    <i class="fa-regular fa-star tw-absolute tw-top-10 tw-right-[6%] tw-text-[7rem] tw-text-[#185A75]/5" aria-hidden="true"></i>
+    {# floating geometric shapes #}
+    <div class="tw-absolute tw-top-16 tw-left-[6%] tw-w-14 tw-h-14 tw-rounded-2xl tw-rotate-12 tw-animate-bounce" style="background: rgba(56,189,248,0.14); border: 1.5px solid rgba(56,189,248,0.3); animation-duration: 6s;"></div>
+    <div class="tw-absolute tw-bottom-20 tw-right-[10%] tw-w-10 tw-h-10 tw-rotate-45 tw-animate-pulse" style="background: rgba(24,90,117,0.1); border: 1.5px solid rgba(24,90,117,0.25); animation-duration: 5s;"></div>
+  </div>
+
+  <div class="tw-relative tw-max-w-6xl tw-mx-auto tw-px-4 tw-py-12 md:tw-py-16">
+    <div class="tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8 lg:tw-gap-12 tw-items-center">
+
+      {# Left column — poster / foto pimpinan #}
+      <div class="tw-relative tw-mx-auto tw-w-full tw-max-w-md" data-aos="fade-right">
+        {# decorative diagonal-stripes corner #}
+        <div class="tw-absolute -tw-top-3 -tw-right-3 tw-w-24 tw-h-24 tw-rounded-2xl tw-rotate-6 tw-pointer-events-none" aria-hidden="true" style="background-image: repeating-linear-gradient(45deg, rgba(251,191,36,0.45) 0, rgba(251,191,36,0.45) 6px, transparent 6px, transparent 12px);"></div>
+        <div class="tw-relative tw-bg-white tw-rounded-2xl tw-shadow-xl tw-border tw-border-gray-100 tw-p-4 md:tw-p-6 tw-transition-transform tw-duration-500 hover:-tw-rotate-1 hover:tw-scale-[1.02]">
+          {# Decorated panel behind the photo so it doesn't sit on plain white #}
+          <div class="tw-relative tw-overflow-hidden tw-rounded-xl" style="background: linear-gradient(160deg, #185A75 0%, #38bdf8 100%);">
+            {# inner ornaments #}
+            <div class="tw-absolute tw-inset-0 tw-pointer-events-none" aria-hidden="true">
+              {# dot grid #}
+              <svg class="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="leadership-photo-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.4" fill="#ffffff" fill-opacity="0.35"></circle>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#leadership-photo-dots)"></rect>
+              </svg>
+              {# soft glow #}
+              <div class="tw-absolute -tw-top-10 -tw-left-10 tw-w-48 tw-h-48 tw-rounded-full tw-blur-2xl" style="background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%);"></div>
+              {# bottom wave so the photo bases blend in #}
+              <svg class="tw-absolute tw-bottom-0 tw-left-0 tw-w-full tw-h-16" viewBox="0 0 400 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,30 C80,55 160,5 240,25 C320,45 360,15 400,30 L400,60 L0,60 Z" fill="#ffffff" fill-opacity="0.12"></path>
+              </svg>
+              {# big faint watermark icon #}
+              <i class="fa-solid fa-landmark tw-absolute -tw-bottom-4 -tw-right-3 tw-text-7xl tw-text-white/10" aria-hidden="true"></i>
+            </div>
+            <img src="{{ h.url_for_static('/base/images/walikota-dan-wakil.webp') }}"
+                 alt="{{ _('Walikota dan Wakil Walikota Kota Kendari') }}"
+                 class="tw-relative tw-w-full tw-h-auto tw-mx-auto tw-object-contain"
+                 loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      {# Right column — pesan Satu Data #}
+      <div class="tw-text-center lg:tw-text-left" data-aos="fade-left">
+        <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-4 tw-py-2 tw-mb-5 tw-rounded-full tw-text-xs tw-font-semibold tw-tracking-widest tw-uppercase tw-bg-white tw-shadow-sm tw-border tw-border-gray-100" style="color: #185A75;">
+          <i class="fa-solid fa-database tw-text-[11px]" aria-hidden="true"></i>
+          {{ _('Portal Satu Data Kota Kendari') }}
+        </div>
+
+        <h2 class="tw-text-3xl md:tw-text-4xl tw-font-extrabold tw-text-gray-800 tw-leading-tight tw-mb-5">
+          {% trans %}Mewujudkan{% endtrans %}
+          <span class="tw-relative tw-inline-block tw-mx-1" style="color: #185A75;">
+            {{ _('Satu Data') }}
+            <span class="tw-absolute tw-left-0 -tw-bottom-1 tw-w-full tw-h-1.5 tw-rounded-full" style="background: #fbbf24;" aria-hidden="true"></span>
+          </span>
+          {% trans %}untuk Kota Kendari{% endtrans %}
+        </h2>
+
+        <p class="tw-text-sm md:tw-text-base tw-text-gray-500 tw-leading-relaxed tw-mb-7 tw-max-w-xl lg:tw-mx-0 tw-mx-auto">
+          {% trans %}Portal Satu Data Kota Kendari menyajikan data pemerintah yang
+          akurat, mutakhir, terbuka, dan dapat dibagipakaikan. Mari bersama
+          mendukung perencanaan pembangunan dan pelayanan publik yang lebih
+          baik melalui satu data yang terpercaya untuk seluruh masyarakat.{% endtrans %}
+        </p>
+
+        <a href="{{ h.url_for('dataset.search') }}"
+           class="tw-inline-flex tw-items-center tw-gap-2.5 tw-px-7 tw-py-3.5 tw-rounded-full tw-text-sm tw-font-semibold tw-text-white tw-no-underline tw-shadow-lg tw-transition-all tw-duration-200 hover:tw-gap-3.5 hover:-tw-translate-y-0.5"
+           style="background: linear-gradient(135deg, #185A75, #38bdf8);">
+          <i class="fa-solid fa-compass" aria-hidden="true"></i>
+          {{ _('Jelajahi Dataset') }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

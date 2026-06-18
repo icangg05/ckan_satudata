@@ -185,7 +185,32 @@
                      %}
                   {% endblock %}
                   {% block resource_view_content %}
-                    <div class="resource-view tw-p-6 md:tw-p-8">
+                    <div class="resource-view tw-p-6 md:tw-p-8" style="padding-top:0.5rem;">
+                      {# Status pemrosesan DataStore + tombol refresh — khusus CSV/XLSX #}
+                      {% set _fmt = (res.format or '')|lower %}
+                      {% if _fmt in ['csv', 'xls', 'xlsx'] %}
+                        <div class="ckan-datastore-refresh tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-3 tw-mb-4 tw-px-4 tw-py-3 tw-rounded tw-border tw-border-gray-200"
+                             style="background-color:#f8fafc;"
+                             data-module="datastore-refresh"
+                             data-module-resource-id="{{ res.id }}"
+                             data-module-poll="3000"
+                             data-module-msg-checking="{{ _('Memeriksa status data…') }}"
+                             data-module-msg-processing="{{ _('Sedang memproses data ke DataStore…') }}"
+                             data-module-msg-ready="{{ _('Data sudah terbaru') }}"
+                             data-module-msg-error="{{ _('Gagal memproses data ke DataStore') }}"
+                             data-module-msg-idle="{{ _('Klik refresh untuk memuat ulang tabel') }}">
+                          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm">
+                            <span class="js-dsr-icon" aria-hidden="true"></span>
+                            <span class="js-dsr-text tw-text-gray-600"></span>
+                          </div>
+                          <button type="button"
+                                  class="js-dsr-refresh tw-inline-flex tw-items-center tw-gap-2 tw-h-9 tw-px-4 tw-rounded tw-text-sm tw-font-semibold tw-text-white hover:tw-opacity-90 tw-transition-opacity"
+                                  style="background-color:#185A75;">
+                            <i class="fa-solid fa-rotate-right js-dsr-refresh-icon" aria-hidden="true"></i>
+                            <span>{{ _('Refresh tabel') }}</span>
+                          </button>
+                        </div>
+                      {% endif %}
                       {% if resource_views %}
                           {% for resource_view in resource_views %}
                             {% if resource_view == current_resource_view %}
