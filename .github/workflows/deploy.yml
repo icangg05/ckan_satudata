@@ -25,6 +25,9 @@ jobs:
             echo "Sync code with remote..."
             git pull origin main
 
+            echo "Clear stale CKAN webassets cache (force CSS/JS rebuild)..."
+            rm -rf ckan_storage/webassets
+
             echo "Restart and build services..."
             docker compose -f .devcontainer/docker-compose.yml up -d --build
 
