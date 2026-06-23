@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict dCZsRjxPL39DVcYQTLHnBFayNipI9LnAap98zNCFecxvgzdAdhcEmKU5yxWshgu
+\restrict fkng1gdCNwqmuVOEQG0VKelGWHiZRSefOSCSPO5mDNiv0B3Fm6lRfpEkdEE6Rat
 
 -- Dumped from database version 14.23 (Debian 14.23-1.pgdg13+1)
 -- Dumped by pg_dump version 14.23 (Debian 14.23-1.pgdg13+1)
@@ -194,6 +194,45 @@ ALTER TABLE public."111c8587-88e9-477c-b046-b9c9671dfdc9__id_seq" OWNER TO ckan_
 --
 
 ALTER SEQUENCE public."111c8587-88e9-477c-b046-b9c9671dfdc9__id_seq" OWNED BY public."111c8587-88e9-477c-b046-b9c9671dfdc9"._id;
+
+
+--
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5; Type: TABLE; Schema: public; Owner: ckan_default
+--
+
+CREATE TABLE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" (
+    _id integer NOT NULL,
+    _full_text tsvector,
+    "No" numeric,
+    "Sekolah" text,
+    "SISWA PEREMPUAN" numeric,
+    "SISWA LAKI-LAKI" numeric,
+    "JUMLAH" numeric
+);
+
+
+ALTER TABLE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" OWNER TO ckan_default;
+
+--
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq; Type: SEQUENCE; Schema: public; Owner: ckan_default
+--
+
+CREATE SEQUENCE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq" OWNER TO ckan_default;
+
+--
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ckan_default
+--
+
+ALTER SEQUENCE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq" OWNED BY public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5"._id;
 
 
 --
@@ -453,6 +492,45 @@ CREATE TABLE public._table_stats (
 ALTER TABLE public._table_stats OWNER TO ckan_default;
 
 --
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec; Type: TABLE; Schema: public; Owner: ckan_default
+--
+
+CREATE TABLE public."aecc1fae-250d-4432-ac7c-f730f02d04ec" (
+    _id integer NOT NULL,
+    _full_text tsvector,
+    "No" numeric,
+    "Sekolah" text,
+    "SISWA PEREMPUAN" numeric,
+    "SISWA LAKI-LAKI" numeric,
+    "JUMLAH" numeric
+);
+
+
+ALTER TABLE public."aecc1fae-250d-4432-ac7c-f730f02d04ec" OWNER TO ckan_default;
+
+--
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq; Type: SEQUENCE; Schema: public; Owner: ckan_default
+--
+
+CREATE SEQUENCE public."aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq" OWNER TO ckan_default;
+
+--
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ckan_default
+--
+
+ALTER SEQUENCE public."aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq" OWNED BY public."aecc1fae-250d-4432-ac7c-f730f02d04ec"._id;
+
+
+--
 -- Name: b101ae21-37ef-4503-a4e9-a40c29c802d4; Type: TABLE; Schema: public; Owner: ckan_default
 --
 
@@ -581,6 +659,13 @@ ALTER TABLE ONLY public."111c8587-88e9-477c-b046-b9c9671dfdc9" ALTER COLUMN _id 
 
 
 --
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5 _id; Type: DEFAULT; Schema: public; Owner: ckan_default
+--
+
+ALTER TABLE ONLY public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" ALTER COLUMN _id SET DEFAULT nextval('public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq"'::regclass);
+
+
+--
 -- Name: 47cbadaa-8af6-453f-9414-3886d3e41c1b _id; Type: DEFAULT; Schema: public; Owner: ckan_default
 --
 
@@ -620,6 +705,13 @@ ALTER TABLE ONLY public."816cc929-c37c-492d-8f48-54fb96edc81e" ALTER COLUMN _id 
 --
 
 ALTER TABLE ONLY public."87984e66-7831-4236-b3b0-e1a97e226c69" ALTER COLUMN _id SET DEFAULT nextval('public."87984e66-7831-4236-b3b0-e1a97e226c69__id_seq"'::regclass);
+
+
+--
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec _id; Type: DEFAULT; Schema: public; Owner: ckan_default
+--
+
+ALTER TABLE ONLY public."aecc1fae-250d-4432-ac7c-f730f02d04ec" ALTER COLUMN _id SET DEFAULT nextval('public."aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq"'::regclass);
 
 
 --
@@ -717,6 +809,21 @@ COPY public."111c8587-88e9-477c-b046-b9c9671dfdc9" (_id, _full_text, "Name", "HE
 14	'0':4,5 '000080':2 '50':6 'navi':1 'rgb':3	Navy	#000080	rgb(0,0,50)
 15	'0':5 '100':4,6 'ff00ff':2 'fuchsia':1 'rgb':3	Fuchsia	#FF00FF	rgb(100,0,100)
 16	'0':5 '50':4,6 '800080':2 'purpl':1 'rgb':3	Purple	#800080	rgb(50,0,50)
+\.
+
+
+--
+-- Data for Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5; Type: TABLE DATA; Schema: public; Owner: ckan_default
+--
+
+COPY public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" (_id, _full_text, "No", "Sekolah", "SISWA PEREMPUAN", "SISWA LAKI-LAKI", "JUMLAH") FROM stdin;
+1	'1':1,3 '100':5 '150':7 '50':6 'kendari':4 'sdn':2	1	SDN 1 KENDARI	100	50	150
+2	'100':5 '170':7 '2':1,3 '70':6 'kendari':4 'sdn':2	2	SDN 2 KENDARI	100	70	170
+3	'100':5 '150':7 '3':1,3 '50':6 'kendari':4 'sdn':2	3	SDN 3 KENDARI	100	50	150
+4	'117':7 '4':1,3 '50':6 '67':5 'kendari':4 'sdn':2	4	SDN 4 KENDARI	67	50	117
+5	'100':5 '180':7 '5':1,3 '80':6 'kendari':4 'sdn':2	5	SDN 5 KENDARI	100	80	180
+6	'4':6 '6':1,3 '89':5 '93':7 'kendari':4 'sdn':2	6	SDN 6 KENDARI	89	4	93
+7	'100':5 '190':7 '7':1,3 '90':6 'kendari':4 'sdn':2	7	SDN 7 KENDARI	100	90	190
 \.
 
 
@@ -916,6 +1023,23 @@ ffc8c7e7-ea7b-4375-afeb-97f73a68a6c9	{"rows": 31}
 1ff2ffcf-0c87-41c3-ad7a-8381a14243aa	{"rows": 7}
 0c25bd67-ff61-44af-a036-b6ed460d58fc	{"rows": 45}
 cbf07fa9-db49-4e13-8d3b-b2c1ef072ef9	{"rows": 1084}
+aecc1fae-250d-4432-ac7c-f730f02d04ec	{"rows": 7}
+42f349ca-5e00-4ef3-a3b7-d1f059a82ca5	{"rows": 7}
+\.
+
+
+--
+-- Data for Name: aecc1fae-250d-4432-ac7c-f730f02d04ec; Type: TABLE DATA; Schema: public; Owner: ckan_default
+--
+
+COPY public."aecc1fae-250d-4432-ac7c-f730f02d04ec" (_id, _full_text, "No", "Sekolah", "SISWA PEREMPUAN", "SISWA LAKI-LAKI", "JUMLAH") FROM stdin;
+1	'1':1,3 '100':5 '150':7 '50':6 'kendari':4 'sdn':2	1	SDN 1 KENDARI	100	50	150
+2	'100':5 '150':7 '2':1,3 '50':6 'kendari':4 'sdn':2	2	SDN 2 KENDARI	100	50	150
+3	'100':5 '150':7 '3':1,3 '50':6 'kendari':4 'sdn':2	3	SDN 3 KENDARI	100	50	150
+4	'100':5 '150':7 '4':1,3 '50':6 'kendari':4 'sdn':2	4	SDN 4 KENDARI	100	50	150
+5	'100':5 '150':7 '5':1,3 '50':6 'kendari':4 'sdn':2	5	SDN 5 KENDARI	100	50	150
+6	'100':5 '150':7 '50':6 '6':1,3 'kendari':4 'sdn':2	6	SDN 6 KENDARI	100	50	150
+7	'100':5 '150':7 '50':6 '7':1,3 'kendari':4 'sdn':2	7	SDN 7 KENDARI	100	50	150
 \.
 
 
@@ -2085,6 +2209,13 @@ SELECT pg_catalog.setval('public."111c8587-88e9-477c-b046-b9c9671dfdc9__id_seq"'
 
 
 --
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq; Type: SEQUENCE SET; Schema: public; Owner: ckan_default
+--
+
+SELECT pg_catalog.setval('public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5__id_seq"', 7, true);
+
+
+--
 -- Name: 47cbadaa-8af6-453f-9414-3886d3e41c1b__id_seq; Type: SEQUENCE SET; Schema: public; Owner: ckan_default
 --
 
@@ -2127,6 +2258,13 @@ SELECT pg_catalog.setval('public."87984e66-7831-4236-b3b0-e1a97e226c69__id_seq"'
 
 
 --
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq; Type: SEQUENCE SET; Schema: public; Owner: ckan_default
+--
+
+SELECT pg_catalog.setval('public."aecc1fae-250d-4432-ac7c-f730f02d04ec__id_seq"', 7, true);
+
+
+--
 -- Name: b101ae21-37ef-4503-a4e9-a40c29c802d4__id_seq; Type: SEQUENCE SET; Schema: public; Owner: ckan_default
 --
 
@@ -2161,6 +2299,14 @@ ALTER TABLE ONLY public."0c25bd67-ff61-44af-a036-b6ed460d58fc"
 
 ALTER TABLE ONLY public."111c8587-88e9-477c-b046-b9c9671dfdc9"
     ADD CONSTRAINT "111c8587-88e9-477c-b046-b9c9671dfdc9_pkey" PRIMARY KEY (_id);
+
+
+--
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5_pkey; Type: CONSTRAINT; Schema: public; Owner: ckan_default
+--
+
+ALTER TABLE ONLY public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5"
+    ADD CONSTRAINT "42f349ca-5e00-4ef3-a3b7-d1f059a82ca5_pkey" PRIMARY KEY (_id);
 
 
 --
@@ -2220,6 +2366,14 @@ ALTER TABLE ONLY public._table_stats
 
 
 --
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec aecc1fae-250d-4432-ac7c-f730f02d04ec_pkey; Type: CONSTRAINT; Schema: public; Owner: ckan_default
+--
+
+ALTER TABLE ONLY public."aecc1fae-250d-4432-ac7c-f730f02d04ec"
+    ADD CONSTRAINT "aecc1fae-250d-4432-ac7c-f730f02d04ec_pkey" PRIMARY KEY (_id);
+
+
+--
 -- Name: b101ae21-37ef-4503-a4e9-a40c29c802d4 b101ae21-37ef-4503-a4e9-a40c29c802d4_pkey; Type: CONSTRAINT; Schema: public; Owner: ckan_default
 --
 
@@ -2255,6 +2409,13 @@ CREATE INDEX "1936efdb55394dcee9c0040d6e6882ce2cf6cd12" ON public."816cc929-c37c
 --
 
 CREATE INDEX "21acf4ef5cc52ecbc55dc4c4fafa65788d6cbb8c" ON public."66e3c094-1d16-40df-a7af-18822c7be27b" USING gist (_full_text);
+
+
+--
+-- Name: 26064bd73c4a6d2adf1837017482ffdca191a893; Type: INDEX; Schema: public; Owner: ckan_default
+--
+
+CREATE INDEX "26064bd73c4a6d2adf1837017482ffdca191a893" ON public."aecc1fae-250d-4432-ac7c-f730f02d04ec" USING gist (_full_text);
 
 
 --
@@ -2307,6 +2468,13 @@ CREATE INDEX da01e7a9abb5f993efa36c6fc4834b46c98efa2b ON public."ffc8c7e7-ea7b-4
 
 
 --
+-- Name: f5da7c0ab581b8d2fcc184a89c677a567305125b; Type: INDEX; Schema: public; Owner: ckan_default
+--
+
+CREATE INDEX f5da7c0ab581b8d2fcc184a89c677a567305125b ON public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" USING gist (_full_text);
+
+
+--
 -- Name: f93166de9503634cdc91db5410d5b67df48592f0; Type: INDEX; Schema: public; Owner: ckan_default
 --
 
@@ -2332,6 +2500,13 @@ CREATE TRIGGER zfulltext BEFORE INSERT OR UPDATE ON public."0c25bd67-ff61-44af-a
 --
 
 CREATE TRIGGER zfulltext BEFORE INSERT OR UPDATE ON public."111c8587-88e9-477c-b046-b9c9671dfdc9" FOR EACH ROW EXECUTE FUNCTION public.populate_full_text_trigger();
+
+
+--
+-- Name: 42f349ca-5e00-4ef3-a3b7-d1f059a82ca5 zfulltext; Type: TRIGGER; Schema: public; Owner: ckan_default
+--
+
+CREATE TRIGGER zfulltext BEFORE INSERT OR UPDATE ON public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" FOR EACH ROW EXECUTE FUNCTION public.populate_full_text_trigger();
 
 
 --
@@ -2377,6 +2552,13 @@ CREATE TRIGGER zfulltext BEFORE INSERT OR UPDATE ON public."87984e66-7831-4236-b
 
 
 --
+-- Name: aecc1fae-250d-4432-ac7c-f730f02d04ec zfulltext; Type: TRIGGER; Schema: public; Owner: ckan_default
+--
+
+CREATE TRIGGER zfulltext BEFORE INSERT OR UPDATE ON public."aecc1fae-250d-4432-ac7c-f730f02d04ec" FOR EACH ROW EXECUTE FUNCTION public.populate_full_text_trigger();
+
+
+--
 -- Name: b101ae21-37ef-4503-a4e9-a40c29c802d4 zfulltext; Type: TRIGGER; Schema: public; Owner: ckan_default
 --
 
@@ -2417,6 +2599,13 @@ GRANT SELECT ON TABLE public."0c25bd67-ff61-44af-a036-b6ed460d58fc" TO datastore
 --
 
 GRANT SELECT ON TABLE public."111c8587-88e9-477c-b046-b9c9671dfdc9" TO datastore_default;
+
+
+--
+-- Name: TABLE "42f349ca-5e00-4ef3-a3b7-d1f059a82ca5"; Type: ACL; Schema: public; Owner: ckan_default
+--
+
+GRANT SELECT ON TABLE public."42f349ca-5e00-4ef3-a3b7-d1f059a82ca5" TO datastore_default;
 
 
 --
@@ -2476,6 +2665,13 @@ GRANT SELECT ON TABLE public._table_stats TO datastore_default;
 
 
 --
+-- Name: TABLE "aecc1fae-250d-4432-ac7c-f730f02d04ec"; Type: ACL; Schema: public; Owner: ckan_default
+--
+
+GRANT SELECT ON TABLE public."aecc1fae-250d-4432-ac7c-f730f02d04ec" TO datastore_default;
+
+
+--
 -- Name: TABLE "b101ae21-37ef-4503-a4e9-a40c29c802d4"; Type: ACL; Schema: public; Owner: ckan_default
 --
 
@@ -2507,5 +2703,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE ckan_default IN SCHEMA public GRANT SELECT ON 
 -- PostgreSQL database dump complete
 --
 
-\unrestrict dCZsRjxPL39DVcYQTLHnBFayNipI9LnAap98zNCFecxvgzdAdhcEmKU5yxWshgu
+\unrestrict fkng1gdCNwqmuVOEQG0VKelGWHiZRSefOSCSPO5mDNiv0B3Fm6lRfpEkdEE6Rat
 

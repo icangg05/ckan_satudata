@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict WWNYYEjhSIvI4SbUHygasoWq5GtRjchyVneXEv5JA28oRnms8NgenWuqY4MZDCi
+\restrict aFlbvt5NtA2WqiPFQoaR1xPB3JUstiQ86a1hmH6Q2nLAzfp8mvFUemGirYjlpBy
 
 -- Dumped from database version 14.23 (Debian 14.23-1.pgdg13+1)
 -- Dumped by pg_dump version 14.23 (Debian 14.23-1.pgdg13+1)
@@ -546,7 +546,7 @@ COPY public.alembic_version (version_num) FROM stdin;
 --
 
 COPY public.api_token (id, name, user_id, created_at, last_access, plugin_extras) FROM stdin;
-eTkEgB1cu96qIKTl2EeBvi6YTvOTyBiKjNtN3n3e0a4	datapusher	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-12 08:06:06.026683	2026-06-18 09:18:06.803279	\N
+eTkEgB1cu96qIKTl2EeBvi6YTvOTyBiKjNtN3n3e0a4	datapusher	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-12 08:06:06.026683	2026-06-19 02:24:32.820235	\N
 \.
 
 
@@ -766,6 +766,8 @@ fc757f69-5e4c-4e95-878a-67a797dd5e65	c00b536e-bb7e-4fa1-8eb9-d3dbd9607410	78c9a1
 f6add924-c753-446f-ba39-ac16ff3daa1e	5a61f812-214c-4afa-86d7-04f2bec7d762	1ecba460-a929-4fd0-918d-da926ace8d0f	deleted	user	admin
 473131c8-d1ff-44f9-9ca4-bb0ae58db5f2	02897932-a4ab-408a-9c00-30b1f920c0ae	b68d0318-8694-4411-a4ae-d9aa9bcdd5d2	deleted	user	admin
 6f06785b-34ed-4675-8034-34ea81bb78ab	71ba2e16-6c79-4313-86e5-731b209fff31	2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	deleted	package	organization
+a338c4c5-a6b3-46d1-92d9-72e9080d4c9a	71ba2e16-6c79-4313-86e5-731b209fff31	514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	active	package	organization
+8f4cc975-a122-4bd6-ba9e-c9f2da9a0bec	71ba2e16-6c79-4313-86e5-731b209fff31	00c880e0-1111-4dc2-b585-34f1ccf5f62c	active	package	organization
 \.
 
 
@@ -774,7 +776,9 @@ f6add924-c753-446f-ba39-ac16ff3daa1e	5a61f812-214c-4afa-86d7-04f2bec7d762	1ecba4
 --
 
 COPY public.package (id, name, title, version, url, notes, author, author_email, maintainer, maintainer_email, state, license_id, type, owner_org, private, metadata_modified, creator_user_id, metadata_created, plugin_data, extras) FROM stdin;
-2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	laporan-112-tahun-2025	Laporan 112 tahun 2025								deleted		dataset	71ba2e16-6c79-4313-86e5-731b209fff31	f	2026-06-18 09:18:06.472463	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-17 03:33:15.055007	\N	{}
+2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	Laporan 112 tahun 2025								deleted		dataset	71ba2e16-6c79-4313-86e5-731b209fff31	f	2026-06-18 09:18:06.472463	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-17 03:33:15.055007	\N	{}
+514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	laporan-112-tahun-2025	LAPORAN 112 TAHUN 2025			Dataset ini menyajikan rekaman data dan statistik panggilan darurat melalui Layanan Panggilan Darurat 112 sepanjang tahun 2025. Data mencakup volume panggilan, klasifikasi jenis kejadian (seperti kebakaran, medis, kecelakaan, atau tindak kriminal), waktu respons, serta sebaran lokasi kejadian. Dataset ini berguna untuk menganalisis pola gangguan keamanan dan ketertiban, serta mengevaluasi efektivitas penanganan situasi darurat di masyarakat.					active		dataset	71ba2e16-6c79-4313-86e5-731b209fff31	f	2026-06-19 02:23:20.683786	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-18 10:16:19.996866	\N	{}
+00c880e0-1111-4dc2-b585-34f1ccf5f62c	data-sekolah-tahun-2025	Data sekolah tahun 2025			Data sekolah tahun 2025					active		dataset	71ba2e16-6c79-4313-86e5-731b209fff31	f	2026-06-19 02:24:32.571361	1ecba460-a929-4fd0-918d-da926ace8d0f	2026-06-19 02:20:38.018043	\N	{}
 \.
 
 
@@ -799,6 +803,11 @@ COPY public.package_relationship (id, subject_package_id, object_package_id, typ
 --
 
 COPY public.package_tag (id, state, package_id, tag_id) FROM stdin;
+67bc8805-3fd0-49c6-a3dd-f44ff1dbb750	active	514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	f40f9777-5bf7-4f60-b2a8-568add39d21c
+4e6b2e56-1b46-4408-a5d9-14766119118d	active	514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	dbcca7a1-3737-4da0-8077-db039286a003
+394e8d0b-bf15-42be-afde-dab33239adcf	active	514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	76cf0bf2-4c18-4b80-ac18-f86d88a5d7b8
+054af4f1-7e08-413a-9e74-fa66d4d32ec8	active	00c880e0-1111-4dc2-b585-34f1ccf5f62c	0c62d0e7-e8e4-436f-b708-27f4f5bac363
+e3e9f382-1aea-46cd-a550-522b0d2af007	active	00c880e0-1111-4dc2-b585-34f1ccf5f62c	5ceb142b-4da5-4ca2-b217-6cb90b9271e5
 \.
 
 
@@ -809,6 +818,8 @@ COPY public.package_tag (id, state, package_id, tag_id) FROM stdin;
 COPY public.resource (id, url, format, description, "position", hash, state, extras, name, resource_type, mimetype, mimetype_inner, size, last_modified, cache_url, cache_last_updated, created, url_type, package_id, metadata_modified) FROM stdin;
 bb25c71e-bbd7-4949-a839-5fca093daa29	surat-pernyataan-alamat-dalam-administrasi-kependudukan.pdf	PDF		1		deleted	\N	SURAT PERNYATAAN ALAMAT	\N	application/pdf	\N	553671	2026-06-18 09:13:28.915057	\N	\N	2026-06-18 09:13:28.939685	upload	2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	2026-06-18 09:13:28.932101
 cbf07fa9-db49-4e13-8d3b-b2c1ef072ef9	160.-data-statistik-sektoral-dinas-pertanian-dan-pangan-kota-yogyakarta-tahun-2025.xlsx	XLSX		0		deleted	{"datastore_active": true}	REKAP LAPORAN 112 TAHUN 2025	\N	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	\N	30994	2026-06-18 09:18:03.37288	\N	\N	2026-06-18 08:42:33.93213	upload	2cdf4c23-bb49-45ee-bd6f-c0d567c6fd17	2026-06-18 09:18:06.467877
+42f349ca-5e00-4ef3-a3b7-d1f059a82ca5	data-sekolah-2025.xlsx	XLSX		0		active	{"datastore_active": true}	DATA SEKOLAH 2025	\N	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	\N	14813	2026-06-19 02:24:26.172961	\N	\N	2026-06-19 02:21:15.811492	upload	00c880e0-1111-4dc2-b585-34f1ccf5f62c	2026-06-19 02:24:32.549416
+aecc1fae-250d-4432-ac7c-f730f02d04ec	data-sekolah-2025.xlsx	XLSX		0		active	{"datastore_active": true}	REKAP LAPORAN PANGGILAN 112	\N	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	\N	14761	2026-06-19 02:23:14.20641	\N	\N	2026-06-18 10:16:27.288919	upload	514cd1b4-cb97-4cad-99a3-7c8e71bf42d6	2026-06-19 02:23:20.653795
 \.
 
 
@@ -818,6 +829,8 @@ cbf07fa9-db49-4e13-8d3b-b2c1ef072ef9	160.-data-statistik-sektoral-dinas-pertania
 
 COPY public.resource_view (id, resource_id, title, description, view_type, "order", config) FROM stdin;
 9866b464-ba4d-463a-a793-41f338ac3c5d	cbf07fa9-db49-4e13-8d3b-b2c1ef072ef9	Table		datatables_view	0	{"date_format": "llll", "ellipsis_length": 100, "filterable": true, "responsive": false}
+3b36f155-588c-4b9a-974b-4ba3fed89d0a	aecc1fae-250d-4432-ac7c-f730f02d04ec	Table		datatables_view	0	{"date_format": "llll", "ellipsis_length": 100, "filterable": true, "responsive": false}
+0ae1e768-8132-4ecc-8c59-a8f737bab7ec	42f349ca-5e00-4ef3-a3b7-d1f059a82ca5	Table		datatables_view	0	{"date_format": "llll", "ellipsis_length": 100, "filterable": true, "responsive": false}
 \.
 
 
@@ -857,6 +870,9 @@ b98e80ea-5aa7-4bbf-a63f-4cccdc0387e1	sipil	\N
 5290232f-30d4-4f23-a6f7-033f2310fdea	gaji	\N
 dc6dffe7-5338-49c1-9ab2-f24a48a5b93c	tenaga	\N
 e4090e4d-aa2d-4d0c-b743-09a4c16fe724	pekerjaan	\N
+dbcca7a1-3737-4da0-8077-db039286a003	call center	\N
+f40f9777-5bf7-4f60-b2a8-568add39d21c	layanan publik	\N
+0c62d0e7-e8e4-436f-b708-27f4f5bac363	data	\N
 \.
 
 
@@ -906,6 +922,8 @@ eb86f539-f6ce-4d6e-a7d0-df8dc80e3082	c69de9de-3343-4ed6-ab6d-d55211e5886e	resour
 85df8aff-4088-424b-bc8e-b106f5cba98f	1ff2ffcf-0c87-41c3-ad7a-8381a14243aa	resource	datapusher	datapusher	{"job_id": "7743b5cc-80be-48ad-8fbf-5a17e44c3791", "job_key": "ee01a212-7195-498d-979a-c75703215ff7"}	complete	{}	2026-06-18 08:23:45.646852
 945e4500-8cbf-4b13-bbe6-65d1a0f13350	0c25bd67-ff61-44af-a036-b6ed460d58fc	resource	datapusher	datapusher	{"job_id": "ad05e81a-c717-49f1-9b04-0279867a6b42", "job_key": "df4983c0-6902-4fe9-9156-4e3e625afba7"}	error	{}	2026-06-18 08:41:42.645007
 e37cddf0-e951-4e7b-ab83-aea96a4e9c28	cbf07fa9-db49-4e13-8d3b-b2c1ef072ef9	resource	datapusher	datapusher	{"job_id": "74a2e0f2-a69e-4007-86fe-4e59372cef28", "job_key": "03b81c2c-1646-4eed-bad0-1d9329614597"}	complete	{}	2026-06-18 09:18:06.817874
+274fc549-2376-4713-a603-880e4a92b574	aecc1fae-250d-4432-ac7c-f730f02d04ec	resource	datapusher	datapusher	{"job_id": "fc1a9a8a-8895-4cda-ac8f-736ac97f7b3b", "job_key": "1c754260-b676-44a6-b246-443f943bd8ab"}	complete	{}	2026-06-19 02:23:20.97568
+d7ababd5-ae99-432e-a2a5-a21bbaee4a94	42f349ca-5e00-4ef3-a3b7-d1f059a82ca5	resource	datapusher	datapusher	{"job_id": "ec2baa03-3f3f-4185-b93e-e7c74cf1bd78", "job_key": "60935579-243e-40df-b726-3d9b2ebcab6a"}	complete	{}	2026-06-19 02:24:32.832524
 \.
 
 
@@ -960,7 +978,6 @@ c2e9c708-538b-42a4-b08c-d034f7b337a4	admin_dukcapil	\N	2026-06-16 05:12:23.53305
 1bec422e-50d7-4949-8eec-087c2fd8593b	admin_bagkerjasama	\N	2026-06-16 05:03:17.672564	\N	$pbkdf2-sha512$25000$u5cyBkDIWSvF.H8PoVQqBQ$ylWh2aSXdBCU6ryVj0xh0HP4n/Q6Cnirq8IT1Rys5eCoyioGfVSnzRqcqgJdU8RJnqWErViKOP2gcN9YCyJ7Ig	Admin Bagian Kerjasama Setda	bagkerjasama@gmail.com	\N	f	f	active	\N		\N
 75381928-6189-47e9-a2fc-8926fdc637d7	admin_bagkesra	\N	2026-06-16 05:04:10.582235	\N	$pbkdf2-sha512$25000$HiOE8H6P8b5XKmVMKWUshQ$7leesO34aCdpJWaq9RerkSbmGkPLjB19gThJyxSNeekeEV7CTDh9ba0U/jeangi1byxVGlKvU4SjtP5zQsuZqg	Admin Bagian Kesejahteraan Rakyat Setda	bagkesra@gmail.com	\N	f	f	active	\N		\N
 a2c23ac6-921f-4cf3-ba59-db57f61b185e	admin_bagkeuangan	\N	2026-06-16 05:04:53.828212	\N	$pbkdf2-sha512$25000$6L13jjHmvBeiNAYg5Nxb6w$TWMxnp2LLZiNu6Fn47ykhJMzj7AYl.ATStuBi040fT3jOw7JkZq0bR2MDoNcYMZUE1Jt1aJJckA4XLlL8pewvg	Admin Bagian Keuangan Setda	bagkeuangan@gmail.com	\N	f	f	active	\N		\N
-b68d0318-8694-4411-a4ae-d9aa9bcdd5d2	admin_kominfo	\N	2026-06-15 22:46:17.731501	\N	$pbkdf2-sha512$25000$HgOgNIaQ0tqbM6aUUqq1lg$BfZiTdvnjkj2vXAypfO0pEz1AYyeET4buVmyP.t8fBxwLE7Q5WviFgHYZQZAS2vgoIW.h4XoqG1oJRFjlYEkXg	Admin Kominfo	kominfo@gmail.com	\N	f	f	active	\N		2026-06-16 11:20:10.900204
 b7327420-c2a1-4719-8061-22d1ebca7d3d	admin_damkar	\N	2026-06-16 05:11:39.646917	\N	$pbkdf2-sha512$25000$plRKaU3JGeP8H6O0lpJSCg$Gk/N6PM2fDH7gxlUuKpN8h28uouchmkgEFHdIAtSx/tJO1lNMlXLNJ9LAhdKISjJ918fwxyh11cs/Qj38ezHeA	Admin Dinas Damkar dan Penyelamatan	damkar@gmail.com	\N	f	f	active	\N		\N
 78e40015-1e4c-4367-99cb-b4cf78bc8c40	admin_dinkes	\N	2026-06-16 05:12:58.017274	\N	$pbkdf2-sha512$25000$C2EsBSCkdK6VkvLeO0cI4Q$2PfSR5VsMmkVnTbp7PAwhGwEs2C0asQtoIcfAQitvJD7S1vMSMpBfzJb5SXel2eL3HQEC84zhWoc/AnaUhcLDA	Admin Dinas Kesehatan	dinkes@gmail.com	\N	f	f	active	\N		\N
 70ce8cd0-a15f-459e-9707-0ff7deec71ad	admin_dkp	\N	2026-06-16 05:13:39.54504	\N	$pbkdf2-sha512$25000$ZyzFGOMcIwSAkJJy7l2LEQ$AbejEFJY1lVFrLKIkAdeRD63P4g.gP6FM/4TffpVidk8.QYMs7XCSpPUEgMCCFcMe1q6blnfYFHBLPJxuh811Q	Admin Dinas Ketahanan Pangan	dkp@gmail.com	\N	f	f	active	\N		\N
@@ -982,7 +999,8 @@ f5e5b358-3b9e-4546-8146-3963034e9ca6	admin_dinsos	\N	2026-06-16 05:30:22.425002	
 78c9a180-dc15-409f-b6d2-e1cf8c285298	admin_disperinaker	\N	2026-06-16 05:31:05.943292	\N	$pbkdf2-sha512$25000$/r/XWovx/v.fs1aKce793w$G5465Q5KrOJCnaW8iswzd06zDSf7kVQ2jNFuql4cyUwiNKSBfkKUnbZQf4W7yZ.U8fmztIFC9YDoyUmw8n0lqw	Admin Dinas Tenaga Kerja & Perindustrian	disperinaker@gmail.com	\N	f	f	active	\N		\N
 3d8a85b7-48b4-4980-95a2-d9bc3bbfbfa9	admin_inspektorat	\N	2026-06-16 05:31:42.980784	\N	$pbkdf2-sha512$25000$DQFAaO19bw2BkPJ.TwnBuA$XvVZZ5aw4MbJbqfbEfqetIWmPjXyZz.gX32RWD7KMWapLiwbLC7MloxUXSoPDWi40Z9Kr7LZhhb7fM5oujcSRw	Admin Inspektorat	inspektorat@gmail.com	\N	f	f	active	\N		\N
 2c5c2e38-31f5-43fd-bfe5-67bb1154a544	admin_satpolpp	\N	2026-06-16 05:32:47.082852	\N	$pbkdf2-sha512$25000$JoTQmpNy7j3HWKs15vw/hw$OL4jCcKrkYubyg8n0ktuKyvfkPEw1Ry76MNG3Nh8Von4kLzbZkX2BNxXSJ5D0.q9ToiG..Al1EpuP6224C1HFw	Admin Satuan Polisi Pamong Praja	satpolpp@gmail.com	\N	f	f	active	\N		\N
-1ecba460-a929-4fd0-918d-da926ace8d0f	ckan_admin	\N	2026-06-07 15:34:52.070761	Akun Superadmin CKAN Satudata Kota Kendari	$pbkdf2-sha512$25000$.7/3/p8TQmiNkbL23ts7pw$1v8Okyj6uGoPLKAqD8ARLRvW9VlERBIE0cLZlLtdb2ciS/EmM1jn7rTpwQ.hgfoF4MqBxBDoiwYkXWLQPN0BJg	Administrator	ilmifaizan1112@gmail.com	130e6d08e25142ebdba41629b804a2b9	t	f	active	\N	2026-06-08-053303.105869admin.png	2026-06-18 09:46:34.430709
+b68d0318-8694-4411-a4ae-d9aa9bcdd5d2	admin_kominfo	\N	2026-06-15 22:46:17.731501	\N	$pbkdf2-sha512$25000$HgOgNIaQ0tqbM6aUUqq1lg$BfZiTdvnjkj2vXAypfO0pEz1AYyeET4buVmyP.t8fBxwLE7Q5WviFgHYZQZAS2vgoIW.h4XoqG1oJRFjlYEkXg	Admin Kominfo	kominfo@gmail.com	\N	f	f	active	\N		2026-06-19 01:58:30.029733
+1ecba460-a929-4fd0-918d-da926ace8d0f	ckan_admin	\N	2026-06-07 15:34:52.070761	Akun Superadmin CKAN Satudata Kota Kendari	$pbkdf2-sha512$25000$.7/3/p8TQmiNkbL23ts7pw$1v8Okyj6uGoPLKAqD8ARLRvW9VlERBIE0cLZlLtdb2ciS/EmM1jn7rTpwQ.hgfoF4MqBxBDoiwYkXWLQPN0BJg	Administrator	ilmifaizan1112@gmail.com	130e6d08e25142ebdba41629b804a2b9	t	f	active	\N	2026-06-08-053303.105869admin.png	2026-06-19 02:18:04.436507
 \.
 
 
@@ -1715,5 +1733,5 @@ ALTER TABLE ONLY public.user_following_user
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WWNYYEjhSIvI4SbUHygasoWq5GtRjchyVneXEv5JA28oRnms8NgenWuqY4MZDCi
+\unrestrict aFlbvt5NtA2WqiPFQoaR1xPB3JUstiQ86a1hmH6Q2nLAzfp8mvFUemGirYjlpBy
 

@@ -136,3 +136,15 @@ npm run build-tailwind
 
 > Ringkasnya: edit class → `npm run build-tailwind` di lokal → pastikan `tailwind.css` ter-update
 > → baru zip & kirim ke server. Di server cukup `docker compose up`, **tidak ada build Node/Tailwind**.
+
+Command: echo "127.0.0.1 ckan_satudata-ckan-1" | sudo tee -a /etc/hosts
+untuk alihkan host ke url custom
+
+saat ke server — soal ckan.datapusher.api_token
+Token api di ckan.ini itu terikat ke database (jti-nya harus ada di tabel api_token). Token lama gagal di sini justru karena DB sudah saya restore dari backup yang tidak memuat jti tersebut.
+
+Untuk local: sudah saya buatkan token baru (user ckan_admin) dan masukkan ke ckan.ini.
+Untuk server: jangan menyalin token ckan.ini local ini ke server — token tersebut tidak ada di DB server. Di server, generate token dari DB server sendiri:
+
+docker exec ckan_satudata-ckan-1 ckan -c /app/ckan.ini user token add <sysadmin_server> datapusher
+lalu tempel ke ckan.datapusher.api_token di ckan.ini server (pakai cara truncate in-place, bukan editor yang mengganti inode, karena file di-mount single-file).
